@@ -34,7 +34,7 @@ export const themes: Record<string, Theme> = {
             point: `bg-classic-point`,
             sub: `bg-classic-sub`,
         },
-        quote: "Great things take time.",
+        quote: "Great things\ntake time.",
     },
     purple: {
         name: "Purple",
@@ -49,7 +49,7 @@ export const themes: Record<string, Theme> = {
             point: `bg-purple-point`,
             sub: `bg-purple-sub`,
         },
-        quote: "Becoming a better version of me.",
+        quote: "Becoming a better\nversion of me.",
     },
     black: {
         name: "Black",
@@ -64,6 +64,6 @@ export const themes: Record<string, Theme> = {
             point: `bg-black-point`,
             sub: `bg-black-sub`,
         },
-        quote: "For my better tomorrow.",
+        quote: "For my better\ntomorrow.",
     },
 };

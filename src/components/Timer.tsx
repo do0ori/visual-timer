@@ -154,9 +154,16 @@ const Timer: React.FC = () => {
                 </svg>
 
                 {/* Quote */}
-                <div className="absolute bottom-32 left-0 w-full text-center">
-                    <p className={`text-sm ${currentTheme.text.point}`}>
-                        {currentTheme.quote}
+                <div className="absolute bottom-24 left-0 w-full text-center">
+                    <p
+                        className={`text-sm font-bold ${currentTheme.text.point}`}
+                    >
+                        {currentTheme.quote.split("\n").map((line, index) => (
+                            <span key={index}>
+                                {line}
+                                <br />
+                            </span>
+                        ))}
                     </p>
                 </div>
             </div>
