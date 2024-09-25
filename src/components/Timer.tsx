@@ -6,14 +6,16 @@ import { IoAdd, IoPlay, IoPause, IoRefresh } from "react-icons/io5";
 const Timer: React.FC = () => {
     const {
         count,
+        currentUnit,
         isRunning,
         isMinutes,
-        currentUnit,
+        isInitialized,
         start,
         stop,
         reset,
         toggleUnit,
         setTime,
+        add,
     } = useTimer({
         initialTime: 5,
         unit: "minutes",
@@ -161,13 +163,19 @@ const Timer: React.FC = () => {
 
             <div className="mt-4 flex space-x-4">
                 {/* Add 1 Button */}
-                {/* TODO: onClick 구현하기 -> hook 수정 */}
                 <button
-                    onClick={undefined}
+                    onClick={() => add(isMinutes ? 1 : 10)}
                     aria-label="Add one"
-                    className={`text-white p-2 w-16 h-16 rounded-full flex items-center justify-center ${currentTheme.bg.point} border-2 border-white active:translate-y-1`}
+                    className={`text-white p-2 w-16 h-16 rounded-full flex items-center justify-center ${
+                        currentTheme.bg.point
+                    } border-2 border-white active:translate-y-1 ${
+                        isInitialized ? "invisible" : "visible"
+                    }`}
                 >
-                    <IoAdd size={25} />
+                    <div className={"flex items-center justify-center"}>
+                        <IoAdd size={20} />
+                        <span className={"text-lg"}>{isMinutes ? 1 : 10}</span>
+                    </div>
                 </button>
 
                 {/* Stop/Start Button */}
@@ -180,11 +188,14 @@ const Timer: React.FC = () => {
                 </button>
 
                 {/* Reset Button */}
-                {/* TODO: 남은 count가 원래 count와 다를 때에만 보이도록 하기 -> hook 수정 */}
                 <button
                     onClick={reset}
                     aria-label="Reset Timer"
-                    className={`text-white p-2 w-16 h-16 rounded-full flex items-center justify-center ${currentTheme.bg.point} border-2 border-white active:translate-y-1`}
+                    className={`text-white p-2 w-16 h-16 rounded-full flex items-center justify-center ${
+                        currentTheme.bg.point
+                    } border-2 border-white active:translate-y-1 ${
+                        isInitialized ? "invisible" : "visible"
+                    }`}
                 >
                     <IoRefresh size={25} className="transform scale-x-[-1]" />
                 </button>
