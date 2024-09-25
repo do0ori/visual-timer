@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { themes } from "../config/timer/themes";
 import { useTimer } from "../hooks/useTimer";
-import { IoAdd, IoPlay, IoPause, IoRefresh } from "react-icons/io5";
+import {
+    IoAdd,
+    IoPlay,
+    IoPause,
+    IoRefresh,
+    IoSwapVertical,
+} from "react-icons/io5";
 
 const Timer: React.FC = () => {
     const {
@@ -53,7 +59,12 @@ const Timer: React.FC = () => {
                         isRunning ? "invisible" : "visible"
                     }`}
                 >
-                    {isMinutes ? "Seconds" : "Minutes"}
+                    <div className={"flex items-center justify-center"}>
+                        <IoSwapVertical size={20} />
+                        <span className={"ml-1 text-lg"}>
+                            {isMinutes ? "min" : "sec"}
+                        </span>
+                    </div>
                 </button>
             </div>
 
