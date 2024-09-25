@@ -18,12 +18,14 @@ type TimerOptions = {
 type TimerControllers = {
     /** Current countdown value. */
     count: number;
+    /** The current unit details (interval and multiple values). */
+    currentUnit: Unit;
     /** If true, the timer is currently running. */
     isRunning: boolean;
     /** True if the timer is in minutes mode, false if in seconds mode. */
     isMinutes: boolean;
-    /** The current unit details (interval and multiple values). */
-    currentUnit: Unit;
+    /** If true, the timer is initialized. */
+    isInitialized: boolean;
     /** Starts the countdown. */
     start: () => void;
     /** Stops the countdown. */
@@ -34,6 +36,8 @@ type TimerControllers = {
     toggleUnit: () => void;
     /** Sets a new time for the countdown. */
     setTime: (time: number) => void;
+    /** Adds a time to current value. */
+    add: (time: number) => void;
 }
 
 export function useTimer({
@@ -45,7 +49,10 @@ export function useTimer({
 }: TimerOptions): TimerControllers {
     // State to track the current time in minutes or seconds
     const [time, setTime] = useState<number>(initialTime);
-    const [isMinutes, setIsMinutes] = useState(unit === "minutes");
+    const [isMinutes, setIsMinutes] = useState<boolean>(unit === "minutes");
+
+    // Manage the initialized state of the timer
+    const [isInitialized, setIsInitialized] = useState<boolean>(true);
 
     // Get current unit details (intervalMs and multiple for minutes/seconds)
     const currentUnit = timerUnits[isMinutes ? "minutes" : "seconds"];
@@ -69,15 +76,16 @@ export function useTimer({
 
     // Resets the countdown to the initial value and stops it
     const resetCountdown = useCallback(() => {
-        stopCountdown(); // Stop the timer
-        setCount(countStart); // Reset the count to the initial value
+        stopCountdown();
+        setCount(countStart);
+        setIsInitialized(true);
     }, [stopCountdown, setCount, countStart]);
 
     // The callback for the countdown logic (either increment or decrement)
     const countdownCallback = useCallback(() => {
         if (count === countStop) {
-            resetCountdown(); // Reset if we reach the stop value
-            if (onFinish) onFinish(); // Trigger onFinish callback if provided
+            resetCountdown();
+            if (onFinish) onFinish();
             return;
         }
 
@@ -88,34 +96,50 @@ export function useTimer({
     // useInterval hook triggers the countdown logic when the timer is running
     useInterval(countdownCallback, isRunning ? intervalMs : null);
 
+    // Function to start the countdown and mark as initialized
+    const start = useCallback(() => {
+        startCountdown();
+        setIsInitialized(false);
+    }, [startCountdown]);
+
     // Sets a new time for the countdown and resets it
     const handleSetTime = useCallback(
         (newTime: number) => {
-            setTime(newTime); // Update the time state
-            const newCountStart = newTime * currentUnit.multiple; // Calculate the new count start value
-            setCount(newCountStart); // Update the count state
-            stopCountdown(); // Stop the countdown after setting the new time
+            const newCountStart = newTime * currentUnit.multiple;
+            setTime(newTime);
+            setCount(newCountStart);
+            setIsInitialized(true);
+            stopCountdown();
         },
         [setCount, stopCountdown, currentUnit.multiple]
     );
 
     // Toggles between minutes and seconds mode
     const toggleUnit = useCallback(() => {
-        setIsMinutes((prev) => !prev); // Toggle isMinutes state
-        const newCountStart = time * (isMinutes ? timerUnits.seconds.multiple : timerUnits.minutes.multiple); // Calculate the new count start value
-        setCount(newCountStart); // Update the count with the new unit
-        stopCountdown(); // Stop the countdown when switching units
+        const newCountStart = time * (isMinutes ? timerUnits.seconds.multiple : timerUnits.minutes.multiple);
+        setIsMinutes(!isMinutes);
+        setCount(newCountStart);
+        setIsInitialized(true);
+        stopCountdown();
     }, [isMinutes, setCount, time, stopCountdown]);
+
+    // Function to add a specific time to the current count
+    const add = useCallback((time: number) => {
+        const newCountStart = count + time * currentUnit.multiple;
+        setCount(newCountStart);
+    }, [count, currentUnit.multiple, setCount]);
 
     return {
         count,
+        currentUnit,
         isRunning,
         isMinutes,
-        currentUnit,
-        start: startCountdown,
+        isInitialized,
+        start,
         stop: stopCountdown,
         reset: resetCountdown,
         toggleUnit,
         setTime: handleSetTime,
+        add
     };
 }
