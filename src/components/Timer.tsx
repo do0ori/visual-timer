@@ -25,6 +25,7 @@ const Timer: React.FC = () => {
     } = useTimer({
         initialTime: 10,
         unit: "minutes",
+        maxTime: 60,
         onFinish: () => {
             window.alert("Finish!");
         },

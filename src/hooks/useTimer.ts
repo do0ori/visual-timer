@@ -9,8 +9,8 @@ type TimerOptions = {
     unit?: "minutes" | "seconds";
     /** If true, the timer will increment instead of decrement. */
     isIncrement?: boolean;
-    /** The value at which the countdown should stop. */
-    countStop?: number;
+    /** Maximum possible time for the timer. */
+    maxTime?: number;
     /** Callback function triggered when the timer reaches the countStop. */
     onFinish?: () => void;
 }
@@ -43,10 +43,17 @@ type TimerControllers = {
 export function useTimer({
     initialTime,
     unit = "minutes",
-    countStop = 0,
-    isIncrement = false,
+    maxTime = undefined,
     onFinish,
 }: TimerOptions): TimerControllers {
+    // Validation check for initialTime and maxTime
+    if (initialTime < 0) {
+        throw new Error("initialTime cannot be negative");
+    }
+    if (maxTime !== undefined && maxTime < initialTime) {
+        throw new Error("maxTime cannot be less than initialTime");
+    }
+
     // State to track the current time in minutes or seconds
     const [time, setTime] = useState<number>(initialTime);
     const [isMinutes, setIsMinutes] = useState<boolean>(unit === "minutes");
@@ -59,10 +66,12 @@ export function useTimer({
     const countStart = time * currentUnit.multiple;
     const intervalMs = currentUnit.interval;
 
-    // Manage count state with useCounter, which provides increment, decrement, and setCount functions
+    // Calculate maximum possible count value if maxTime is given
+    const maxCountStart = maxTime ? maxTime * currentUnit.multiple : undefined;
+
+    // Manage count state with useCounter, which provides decrement and setCount functions
     const {
         count,
-        increment,
         decrement,
         setCount
     } = useCounter(countStart);
@@ -81,17 +90,15 @@ export function useTimer({
         setIsInitialized(true);
     }, [stopCountdown, setCount, countStart]);
 
-    // The callback for the countdown logic (either increment or decrement)
+    // The callback for the countdown logic
     const countdownCallback = useCallback(() => {
-        if (count === countStop) {
+        if (count === 0) {
             resetCountdown();
             if (onFinish) onFinish();
             return;
         }
-
-        // Increment or decrement based on the isIncrement flag
-        isIncrement ? increment() : decrement();
-    }, [count, countStop, decrement, increment, isIncrement, resetCountdown, onFinish]);
+        decrement();
+    }, [count, decrement, resetCountdown, onFinish]);
 
     // useInterval hook triggers the countdown logic when the timer is running
     useInterval(countdownCallback, isRunning ? intervalMs : null);
@@ -105,13 +112,14 @@ export function useTimer({
     // Sets a new time for the countdown and resets it
     const handleSetTime = useCallback(
         (newTime: number) => {
-            const newCountStart = newTime * currentUnit.multiple;
-            setTime(newTime);
+            const validatedTime = maxTime ? Math.min(newTime, maxTime) : newTime;
+            const newCountStart = validatedTime * currentUnit.multiple;
+            setTime(validatedTime);
             setCount(newCountStart);
             setIsInitialized(true);
             stopCountdown();
         },
-        [setCount, stopCountdown, currentUnit.multiple]
+        [setCount, stopCountdown, currentUnit.multiple, maxTime]
     );
 
     // Toggles between minutes and seconds mode
@@ -125,9 +133,13 @@ export function useTimer({
 
     // Function to add a specific time to the current count
     const add = useCallback((time: number) => {
-        const newCountStart = count + time * currentUnit.multiple;
+        let newCountStart = count + time * currentUnit.multiple;
+        if (maxCountStart) {
+            newCountStart = Math.min(newCountStart, maxCountStart);
+        }
+        newCountStart = Math.max(newCountStart, 0);
         setCount(newCountStart);
-    }, [count, currentUnit.multiple, setCount]);
+    }, [count, maxCountStart, currentUnit.multiple, setCount]);
 
     return {
         count,
