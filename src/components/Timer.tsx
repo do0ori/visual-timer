@@ -23,7 +23,7 @@ const Timer: React.FC = () => {
         setTime,
         add,
     } = useTimer({
-        initialTime: 5,
+        initialTime: 10,
         unit: "minutes",
         onFinish: () => {
             window.alert("Finish!");
@@ -44,6 +44,21 @@ const Timer: React.FC = () => {
         value: i * 5,
         angle: i * 30,
     }));
+
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+
+    const handleMouseEvent = (e: React.MouseEvent) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const radians = Math.atan2(y, x);
+        let degrees = radians * (180 / Math.PI) + 90;
+        if (degrees < 0) degrees += 360;
+
+        const roundedDegrees = Math.round(degrees / 6) * 6;
+        const newTime = roundedDegrees / 6;
+        setTime(newTime);
+    };
 
     return (
         <div
@@ -69,7 +84,13 @@ const Timer: React.FC = () => {
             </div>
 
             {/* Timer */}
-            <div className="relative w-96 h-96">
+            <div
+                className="relative w-96 h-96"
+                onMouseDown={() => setIsDragging(true)}
+                onMouseUp={() => setIsDragging(false)}
+                onMouseMove={(e) => isDragging && handleMouseEvent(e)}
+                onClick={handleMouseEvent}
+            >
                 <svg className="w-full h-full" viewBox="-50 -50 100 100">
                     {/* Timer Background */}
                     <circle
@@ -123,6 +144,7 @@ const Timer: React.FC = () => {
                                 fontSize={3}
                                 fontWeight={1000}
                                 fill={currentTheme.color.point}
+                                className={"select-none"}
                             >
                                 {value}
                             </text>
@@ -170,7 +192,7 @@ const Timer: React.FC = () => {
                         className={`text-sm font-bold ${currentTheme.text.point}`}
                     >
                         {currentTheme.quote.split("\n").map((line, index) => (
-                            <span key={index}>
+                            <span key={index} className={"select-none"}>
                                 {line}
                                 <br />
                             </span>
@@ -231,10 +253,6 @@ const Timer: React.FC = () => {
                     </button>
                 ))}
             </div>
-            {/* TODO: 드래그해서 시간을 설정할 수 있도록 하기 */}
-            <button className="mt-6" onClick={() => setTime(10)}>
-                시간 10으로 설정 테스트
-            </button>
         </div>
     );
 };
