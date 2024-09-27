@@ -205,7 +205,7 @@ const Timer: React.FC = () => {
                     <button
                         key={key}
                         onClick={() => setTheme(key)}
-                        className={`text-black w-20 p-2 ${theme.bg.main} rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]`}
+                        className={`${key !== 'black' ? 'text-black' : 'text-white'} w-20 p-2 ${theme.bg.main} rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]`}
                     >
                         {theme.name}
                     </button>
