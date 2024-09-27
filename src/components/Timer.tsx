@@ -1,37 +1,20 @@
-import { useState } from "react";
-import { themes } from "../config/timer/themes";
-import { useTimer } from "../hooks/useTimer";
-import {
-    IoAdd,
-    IoPlay,
-    IoPause,
-    IoRefresh,
-    IoSwapVertical,
-} from "react-icons/io5";
+import { useState } from 'react';
+import { themes } from '../config/timer/themes';
+import { useTimer } from '../hooks/useTimer';
+import { IoAdd, IoPlay, IoPause, IoRefresh, IoSwapVertical } from 'react-icons/io5';
 
 const Timer: React.FC = () => {
-    const {
-        count,
-        currentUnit,
-        isRunning,
-        isMinutes,
-        isInitialized,
-        start,
-        stop,
-        reset,
-        toggleUnit,
-        setTime,
-        add,
-    } = useTimer({
-        initialTime: 10,
-        unit: "minutes",
-        maxTime: 60,
-        onFinish: () => {
-            window.alert("Finish!");
-        },
-    });
+    const { count, currentUnit, isRunning, isMinutes, isInitialized, start, stop, reset, toggleUnit, setTime, add } =
+        useTimer({
+            initialTime: 10,
+            unit: 'minutes',
+            maxTime: 60,
+            onFinish: () => {
+                window.alert('Finish!');
+            },
+        });
 
-    const [theme, setTheme] = useState<string>("classic");
+    const [theme, setTheme] = useState<string>('classic');
     const currentTheme = themes[theme];
 
     const baseRadius = 45;
@@ -62,46 +45,33 @@ const Timer: React.FC = () => {
     };
 
     return (
-        <div
-            className={`flex flex-col items-center justify-center min-h-screen ${currentTheme.bg.main}`}
-        >
+        <div className={`flex min-h-screen flex-col items-center justify-center ${currentTheme.bg.main}`}>
             {/* Unit Toggle Button */}
             <div className="mt-4 flex space-x-4">
                 <button
                     onClick={toggleUnit}
-                    className={`text-white p-2 w-20 marker:rounded-full ${
+                    className={`w-20 p-2 text-white marker:rounded-full ${
                         currentTheme.bg.point
-                    } border-2 border-white active:translate-y-1 ${
-                        isRunning ? "invisible" : "visible"
-                    }`}
+                    } border-2 border-white active:translate-y-1 ${isRunning ? 'invisible' : 'visible'}`}
                 >
-                    <div className={"flex items-center justify-center"}>
+                    <div className={'flex items-center justify-center'}>
                         <IoSwapVertical size={20} />
-                        <span className={"ml-1 text-lg"}>
-                            {isMinutes ? "min" : "sec"}
-                        </span>
+                        <span className={'ml-1 text-lg'}>{isMinutes ? 'min' : 'sec'}</span>
                     </div>
                 </button>
             </div>
 
             {/* Timer */}
             <div
-                className="relative w-96 h-96"
+                className="relative h-96 w-96"
                 onMouseDown={() => setIsDragging(true)}
                 onMouseUp={() => setIsDragging(false)}
                 onMouseMove={(e) => isDragging && handleMouseEvent(e)}
                 onClick={handleMouseEvent}
             >
-                <svg className="w-full h-full" viewBox="-50 -50 100 100">
+                <svg className="h-full w-full" viewBox="-50 -50 100 100">
                     {/* Timer Background */}
-                    <circle
-                        cx={0}
-                        cy={0}
-                        r={baseRadius}
-                        fill="#FBFBFB"
-                        stroke="#FBFBFB"
-                        strokeWidth={2}
-                    />
+                    <circle cx={0} cy={0} r={baseRadius} fill="#FBFBFB" stroke="#FBFBFB" strokeWidth={2} />
                     {/* Clock Ticks */}
                     {minuteMarkers.map((marker) =>
                         marker % 5 ? (
@@ -145,7 +115,7 @@ const Timer: React.FC = () => {
                                 fontSize={3}
                                 fontWeight={1000}
                                 fill={currentTheme.color.point}
-                                className={"select-none"}
+                                className={'select-none'}
                             >
                                 {value}
                             </text>
@@ -160,20 +130,13 @@ const Timer: React.FC = () => {
                         fill="none"
                         stroke={currentTheme.color.point}
                         strokeWidth="30%"
-                        strokeDasharray={`${
-                            progress * fullProgress
-                        } ${fullProgress}`}
+                        strokeDasharray={`${progress * fullProgress} ${fullProgress}`}
                         strokeDashoffset="0"
                         transform="rotate(-90)"
                     />
                     {/* Center Knob Shape */}
                     <g transform={`rotate(${360 * progress})`}>
-                        <circle
-                            cx={0}
-                            cy={0}
-                            r={6}
-                            fill={currentTheme.color.sub}
-                        />
+                        <circle cx={0} cy={0} r={6} fill={currentTheme.color.sub} />
                         <rect
                             width={1.5}
                             height={4.5}
@@ -182,18 +145,16 @@ const Timer: React.FC = () => {
                             rx={1}
                             ry={1}
                             fill={currentTheme.color.sub}
-                            className="filter brightness-90 saturate-200"
+                            className="brightness-90 saturate-200 filter"
                         />
                     </g>
                 </svg>
 
                 {/* Quote */}
                 <div className="absolute bottom-24 left-0 w-full text-center">
-                    <p
-                        className={`text-sm font-bold ${currentTheme.text.point}`}
-                    >
-                        {currentTheme.quote.split("\n").map((line, index) => (
-                            <span key={index} className={"select-none"}>
+                    <p className={`text-sm font-bold ${currentTheme.text.point}`}>
+                        {currentTheme.quote.split('\n').map((line, index) => (
+                            <span key={index} className={'select-none'}>
                                 {line}
                                 <br />
                             </span>
@@ -207,23 +168,21 @@ const Timer: React.FC = () => {
                 <button
                     onClick={() => add(isMinutes ? 1 : 10)}
                     aria-label="Add one"
-                    className={`text-white p-2 w-16 h-16 rounded-full flex items-center justify-center ${
+                    className={`flex h-16 w-16 items-center justify-center rounded-full p-2 text-white ${
                         currentTheme.bg.point
-                    } border-2 border-white active:translate-y-1 ${
-                        isInitialized ? "invisible" : "visible"
-                    }`}
+                    } border-2 border-white active:translate-y-1 ${isInitialized ? 'invisible' : 'visible'}`}
                 >
-                    <div className={"flex items-center justify-center"}>
+                    <div className={'flex items-center justify-center'}>
                         <IoAdd size={20} />
-                        <span className={"text-lg"}>{isMinutes ? 1 : 10}</span>
+                        <span className={'text-lg'}>{isMinutes ? 1 : 10}</span>
                     </div>
                 </button>
 
                 {/* Stop/Start Button */}
                 <button
                     onClick={isRunning ? stop : start}
-                    aria-label={isRunning ? "Pause Timer" : "Start Timer"}
-                    className={`text-white p-2 w-16 h-16 rounded-full flex items-center justify-center ${currentTheme.bg.point} border-2 border-white active:translate-y-1`}
+                    aria-label={isRunning ? 'Pause Timer' : 'Start Timer'}
+                    className={`flex h-16 w-16 items-center justify-center rounded-full p-2 text-white ${currentTheme.bg.point} border-2 border-white active:translate-y-1`}
                 >
                     {isRunning ? <IoPause size={25} /> : <IoPlay size={25} />}
                 </button>
@@ -232,13 +191,11 @@ const Timer: React.FC = () => {
                 <button
                     onClick={reset}
                     aria-label="Reset Timer"
-                    className={`text-white p-2 w-16 h-16 rounded-full flex items-center justify-center ${
+                    className={`flex h-16 w-16 items-center justify-center rounded-full p-2 text-white ${
                         currentTheme.bg.point
-                    } border-2 border-white active:translate-y-1 ${
-                        isInitialized ? "invisible" : "visible"
-                    }`}
+                    } border-2 border-white active:translate-y-1 ${isInitialized ? 'invisible' : 'visible'}`}
                 >
-                    <IoRefresh size={25} className="transform scale-x-[-1]" />
+                    <IoRefresh size={25} className="scale-x-[-1] transform" />
                 </button>
             </div>
 
@@ -248,7 +205,7 @@ const Timer: React.FC = () => {
                     <button
                         key={key}
                         onClick={() => setTheme(key)}
-                        className={`text-black p-2 w-20 ${theme.bg.main} rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]`}
+                        className={`text-black w-20 p-2 ${theme.bg.main} rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]`}
                     >
                         {theme.name}
                     </button>

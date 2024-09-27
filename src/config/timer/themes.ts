@@ -1,4 +1,4 @@
-import { themeColors } from "../themeColors";
+import { themeColors } from '../themeColors';
 
 type Theme = {
     name: string;
@@ -22,7 +22,7 @@ type Theme = {
 
 export const themes: Record<string, Theme> = {
     classic: {
-        name: "Classic",
+        name: 'Classic',
         color: themeColors.classic,
         text: {
             main: `text-classic-main`,
@@ -34,10 +34,10 @@ export const themes: Record<string, Theme> = {
             point: `bg-classic-point`,
             sub: `bg-classic-sub`,
         },
-        quote: "Great things\ntake time.",
+        quote: 'Great things\ntake time.',
     },
     purple: {
-        name: "Purple",
+        name: 'Purple',
         color: themeColors.purple,
         text: {
             main: `text-purple-main`,
@@ -49,10 +49,10 @@ export const themes: Record<string, Theme> = {
             point: `bg-purple-point`,
             sub: `bg-purple-sub`,
         },
-        quote: "Becoming a better\nversion of me.",
+        quote: 'Becoming a better\nversion of me.',
     },
     black: {
-        name: "Black",
+        name: 'Black',
         color: themeColors.black,
         text: {
             main: `text-black-main`,
@@ -64,6 +64,6 @@ export const themes: Record<string, Theme> = {
             point: `bg-black-point`,
             sub: `bg-black-sub`,
         },
-        quote: "For my better\ntomorrow.",
+        quote: 'For my better\ntomorrow.',
     },
 };
