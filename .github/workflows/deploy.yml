@@ -1,0 +1,52 @@
+name: Deploy React App to GitHub Pages
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'public/**'
+            - 'src/**'
+
+    pull_request:
+        branches:
+            - main
+        paths:
+            - 'public/**'
+            - 'src/**'
+
+    workflow_dispatch:
+
+jobs:
+    build-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            - name: Cache Node.js modules
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+
+            - name: Install dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: npm install
+
+            - name: Build the project
+              run: npm run build
+
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GH_TOKEN }}
+                  publish_dir: ./build
