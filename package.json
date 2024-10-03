@@ -1,7 +1,7 @@
 {
     "name": "visual-timer",
     "version": "0.1.0",
-    "private": true,
+    "private": false,
     "dependencies": {
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
@@ -57,5 +57,6 @@
         "prettier-plugin-tailwindcss": "^0.6.8",
         "tailwindcss": "^3.4.13",
         "typescript-eslint": "^8.7.0"
-    }
+    },
+    "homepage": "http://do0ori.github.io/visual-timer"
 }
