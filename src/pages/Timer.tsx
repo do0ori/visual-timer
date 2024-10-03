@@ -6,6 +6,7 @@ import TimerDisplay from '../components/Display/TimerDisplay';
 import QuoteDisplay from '../components/Display/QuoteDisplay';
 import ControlButtons from '../components/Button/ControlButtons';
 import ThemeSwitchButtons from '../components/Button/ThemeSwitchButtons';
+import alarmSound from '../assets/alarmSound.mp3';
 
 const Timer: React.FC = () => {
     const { count, currentUnit, isRunning, isMinutes, isInitialized, start, stop, reset, toggleUnit, setTime, add } =
@@ -14,12 +15,28 @@ const Timer: React.FC = () => {
             unit: 'minutes',
             maxTime: 60,
             onFinish: () => {
-                window.alert('Finish!');
+                handleFinish();
             },
         });
 
     const [theme, setTheme] = useState<string>('classic');
     const currentTheme = themes[theme];
+
+    const handleFinish = () => {
+        const audio = new Audio(alarmSound);
+        audio
+            .play()
+            .then(() => {
+                setTimeout(() => {
+                    window.alert('Timer finished!');
+                    audio.pause();
+                    audio.currentTime = 0;
+                }, 0);
+            })
+            .catch((error) => {
+                console.error('Failed to play the sound:', error);
+            });
+    };
 
     const progress = count / currentUnit.denominator;
 
