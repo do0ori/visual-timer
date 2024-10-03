@@ -1,6 +1,6 @@
 import { themeColors } from '../themeColors';
 
-type Theme = {
+export type Theme = {
     name: string;
     color: {
         main: string;
