@@ -52,11 +52,19 @@
         "eslint-plugin-react": "^7.37.0",
         "eslint-plugin-tailwindcss": "^3.17.4",
         "globals": "^15.9.0",
-        "postcss": ">=8.4.31",
+        "postcss": "^8.4.47",
         "prettier": "^3.3.3",
         "prettier-plugin-tailwindcss": "^0.6.8",
         "tailwindcss": "^3.4.13",
         "typescript-eslint": "^8.7.0"
     },
-    "homepage": "http://do0ori.github.io/visual-timer"
+    "homepage": "http://do0ori.github.io/visual-timer",
+    "overrides": {
+        "svgo": {
+            "nth-check": ">=2.0.2"
+        },
+        "react-scripts": {
+            "postcss": ">=8.4.31"
+        }
+    }
 }
