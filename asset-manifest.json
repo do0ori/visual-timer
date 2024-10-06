@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/visual-timer/static/css/main.9ee5c168.css",
-    "main.js": "/visual-timer/static/js/main.fd2dd32b.js",
+    "main.js": "/visual-timer/static/js/main.f2561489.js",
     "static/media/alarmSound.mp3": "/visual-timer/static/media/alarmSound.e0347873381d6798c567.mp3",
     "index.html": "/visual-timer/index.html",
     "main.9ee5c168.css.map": "/visual-timer/static/css/main.9ee5c168.css.map",
-    "main.fd2dd32b.js.map": "/visual-timer/static/js/main.fd2dd32b.js.map"
+    "main.f2561489.js.map": "/visual-timer/static/js/main.f2561489.js.map"
   },
   "entrypoints": [
     "static/css/main.9ee5c168.css",
-    "static/js/main.fd2dd32b.js"
+    "static/js/main.f2561489.js"
   ]
 }
