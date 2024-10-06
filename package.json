@@ -65,6 +65,9 @@
         },
         "react-scripts": {
             "postcss": ">=8.4.31"
+        },
+        "express": {
+            "cookie": ">=0.7.0"
         }
     }
 }
