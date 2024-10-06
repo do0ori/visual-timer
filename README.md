@@ -1,46 +1,80 @@
-# Getting Started with Create React App
+# ⏰ Visual Timer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Visual Timer** is a user-friendly, customizable web-based timer application. It allows users to toggle between different units (minutes and seconds), customize the timer’s appearance using themes, and manually set the timer duration by interacting with the clock interface.
 
-## Available Scripts
+## ✨ Key Features
 
-In the project directory, you can run:
+1. **Customizable Themes**
 
-### `npm start`
+    - Choose from various **themes** to change the appearance of the timer.
+    - The theme applies instantly, updating the timer's **background** and **accent colors** in real-time.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+2. **Unit Toggle (Minutes/Seconds)**
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    - Switch between **minutes** and **seconds** to precisely manage the countdown.
+    - The timer units can be toggled while the timer is stopped, allowing flexibility in how time is measured.
 
-### `npm test`
+3. **Interactive Time Setting**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    - **Drag and click** on the clock interface to set the desired time, with the visual interface reflecting changes in real-time.
+    - Supports **fine-tuning** of the timer duration by adding time in increments using dedicated buttons.
 
-### `npm run build`
+4. **Countdown Progress Visualization**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    - The remaining time is displayed via a **progress circle** around the clock face, providing a clear visual indicator of the time left.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. **Sound Alerts**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    - When the timer reaches zero, an **alarm sound** plays along with a popup alert to notify the user that the countdown has finished.
 
-### `npm run eject`
+6. **Persistent Settings**
+    - The application saves the last used **time** and **theme** to local storage, ensuring that users can pick up right where they left off in their next session.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 🛠️ Usage
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+👉 [**Try it live here**](https://do0ori.github.io/visual-timer)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Use the **unit toggle button** to switch between minutes and seconds.
+2. **Drag** on the clock face or click to set the desired time.
+3. Choose a **theme** from the theme switch buttons to customize the look of the timer.
+4. Press the **Start** button to begin the countdown, or add time as needed.
+5. A **popup** and **alarm sound** will notify you when the timer finishes.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 💻 Technology Stack
 
-## Learn More
+<p>
+    <img src="https://img.shields.io/badge/Typescript-2d79c7?style=for-the-badge&logo=Typescript&logoColor=white">
+    <img src="https://img.shields.io/badge/Create React App-282c35?style=for-the-badge&logo=createreactapp&logoColor=09D3AC">
+    <img src="https://img.shields.io/badge/Tailwind CSS-131729?style=for-the-badge&logo=Tailwind CSS&logoColor=78baf2">
+</p>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📦 Setup and Installation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/do0ori/visual-timer.git
+    ```
+
+2. Navigate to the project folder and install dependencies:
+
+    ```bash
+    cd visual-timer
+    npm install
+    ```
+
+3. Start the development server:
+
+    ```bash
+    npm start
+    ```
+
+## 🤝 Contributions
+
+Contributions are welcome! To contribute:
+
+1. **Fork** the repository.
+2. Create a new **branch** for your feature/bug fix.
+3. Submit a **pull request** with a clear description of your changes.
+
+Feel free to open [issues](https://github.com/do0ori/visual-timer/issues) for bug reports or feature suggestions.
