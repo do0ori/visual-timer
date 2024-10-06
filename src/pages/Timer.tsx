@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { themes } from '../config/timer/themes';
 import { useTimer } from '../hooks/useTimer';
+import { useLocalStorage } from 'usehooks-ts';
 import UnitToggleButton from '../components/Button/UnitToggleButton';
 import TimerDisplay from '../components/Display/TimerDisplay';
 import QuoteDisplay from '../components/Display/QuoteDisplay';
@@ -9,18 +10,33 @@ import ThemeSwitchButtons from '../components/Button/ThemeSwitchButtons';
 import alarmSound from '../assets/alarmSound.mp3';
 
 const Timer: React.FC = () => {
-    const { count, currentUnit, isRunning, isMinutes, isInitialized, start, stop, reset, toggleUnit, setTime, add } =
-        useTimer({
-            initialTime: 10,
-            unit: 'minutes',
-            maxTime: 60,
-            onFinish: () => {
-                handleFinish();
-            },
-        });
+    const [theme, setTheme] = useLocalStorage<string>('theme', 'classic');
+    const [storedTime, setStoredTime] = useLocalStorage<number>('time', 10);
+    const [storedIsMinutes, setStoredIsMinutes] = useLocalStorage<boolean>('isMinutes', true);
 
-    const [theme, setTheme] = useState<string>('classic');
     const currentTheme = themes[theme];
+
+    const {
+        totalTime,
+        count,
+        currentUnit,
+        isRunning,
+        isMinutes,
+        isInitialized,
+        start,
+        stop,
+        reset,
+        toggleUnit,
+        setTime,
+        add,
+    } = useTimer({
+        initialTime: storedTime,
+        unit: storedIsMinutes ? 'minutes' : 'seconds',
+        maxTime: 60,
+        onFinish: () => {
+            handleFinish();
+        },
+    });
 
     const handleFinish = () => {
         const audio = new Audio(alarmSound);
@@ -52,6 +68,14 @@ const Timer: React.FC = () => {
         const newTime = roundedDegrees / 6;
         setTime(newTime);
     };
+
+    useEffect(() => {
+        setStoredTime(totalTime);
+    }, [totalTime]);
+
+    useEffect(() => {
+        setStoredIsMinutes(isMinutes);
+    }, [isMinutes]);
 
     return (
         <div className={`flex min-h-screen flex-col items-center justify-center ${currentTheme.bg.main}`}>

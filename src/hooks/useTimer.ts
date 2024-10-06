@@ -16,6 +16,8 @@ type TimerOptions = {
 };
 
 type TimerControllers = {
+    /** Total time value. */
+    totalTime: number;
     /** Current countdown value. */
     count: number;
     /** The current unit details (interval and multiple values). */
@@ -137,6 +139,7 @@ export function useTimer({
     );
 
     return {
+        totalTime: time,
         count,
         currentUnit,
         isRunning,
