@@ -13,7 +13,7 @@ const ThemeSwitchButtons: React.FC<ThemeSwitchButtonsProps> = ({ setTheme }) => 
                     key={key}
                     onClick={() => setTheme(key)}
                     className={`${key !== 'black' ? 'text-black' : 'text-white'} w-20 p-2 ${
-                        theme.bg.main
+                        key !== 'purple' ? theme.bg.main : theme.bg.sub
                     } rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]`}
                 >
                     {theme.name}

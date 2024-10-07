@@ -2,16 +2,16 @@ export const themeColors = {
     classic: {
         main: '#F4E3C1',
         point: '#4A7658',
-        sub: '#d9b595',
+        sub: '#F0BE81',
     },
     purple: {
-        main: '#ECE8EF',
-        point: '#8B6FA8',
-        sub: '#e8e7ed',
+        main: '#D3DCE3',
+        point: '#9079C9',
+        sub: '#D7D5E0',
     },
     black: {
-        main: '#4D4D4D',
-        point: '#586F5B',
-        sub: '#cad4d1',
+        main: '#212625',
+        point: '#4C6A60',
+        sub: '#CEE5DD',
     },
 };
