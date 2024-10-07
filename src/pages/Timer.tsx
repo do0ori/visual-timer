@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { themes } from '../config/timer/themes';
 import { useTimer } from '../hooks/useTimer';
 import { useLocalStorage } from 'usehooks-ts';
-import { handleFinish, handleMouseEvent } from '../utils/timerHandler';
+import { handleFinish, handleDragEvent } from '../utils/timerHandler';
 import UnitToggleButton from '../components/Button/UnitToggleButton';
 import TimerDisplay from '../components/Display/TimerDisplay';
 import QuoteDisplay from '../components/Display/QuoteDisplay';
@@ -57,7 +57,7 @@ const Timer: React.FC = () => {
             <TimerDisplay
                 progress={progress}
                 currentTheme={currentTheme}
-                handleMouseEvent={(e) => handleMouseEvent(e, setTime)}
+                handleDragEvent={(e) => handleDragEvent(e, setTime)}
             >
                 <QuoteDisplay currentTheme={currentTheme} />
             </TimerDisplay>

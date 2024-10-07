@@ -4,11 +4,11 @@ import { Theme } from '../../config/timer/themes';
 type TimerDisplayProps = {
     progress: number;
     currentTheme: Theme;
-    handleMouseEvent: (e: React.MouseEvent) => void;
+    handleDragEvent: (e: React.MouseEvent | React.TouchEvent) => void;
     children?: React.ReactNode; // 꾸미기 요소 추가를 위한 children prop
 };
 
-const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, handleMouseEvent, children }) => {
+const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, handleDragEvent, children }) => {
     const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const baseRadius = 45;
@@ -26,8 +26,11 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
             className="relative h-96 w-96"
             onMouseDown={() => setIsDragging(true)}
             onMouseUp={() => setIsDragging(false)}
-            onMouseMove={(e) => isDragging && handleMouseEvent(e)}
-            onClick={handleMouseEvent}
+            onMouseMove={(e) => isDragging && handleDragEvent(e)}
+            onTouchStart={() => setIsDragging(true)}
+            onTouchEnd={() => setIsDragging(false)}
+            onTouchMove={(e) => isDragging && handleDragEvent(e)}
+            onClick={handleDragEvent}
         >
             <svg className="h-full w-full" viewBox="-50 -50 100 100">
                 {/* Timer Background */}
