@@ -10,7 +10,7 @@ import ControlButtons from '../components/Button/ControlButtons';
 import ThemeSwitchButtons from '../components/Button/ThemeSwitchButtons';
 
 const Timer: React.FC = () => {
-    const [theme, setTheme] = useLocalStorage<string>('theme', 'classic');
+    const [theme, setTheme] = useLocalStorage<string>('theme', 'default-classic');
     const [storedTime, setStoredTime] = useLocalStorage<number>('time', 10);
     const [storedIsMinutes, setStoredIsMinutes] = useLocalStorage<boolean>('isMinutes', true);
 
@@ -47,7 +47,10 @@ const Timer: React.FC = () => {
     }, [isMinutes]);
 
     return (
-        <div className={`flex min-h-screen flex-col items-center justify-center ${currentTheme.bg.main}`}>
+        <div
+            className="flex min-h-screen flex-col items-center justify-center"
+            style={{ backgroundColor: currentTheme.color.main }}
+        >
             <UnitToggleButton
                 onClick={toggleUnit}
                 isMinutes={isMinutes}

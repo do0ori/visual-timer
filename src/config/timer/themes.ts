@@ -1,68 +1,36 @@
-import { themeColors } from '../themeColors';
+export type ThemeColor = {
+    main: string;
+    point: string;
+    sub: string;
+};
 
 export type Theme = {
-    name: string;
-    color: {
-        main: string;
-        point: string;
-        sub: string;
-    };
-    text: {
-        main: string;
-        point: string;
-        sub: string;
-    };
-    bg: {
-        main: string;
-        point: string;
-        sub: string;
-    };
+    color: ThemeColor;
     quote: string;
 };
 
 export const themes: Record<string, Theme> = {
-    classic: {
-        name: 'Classic',
-        color: themeColors.classic,
-        text: {
-            main: `text-classic-main`,
-            point: `text-classic-point`,
-            sub: `text-classic-sub`,
-        },
-        bg: {
-            main: `bg-classic-main`,
-            point: `bg-classic-point`,
-            sub: `bg-classic-sub`,
+    'default-classic': {
+        color: {
+            main: '#F4E3C1',
+            point: '#4A7658',
+            sub: '#F0BE81',
         },
         quote: 'Great things\ntake time.',
     },
-    purple: {
-        name: 'Purple',
-        color: themeColors.purple,
-        text: {
-            main: `text-purple-main`,
-            point: `text-purple-point`,
-            sub: `text-purple-sub`,
-        },
-        bg: {
-            main: `bg-purple-main`,
-            point: `bg-purple-point`,
-            sub: `bg-purple-sub`,
+    'default-purple': {
+        color: {
+            main: '#DCE0E3',
+            point: '#9079C9',
+            sub: '#D7D5E0',
         },
         quote: 'Becoming a better\nversion of me.',
     },
-    black: {
-        name: 'Black',
-        color: themeColors.black,
-        text: {
-            main: `text-black-main`,
-            point: `text-black-point`,
-            sub: `text-black-sub`,
-        },
-        bg: {
-            main: `bg-black-main`,
-            point: `bg-black-point`,
-            sub: `bg-black-sub`,
+    'default-black': {
+        color: {
+            main: '#202123',
+            point: '#4C6A60',
+            sub: '#CEE5DD',
         },
         quote: 'For my better\ntomorrow.',
     },

@@ -12,12 +12,11 @@ const ThemeSwitchButtons: React.FC<ThemeSwitchButtonsProps> = ({ setTheme }) => 
                 <button
                     key={key}
                     onClick={() => setTheme(key)}
-                    className={`${key !== 'black' ? 'text-black' : 'text-white'} w-20 p-2 ${
-                        key !== 'purple' ? theme.bg.main : theme.bg.sub
-                    } rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]`}
-                >
-                    {theme.name}
-                </button>
+                    className="h-12 w-12 rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]"
+                    style={{
+                        background: `linear-gradient(135deg, ${theme.color.main} 50%, ${theme.color.point} 50%)`,
+                    }}
+                ></button>
             ))}
         </div>
     );

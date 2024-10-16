@@ -13,9 +13,12 @@ const UnitToggleButton: React.FC<UnitToggleButtonProps> = ({ onClick, isMinutes,
     return (
         <button
             onClick={onClick}
-            className={`w-20 rounded-full p-2 text-white ${currentTheme.bg.point} border-2 border-white active:brightness-90 ${
+            className={`w-20 rounded-full border-2 border-white p-2 text-white active:brightness-90 ${
                 isRunning ? 'invisible' : 'visible'
             }`}
+            style={{
+                backgroundColor: currentTheme.color.point,
+            }}
         >
             <div className="flex items-center justify-center">
                 <IoSwapVertical size={20} />
