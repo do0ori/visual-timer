@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { IoSettingsSharp, IoAlbums } from 'react-icons/io5';
 import { GoHomeFill } from 'react-icons/go';
 import { IoMenu } from 'react-icons/io5';
+import { MdEmail } from 'react-icons/md';
 
-const HamburgerMenu: React.FC = () => {
+const HamburgerMenu: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -35,8 +36,8 @@ const HamburgerMenu: React.FC = () => {
             <button
                 onClick={toggleMenu}
                 className={`fixed left-5 top-6 z-50 transition-opacity duration-300 ${
-                    isOpen ? 'opacity-0' : 'opacity-100'
-                }`}
+                    isRunning ? 'invisible' : 'visible'
+                } ${isOpen ? 'opacity-0' : 'opacity-100'}`}
             >
                 <IoMenu size={35} />
             </button>
@@ -67,6 +68,12 @@ const HamburgerMenu: React.FC = () => {
                                 <IoSettingsSharp size={24} />
                                 <span>Settings</span>
                             </Link>
+                        </li>
+                        <li>
+                            <a href="mailto:fuzzydo0ori@gmail.com" className="flex items-center space-x-2">
+                                <MdEmail size={24} />
+                                <span>Contact</span>
+                            </a>
                         </li>
                     </ul>
                 </div>

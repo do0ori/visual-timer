@@ -7,6 +7,7 @@ import UnitToggleButton from '../components/Button/UnitToggleButton';
 import TimerDisplay from '../components/Display/TimerDisplay';
 import QuoteDisplay from '../components/Display/QuoteDisplay';
 import ControlButtons from '../components/Button/ControlButtons';
+import HamburgerMenu from './HamburgerMenu';
 
 const Timer: React.FC<{ timer: TimerData; type: TimerType }> = ({ timer, type }) => {
     const { updateTimer } = useTimerStore();
@@ -48,7 +49,8 @@ const Timer: React.FC<{ timer: TimerData; type: TimerType }> = ({ timer, type })
 
     return (
         <div className="flex h-screen w-screen flex-col justify-between">
-            <div className="mr-5 mt-5 self-end">
+            <div className="flex w-full items-center justify-between p-5">
+                <HamburgerMenu isRunning={isRunning} />
                 <UnitToggleButton
                     onClick={toggleUnit}
                     isMinutes={isMinutes}

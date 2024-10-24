@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import MainPage from './pages/MainPage';
 import SettingsPage from './pages/SettingsPage';
-import HamburgerLayout from './components/Layout/HamburgerLayout';
 import TopBarLayout from './components/Layout/TopBarLayout';
 
 const router = createBrowserRouter(
@@ -17,11 +16,7 @@ const router = createBrowserRouter(
                 {
                     index: true,
                     path: '/',
-                    element: (
-                        <HamburgerLayout>
-                            <MainPage />
-                        </HamburgerLayout>
-                    ),
+                    element: <MainPage />,
                 },
                 {
                     path: 'settings',
