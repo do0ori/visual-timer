@@ -47,8 +47,8 @@ const Timer: React.FC<{ timer: TimerData; type: TimerType }> = ({ timer, type })
     }, [isMinutes, timer.id, updateTimer, type]);
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center">
-            <div className="fixed right-5 top-5">
+        <div className="flex h-screen w-screen flex-col justify-between">
+            <div className="mr-5 mt-5 self-end">
                 <UnitToggleButton
                     onClick={toggleUnit}
                     isMinutes={isMinutes}
@@ -57,7 +57,7 @@ const Timer: React.FC<{ timer: TimerData; type: TimerType }> = ({ timer, type })
                 />
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex grow items-center justify-center">
                 <TimerDisplay
                     progress={progress}
                     currentTheme={currentTheme}
@@ -67,7 +67,7 @@ const Timer: React.FC<{ timer: TimerData; type: TimerType }> = ({ timer, type })
                 </TimerDisplay>
             </div>
 
-            <div className="fixed bottom-12 flex w-full justify-center">
+            <div className="mb-10 w-screen self-center">
                 <ControlButtons
                     isMinutes={isMinutes}
                     isRunning={isRunning}

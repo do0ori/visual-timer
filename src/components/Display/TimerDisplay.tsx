@@ -23,7 +23,8 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
 
     return (
         <div
-            className="relative h-96 w-96"
+            className="relative"
+            style={{ width: 'min(90vw, 75vh)', height: 'min(90vw, 75vh)' }}
             onMouseDown={() => setIsDragging(true)}
             onMouseUp={() => setIsDragging(false)}
             onMouseMove={(e) => isDragging && handleDragEvent(e)}

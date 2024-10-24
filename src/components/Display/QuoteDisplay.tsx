@@ -6,7 +6,7 @@ type QuoteDisplayProps = {
 };
 
 const QuoteDisplay: React.FC<QuoteDisplayProps> = ({ currentTheme }) => (
-    <div className="absolute bottom-24 left-0 w-full text-center">
+    <div className="absolute bottom-[25%] left-0 w-full text-center">
         <p
             className="text-sm font-bold"
             style={{

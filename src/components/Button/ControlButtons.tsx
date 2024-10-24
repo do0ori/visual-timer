@@ -25,7 +25,7 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
     add,
 }) => {
     return (
-        <div className="flex w-full justify-around">
+        <div className="flex justify-around">
             {/* Add Button */}
             <ControlButton
                 onClick={() => add(isMinutes ? 1 : 10)}
