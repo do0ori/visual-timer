@@ -6,7 +6,7 @@ export type ThemeColor = {
 
 export type Theme = {
     color: ThemeColor;
-    quote: string;
+    text: string;
 };
 
 export const themes: Record<string, Theme> = {
@@ -16,7 +16,7 @@ export const themes: Record<string, Theme> = {
             point: '#4A7658',
             sub: '#F0BE81',
         },
-        quote: 'Great things\ntake time.',
+        text: 'Great things\ntake time.',
     },
     'default-purple': {
         color: {
@@ -24,7 +24,7 @@ export const themes: Record<string, Theme> = {
             point: '#9079C9',
             sub: '#D7D5E0',
         },
-        quote: 'Becoming a better\nversion of me.',
+        text: 'Becoming a better\nversion of me.',
     },
     'default-black': {
         color: {
@@ -32,6 +32,6 @@ export const themes: Record<string, Theme> = {
             point: '#4C6A60',
             sub: '#CEE5DD',
         },
-        quote: 'For my better\ntomorrow.',
+        text: 'For my better\ntomorrow.',
     },
 };

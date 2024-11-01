@@ -5,10 +5,9 @@ type TimerDisplayProps = {
     progress: number;
     currentTheme: Theme;
     handleDragEvent: (e: React.MouseEvent | React.TouchEvent) => void;
-    children?: React.ReactNode; // 꾸미기 요소 추가를 위한 children prop
 };
 
-const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, handleDragEvent, children }) => {
+const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, handleDragEvent }) => {
     const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const baseRadius = 45;
@@ -22,20 +21,26 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
     }));
 
     return (
-        <div
-            className="relative"
-            style={{ width: 'min(90vw, 75vh)', height: 'min(90vw, 75vh)' }}
-            onMouseDown={() => setIsDragging(true)}
-            onMouseUp={() => setIsDragging(false)}
-            onMouseMove={(e) => isDragging && handleDragEvent(e)}
-            onTouchStart={() => setIsDragging(true)}
-            onTouchEnd={() => setIsDragging(false)}
-            onTouchMove={(e) => isDragging && handleDragEvent(e)}
-            onClick={handleDragEvent}
-        >
+        <div className="h-full">
             <svg className="h-full w-full" viewBox="-50 -50 100 100">
                 {/* Timer Background */}
-                <circle cx={0} cy={0} r={baseRadius} fill="#FBFBFB" stroke="#FBFBFB" strokeWidth={2} />
+                <circle
+                    cx={0}
+                    cy={0}
+                    r={baseRadius}
+                    fill="#FBFBFB"
+                    stroke="#FBFBFB"
+                    strokeWidth={2}
+                    onMouseDown={() => setIsDragging(true)}
+                    onMouseUp={() => setIsDragging(false)}
+                    onMouseMove={(e) => isDragging && handleDragEvent(e)}
+                    onTouchStart={() => setIsDragging(true)}
+                    onTouchEnd={() => setIsDragging(false)}
+                    onTouchMove={(e) => isDragging && handleDragEvent(e)}
+                    onClick={handleDragEvent}
+                    style={{ pointerEvents: 'visiblePainted' }}
+                    className="relative"
+                />
                 {/* Clock Ticks */}
                 {minuteMarkers.map((marker) =>
                     marker % 5 ? (
@@ -48,6 +53,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
                             stroke={currentTheme.color.point}
                             strokeWidth={0.3}
                             transform={`rotate(${6 * marker})`}
+                            style={{ pointerEvents: 'none' }}
                         />
                     ) : (
                         <line
@@ -59,6 +65,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
                             stroke={currentTheme.color.point}
                             strokeWidth={0.5}
                             transform={`rotate(${(30 * marker) / 5})`}
+                            style={{ pointerEvents: 'none' }}
                         />
                     )
                 )}
@@ -80,6 +87,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
                             fontWeight={1000}
                             fill={currentTheme.color.point}
                             className={'select-none'}
+                            style={{ pointerEvents: 'none' }}
                         >
                             {value}
                         </text>
@@ -97,9 +105,10 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
                     strokeDasharray={`${progress * fullProgress} ${fullProgress}`}
                     strokeDashoffset="0"
                     transform="rotate(-90)"
+                    style={{ pointerEvents: 'none' }}
                 />
                 {/* Center Knob Shape */}
-                <g transform={`rotate(${360 * progress})`}>
+                <g transform={`rotate(${360 * progress})`} style={{ pointerEvents: 'none' }}>
                     <circle cx={0} cy={0} r={6} fill={currentTheme.color.sub} />
                     <rect
                         width={1.5}
@@ -112,10 +121,25 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, han
                         className="brightness-90 saturate-200 filter"
                     />
                 </g>
-            </svg>
 
-            {/* children을 활용하여 꾸미기 요소 추가 */}
-            {children && children}
+                {/* Timer Text */}
+                <text
+                    x={0}
+                    y={baseRadius / 2 - 5}
+                    textAnchor="middle"
+                    alignmentBaseline="hanging"
+                    fontSize={4}
+                    fontWeight="bold"
+                    fill={currentTheme.color.point}
+                    className="select-none"
+                >
+                    {currentTheme.text.split('\n').map((line, index) => (
+                        <tspan key={index} x="0" dy={`${index === 0 ? 0 : 1.2}em`}>
+                            {line}
+                        </tspan>
+                    ))}
+                </text>
+            </svg>
         </div>
     );
 };
