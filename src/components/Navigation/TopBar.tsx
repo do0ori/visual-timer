@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBack } from 'react-icons/io5';
-import { useThemeStore } from '../store/themeStore';
+import { useThemeStore } from '../../store/themeStore';
 
 const TopBar: React.FC<{ title: string }> = ({ title }) => {
     const { themes, globalThemeKey } = useThemeStore();

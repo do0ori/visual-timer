@@ -1,7 +1,7 @@
 import React from 'react';
 import { IoAdd, IoPlay, IoPause, IoRefresh } from 'react-icons/io5';
-import ControlButton from './ControlButton';
 import { Theme } from '../../config/timer/themes';
+import ControlButton from './ControlButton';
 
 type ControlButtonsProps = {
     isMinutes: boolean;

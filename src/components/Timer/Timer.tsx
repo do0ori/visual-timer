@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useTimer } from '../hooks/useTimer';
-import { MainTimerData, useMainTimerStore } from '../store/mainTimerStore';
-import { useThemeStore } from '../store/themeStore';
-import { handleFinish, handleDragEvent } from '../utils/timerHandler';
-import UnitToggleButton from '../components/Button/UnitToggleButton';
-import TimerDisplay from '../components/Display/TimerDisplay';
-import ControlButtons from '../components/Button/ControlButtons';
-import { deepCopy } from '../utils/deepCopy';
+import { useTimer } from '../../hooks/useTimer';
+import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
+import { useThemeStore } from '../../store/themeStore';
+import { handleFinish, handleDragEvent } from '../../utils/timerHandler';
+import { deepCopy } from '../../utils/deepCopy';
+import UnitToggleButton from './UnitToggleButton';
+import TimerDisplay from './TimerDisplay';
+import ControlButtons from './ControlButtons';
 
 const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     const { selectTimer, updateTimer } = useMainTimerStore();
@@ -40,7 +40,6 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     const progress = count / currentUnit.denominator;
 
     useEffect(() => {
-        console.log('timer 내부', isRunning);
         updateTimer(timer.id, { isRunning });
     }, [isRunning, updateTimer]);
 

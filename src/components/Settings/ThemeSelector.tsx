@@ -1,7 +1,7 @@
 import React from 'react';
 import { useThemeStore } from '../../store/themeStore';
 
-const ThemeSwitchButtons: React.FC = () => {
+const ThemeSelector: React.FC = () => {
     const { themes, globalThemeKey, setGlobalTheme } = useThemeStore();
 
     return (
@@ -33,4 +33,4 @@ const ThemeSwitchButtons: React.FC = () => {
     );
 };
 
-export default ThemeSwitchButtons;
+export default ThemeSelector;

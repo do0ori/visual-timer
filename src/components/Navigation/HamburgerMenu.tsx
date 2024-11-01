@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useAspectRatio } from '../hooks/useAspectRatio';
+import { useAspectRatio } from '../../hooks/useAspectRatio';
 import { Link } from 'react-router-dom';
 import { IoSettingsSharp, IoAlbums } from 'react-icons/io5';
 import { IoMenu } from 'react-icons/io5';
