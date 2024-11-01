@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useBoolean, useCounter, useInterval } from 'usehooks-ts';
 import { timerUnits, Unit } from '../config/timer/units';
 
@@ -137,6 +137,13 @@ export function useTimer({
         },
         [count, maxCountStart, currentUnit.multiple, setCount]
     );
+
+    // Reset timer with new input data
+    useEffect(() => {
+        setTime(initialTime);
+        setIsMinutes(unit === 'minutes');
+        setCount(initialTime * currentUnit.multiple);
+    }, [initialTime, unit, currentUnit.multiple, setCount]);
 
     return {
         totalTime: time,
