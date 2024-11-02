@@ -84,6 +84,15 @@ export const useMainTimerStore = create<MainTimerState>()(
                 });
             },
         }),
-        { name: 'main-timer-store' }
+        {
+            name: 'main-timer-store',
+            onRehydrateStorage: () => (state) => {
+                if (state) {
+                    setTimeout(() => {
+                        state.selectedTimerId = 'default';
+                    }, 0);
+                }
+            },
+        }
     )
 );
