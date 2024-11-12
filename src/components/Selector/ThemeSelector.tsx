@@ -25,7 +25,10 @@ const ThemeSelector: React.FC = () => {
                         type="checkbox"
                         checked={key === globalThemeKey}
                         onChange={() => setGlobalTheme(key)}
-                        className="form-checkbox h-5 w-5 text-indigo-600"
+                        className="form-checkbox h-5 w-5"
+                        style={{
+                            accentColor: theme.color.point,
+                        }}
                     />
                 </div>
             ))}

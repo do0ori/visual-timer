@@ -1,5 +1,5 @@
 import TopBar from '../components/Navigation/TopBar';
-import ThemeSelector from '../components/Settings/ThemeSelector';
+import ThemeSelector from '../components/Selector/ThemeSelector';
 
 const SettingsPage: React.FC = () => {
     return (
