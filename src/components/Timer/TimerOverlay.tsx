@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useThemeStore } from '../../store/themeStore';
 import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { MdTextFields, MdOutlinePalette, MdOutlineTimer } from 'react-icons/md';
 import TimerTopBar from '../Navigation/TimerTopBar';
-import { useThemeStore } from '../../store/themeStore';
+import { deepCopy } from '../../utils/deepCopy';
+import TimeSelector from '../Selector/TimeSelector';
 
 interface TimerOverlayProps {
     isOpen: boolean;
@@ -13,34 +15,38 @@ interface TimerOverlayProps {
 
 const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, onClose, mode }) => {
     const { themes, globalThemeKey } = useThemeStore();
-    const currentTheme = themes[globalThemeKey];
+    const originalTheme = themes[globalThemeKey];
+
     const { addTimer, updateTimer } = useMainTimerStore();
     const [title, setTitle] = useState(initialTimerData?.title || '');
-    const [pointColor, setPointColor] = useState(initialTimerData?.pointColor || '#000000');
+    const [pointColor, setPointColor] = useState(initialTimerData?.pointColor || originalTheme.color.point);
     const [isMinutes, setIsMinutes] = useState(initialTimerData?.isMinutes || false);
-    const [time, setTime] = useState(initialTimerData?.time || 1);
+    const [time, setTime] = useState(initialTimerData?.time || 5);
+
+    const currentTheme = deepCopy(themes[globalThemeKey]);
+    currentTheme.color.point = pointColor;
 
     // Update form values if the initialTimerData changes (e.g., switching between edit targets)
     useEffect(() => {
         if (initialTimerData) {
             setTitle(initialTimerData.title || '');
-            setPointColor(initialTimerData.pointColor || '#000000');
+            setPointColor(initialTimerData.pointColor || currentTheme.color.point);
             setIsMinutes(initialTimerData.isMinutes || false);
-            setTime(initialTimerData.time || 1);
+            setTime(initialTimerData.time || 5);
         } else {
             // Reset fields for a new timer
             setTitle('');
-            setPointColor('#000000');
+            setPointColor(originalTheme.color.point);
             setIsMinutes(false);
-            setTime(1);
+            setTime(5);
         }
     }, [initialTimerData]);
 
     const resetFields = () => {
         setTitle('');
-        setPointColor('#000000');
+        setPointColor(originalTheme.color.point);
         setIsMinutes(false);
-        setTime(1);
+        setTime(5);
     };
 
     const handleSave = () => {
@@ -69,7 +75,7 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex transition-transform duration-500 ${isOpen ? 'translate-x-0' : 'translate-x-full'} h-full w-full`}
+            className={`fixed inset-0 z-50 flex ${isOpen ? 'translate-x-0' : 'translate-x-full'} h-full w-full`}
             style={{
                 backgroundColor: currentTheme.color.main,
             }}
@@ -81,7 +87,7 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
             />
 
             <div className="w-full p-5 pt-16">
-                <div className="mt-6 flex flex-col space-y-5">
+                <div className="mt-6 flex h-full flex-col space-y-7">
                     <label className="flex items-center gap-8">
                         <MdTextFields size={30} />
                         <input
@@ -97,8 +103,11 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
                         <input
                             type="color"
                             value={pointColor}
-                            onChange={(e) => setPointColor(e.target.value)}
-                            className="w-full rounded"
+                            onChange={(e) => {
+                                setPointColor(e.target.value);
+                                currentTheme.color.point = e.target.value;
+                            }}
+                            className="color-picker w-full rounded"
                         />
                     </label>
                     <label className="flex items-center gap-8">
@@ -112,6 +121,9 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
                                     checked={isMinutes}
                                     onChange={() => setIsMinutes(true)}
                                     className="form-radio"
+                                    style={{
+                                        accentColor: originalTheme.color.point,
+                                    }}
                                 />
                                 <span>Min</span>
                             </label>
@@ -123,22 +135,16 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
                                     checked={!isMinutes}
                                     onChange={() => setIsMinutes(false)}
                                     className="form-radio"
+                                    style={{
+                                        accentColor: originalTheme.color.point,
+                                    }}
                                 />
                                 <span>Sec</span>
                             </label>
                         </div>
                     </label>
-                    {/* TODO: TimerDisplay 개조해서 드래그앤클릭으로 시간 지정하도록 */}
-                    <label>
-                        Time (1-60):
-                        <input
-                            type="number"
-                            min="1"
-                            max="60"
-                            value={time}
-                            onChange={(e) => setTime(Number(e.target.value))}
-                            className="w-full rounded border px-2 py-1"
-                        />
+                    <label className="flex grow items-center justify-center">
+                        <TimeSelector time={time} currentTheme={currentTheme} setTime={setTime} />
                     </label>
                 </div>
             </div>

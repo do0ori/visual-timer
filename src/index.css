@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.color-picker::-webkit-color-swatch {
+    border: none; /* 안쪽 테두리 제거 */
+}
