@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import MainPage from './pages/MainPage';
 import SettingsPage from './pages/SettingsPage';
-import TopBarLayout from './components/Layout/TopBarLayout';
 
 const router = createBrowserRouter(
     [
@@ -20,11 +19,7 @@ const router = createBrowserRouter(
                 },
                 {
                     path: 'settings',
-                    element: (
-                        <TopBarLayout>
-                            <SettingsPage />
-                        </TopBarLayout>
-                    ),
+                    element: <SettingsPage />,
                 },
             ],
         },

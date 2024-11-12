@@ -14,11 +14,8 @@ const TopBar: React.FC<{ title: string }> = ({ title }) => {
                 backgroundColor: currentTheme.color.point,
             }}
         >
-            <button
-                onClick={() => navigate('/')}
-                className="text-gray-700 transition-transform hover:text-blue-500 active:scale-90"
-            >
-                <IoArrowBack size={24} color="white" />
+            <button onClick={() => navigate('/')}>
+                <IoArrowBack size={24} />
             </button>
             <h1 className="ml-4 text-xl font-bold">{title}</h1>
         </div>

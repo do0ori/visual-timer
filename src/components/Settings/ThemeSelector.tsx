@@ -5,7 +5,7 @@ const ThemeSelector: React.FC = () => {
     const { themes, globalThemeKey, setGlobalTheme } = useThemeStore();
 
     return (
-        <div className="mt-6 space-y-4">
+        <>
             {Object.entries(themes).map(([key, theme]) => (
                 <div
                     key={key}
@@ -29,7 +29,7 @@ const ThemeSelector: React.FC = () => {
                     />
                 </div>
             ))}
-        </div>
+        </>
     );
 };
 
