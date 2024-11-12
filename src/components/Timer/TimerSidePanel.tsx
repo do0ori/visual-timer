@@ -1,14 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
-import { useAspectRatio } from '../hooks/useAspectRatio';
-import { useMainTimerStore, MainTimerData } from '../store/mainTimerStore';
+import { useAspectRatio } from '../../hooks/useAspectRatio';
+import { useMainTimerStore, MainTimerData } from '../../store/mainTimerStore';
 import { IoList } from 'react-icons/io5';
 import { MdEdit } from 'react-icons/md';
-import { FaCircle, FaPlus } from 'react-icons/fa';
+import { FaCircle, FaPlus, FaTrash } from 'react-icons/fa';
+import TimerOverlay from './TimerOverlay';
 
-const TimerList: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
+const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
     const aspectRatio = useAspectRatio();
     const { timers, selectTimer, removeTimer } = useMainTimerStore();
     const [isOpen, setIsOpen] = useState(false);
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+    const [targetTimer, setTargetTimer] = useState<MainTimerData | null>(null);
+    const [mode, setMode] = useState<'add' | 'edit'>('add');
     const menuRef = useRef<HTMLDivElement>(null);
 
     const widthClass =
@@ -29,7 +33,7 @@ const TimerList: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
     };
 
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && !isOverlayOpen) {
             document.addEventListener('mousedown', handleClickOutside);
         } else {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -38,11 +42,22 @@ const TimerList: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [isOpen]);
+    }, [isOpen, isOverlayOpen]);
 
     const handleSelectTimer = (timerId: string) => {
         selectTimer(timerId);
         setIsOpen(false);
+    };
+
+    const openOverlay = (timer?: MainTimerData) => {
+        setTargetTimer(timer || null);
+        setMode(timer ? 'edit' : 'add');
+        setIsOverlayOpen(true);
+    };
+
+    const closeOverlay = () => {
+        setTargetTimer(null);
+        setIsOverlayOpen(false);
     };
 
     return (
@@ -62,7 +77,18 @@ const TimerList: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                 className={`fixed right-0 top-0 z-40 h-full bg-white shadow-lg transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} ${widthClass}`}
             >
                 <div className="p-5 text-black">
-                    <h2 className="mb-10 text-2xl font-bold">Timer List</h2>
+                    <div className="mb-10 flex items-center justify-between">
+                        <h2 className="text-2xl font-bold">Timer List</h2>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openOverlay();
+                            }}
+                            aria-label="Add Timer"
+                        >
+                            <FaPlus size={24} />
+                        </button>
+                    </div>
                     <ul className="space-y-5">
                         {timers.map((timer: MainTimerData) => (
                             <li
@@ -87,16 +113,17 @@ const TimerList: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                                         className={`${timer.isRunning ? 'invisible' : 'visible'}`}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            console.log('수정');
+                                            openOverlay(timer);
                                         }}
+                                        aria-label="Edit Timer"
                                     />
-                                    <FaPlus
+                                    <FaTrash
                                         size={24}
-                                        className="rotate-45"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             removeTimer(timer.id);
                                         }}
+                                        aria-label="Delete Timer"
                                     />
                                 </div>
                             </li>
@@ -104,8 +131,10 @@ const TimerList: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                     </ul>
                 </div>
             </div>
+
+            <TimerOverlay isOpen={isOverlayOpen} initialTimerData={targetTimer} onClose={closeOverlay} mode={mode} />
         </div>
     );
 };
 
-export default TimerList;
+export default TimerSidePanel;

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export interface MainTimerData {
     id: string;
-    title?: string;
+    title: string;
     time: number;
     isMinutes: boolean;
     isRunning: boolean;
@@ -26,6 +26,7 @@ export const useMainTimerStore = create<MainTimerState>()(
         (set, get) => ({
             defaultTimer: {
                 id: 'default',
+                title: 'default',
                 time: 10,
                 isMinutes: false,
                 isRunning: false,

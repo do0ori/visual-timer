@@ -1,7 +1,7 @@
+import { useMainTimerStore } from '../store/mainTimerStore';
 import HamburgerMenu from '../components/Navigation/HamburgerMenu';
 import Timer from '../components/Timer/Timer';
 import TimerSidePanel from '../components/Timer/TimerSidePanel';
-import { useMainTimerStore } from '../store/mainTimerStore';
 
 const MainPage: React.FC = () => {
     const { selectedTimerId, getTimer } = useMainTimerStore();
