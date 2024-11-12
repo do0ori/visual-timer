@@ -100,7 +100,7 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                                     <div className="flex-shrink-0">
                                         <FaCircle size={50} fill={timer.pointColor} className="h-full w-full" />
                                     </div>
-                                    <div className="flex flex-col pr-5">
+                                    <div className="flex flex-col">
                                         <span className="line-clamp-2 overflow-hidden text-ellipsis">
                                             {timer.title}
                                         </span>

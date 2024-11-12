@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export interface MainTimerData {
     id: string;
-    title: string;
+    title?: string;
     time: number;
     isMinutes: boolean;
     isRunning: boolean;
@@ -26,7 +26,6 @@ export const useMainTimerStore = create<MainTimerState>()(
         (set, get) => ({
             defaultTimer: {
                 id: 'default',
-                title: 'default',
                 time: 10,
                 isMinutes: false,
                 isRunning: false,
@@ -35,14 +34,13 @@ export const useMainTimerStore = create<MainTimerState>()(
             selectedTimerId: 'default',
 
             timers: [
-                { id: '1', title: 'Study', time: 25, isMinutes: true, isRunning: false, pointColor: 'darkblue' },
                 {
-                    id: '2',
-                    title: 'This is long title. how long?',
-                    time: 5,
-                    isMinutes: false,
+                    id: 'pasta',
+                    title: 'Pasta (Al Dente)',
+                    time: 9,
+                    isMinutes: true,
                     isRunning: false,
-                    pointColor: 'green',
+                    pointColor: '#5D6DB6',
                 },
             ],
 
