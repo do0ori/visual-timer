@@ -25,6 +25,11 @@ export const handleFinish = () => {
             audio.pause(); // Stop the audio
             audio.currentTime = 0; // Reset audio
         };
+    } else {
+        // Fallback to alert
+        alert('📢 Timer Finished! Your timer has completed. ⏱️');
+        audio.pause(); // Stop the audio
+        audio.currentTime = 0; // Reset audio
     }
 };
 
