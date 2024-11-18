@@ -1,3 +1,4 @@
+import { isMobile } from 'react-device-detect';
 import alarmSound from '../assets/alarmSound.mp3';
 
 export const handleFinish = () => {
@@ -8,7 +9,7 @@ export const handleFinish = () => {
     audio.play().catch((error) => console.error('Audio play error:', error));
 
     // Send notification
-    if ('Notification' in window) {
+    if ('Notification' in window && !isMobile) {
         const notification = new Notification('📢 Timer Finished!', {
             body: 'Your timer has completed. ⏱️',
             icon: 'logo500.png',
