@@ -2,18 +2,30 @@ import alarmSound from '../assets/alarmSound.mp3';
 
 export const handleFinish = () => {
     const audio = new Audio(alarmSound);
-    audio
-        .play()
-        .then(() => {
-            setTimeout(() => {
-                window.alert('Timer finished!');
-                audio.pause();
-                audio.currentTime = 0;
-            }, 0);
-        })
-        .catch((error) => {
-            console.error('Failed to play the sound:', error);
+    audio.loop = true;
+
+    // Play audio
+    audio.play().catch((error) => console.error('Audio play error:', error));
+
+    // Send notification
+    if ('Notification' in window) {
+        const notification = new Notification('📢 Timer Finished!', {
+            body: 'Your timer has completed. ⏱️',
+            icon: 'logo500.png',
+            tag: 'timer-finished', // Unique identifier for the notification
+            requireInteraction: true, // Keep notification until user interacts
         });
+
+        // Handle notification event
+        notification.onclick = () => notification.close();
+        notification.onclose = () => {
+            if (document.visibilityState !== 'visible') {
+                window.focus(); // Focus the app
+            }
+            audio.pause(); // Stop the audio
+            audio.currentTime = 0; // Reset audio
+        };
+    }
 };
 
 export const handleDragEvent = (e: React.MouseEvent | React.TouchEvent, setTime: (time: number) => void) => {
