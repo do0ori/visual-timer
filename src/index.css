@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    overscroll-behavior: none; /* 모바일 당겨서 새로고침 비활성화 */
+}
+
 .color-picker::-webkit-color-swatch {
     border: none; /* 안쪽 테두리 제거 */
 }
