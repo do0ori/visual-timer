@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useBoolean, useCounter, useInterval } from 'usehooks-ts';
 import { timerUnits, Unit } from '../config/timer/units';
 
@@ -68,6 +68,10 @@ export function useTimer({
     const countStart = time * currentUnit.multiple;
     const intervalMs = currentUnit.interval;
 
+    // State to handle tab visibility change event
+    const lastUpdateTimeRef = useRef<number>(Date.now());
+    const wasRunningRef = useRef<boolean>(false);
+
     // Calculate maximum possible count value if maxTime is given
     const maxCountStart = maxTime ? maxTime * currentUnit.multiple : undefined;
 
@@ -91,7 +95,9 @@ export function useTimer({
             if (onFinish) onFinish();
             return;
         }
+
         decrement();
+        lastUpdateTimeRef.current = Date.now();
     }, [count, decrement, resetCountdown, onFinish]);
 
     // useInterval hook triggers the countdown logic when the timer is running
@@ -123,7 +129,7 @@ export function useTimer({
         setCount(newCountStart);
         setIsInitialized(true);
         stopCountdown();
-    }, [isMinutes, setCount, time, stopCountdown]);
+    }, [setCount, stopCountdown, time, isMinutes]);
 
     // Function to add a specific time to the current count
     const add = useCallback(
@@ -137,6 +143,35 @@ export function useTimer({
         },
         [count, maxCountStart, currentUnit.multiple, setCount]
     );
+
+    // Visibility change handling
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                wasRunningRef.current = isRunning;
+                if (isRunning) {
+                    lastUpdateTimeRef.current = Date.now();
+                    stopCountdown();
+                }
+            } else if (document.visibilityState === 'visible') {
+                if (wasRunningRef.current) {
+                    // Restore timer based on remaining time when the tab becomes active
+                    const elapsedMs = Date.now() - lastUpdateTimeRef.current;
+                    const elapsedCount = Math.floor(elapsedMs / intervalMs);
+                    const newCountStart = Math.max(0, count - elapsedCount);
+
+                    setCount(newCountStart);
+                    startCountdown();
+                }
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, [isRunning, intervalMs, startCountdown, stopCountdown, setCount]);
 
     // Reset timer with new input data
     useEffect(() => {
