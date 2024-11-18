@@ -24,6 +24,34 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
     reset,
     add,
 }) => {
+    const startWithPermissionCheck = async () => {
+        if (!('Notification' in window)) {
+            alert('Your browser does not support notifications.');
+            return;
+        }
+
+        if (Notification.permission === 'denied') {
+            alert('Notifications are blocked. Please enable notifications in your browser settings to use the timer.');
+            return;
+        }
+
+        if (Notification.permission === 'default') {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                    alert('You need to allow notifications to use the timer.');
+                    return;
+                }
+            } catch (error) {
+                console.error('Notification request failed:', error);
+                alert('Failed to request notification permissions. Please try again.');
+                return;
+            }
+        }
+
+        start(); // If permission is granted, start the timer
+    };
+
     return (
         <div className="flex justify-around">
             {/* Add Button */}
@@ -41,7 +69,7 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
 
             {/* Stop/Start Button */}
             <ControlButton
-                onClick={isRunning ? stop : start}
+                onClick={isRunning ? stop : startWithPermissionCheck}
                 aria-label={isRunning ? 'Pause Timer' : 'Start Timer'}
                 currentTheme={currentTheme}
             >
