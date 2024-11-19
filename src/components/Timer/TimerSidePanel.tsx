@@ -93,7 +93,7 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                         {timers.map((timer: MainTimerData) => (
                             <li
                                 key={timer.id}
-                                className="flex cursor-pointer items-center justify-between space-x-2"
+                                className="flex cursor-pointer items-center justify-between"
                                 onClick={() => handleSelectTimer(timer.id)}
                             >
                                 <div className="flex grow gap-5">
