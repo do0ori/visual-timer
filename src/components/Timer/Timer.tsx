@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useTimer } from '../../hooks/useTimer';
 import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
+import { useSettingsStore } from '../../store/settingsStore';
 import { handleFinish, handleDragEvent } from '../../utils/timerHandler';
 import { deepCopy } from '../../utils/deepCopy';
 import UnitToggleButton from './UnitToggleButton';
@@ -11,6 +12,7 @@ import ControlButtons from './ControlButtons';
 const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     const { selectTimer, updateTimer } = useMainTimerStore();
     const { themes, globalThemeKey } = useThemeStore();
+    const { volume } = useSettingsStore();
 
     const { time: storedTime, isMinutes: storedIsMinutes, pointColor, title } = timer;
     const currentTheme = deepCopy(themes[globalThemeKey]);
@@ -18,8 +20,8 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     if (title) currentTheme.text = title;
 
     const onFinish = useCallback(() => {
-        handleFinish(currentTheme.color.point);
-    }, [currentTheme]);
+        handleFinish(volume, currentTheme.color.point);
+    }, [volume, currentTheme]);
 
     const {
         totalTime,

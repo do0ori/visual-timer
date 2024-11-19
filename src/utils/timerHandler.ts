@@ -2,9 +2,10 @@ import { isMobile } from 'react-device-detect';
 import Swal from 'sweetalert2';
 import alarmSound from '../assets/alarmSound.mp3';
 
-export const handleFinish = (pointColor: string) => {
+export const handleFinish = (volume: number, pointColor: string) => {
     const audio = new Audio(alarmSound);
     audio.loop = true;
+    audio.volume = volume;
 
     // Play audio
     audio.play().catch((error) => console.error('Audio play error:', error));
