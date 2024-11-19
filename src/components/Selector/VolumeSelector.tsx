@@ -14,7 +14,7 @@ const VolumeSelector: React.FC = () => {
     const volumeSlider = (
         <div className="flex w-full flex-col gap-2">
             <label htmlFor="volume" className="text-lg">
-                Notification Volume
+                Volume
             </label>
             <div className="flex gap-5">
                 <input
