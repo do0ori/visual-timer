@@ -1,7 +1,8 @@
 import { isMobile } from 'react-device-detect';
+import Swal from 'sweetalert2';
 import alarmSound from '../assets/alarmSound.mp3';
 
-export const handleFinish = () => {
+export const handleFinish = (pointColor: string) => {
     const audio = new Audio(alarmSound);
     audio.loop = true;
 
@@ -28,9 +29,17 @@ export const handleFinish = () => {
         };
     } else {
         // Fallback to alert
-        alert('📢 Timer Finished! Your timer has completed. ⏱️');
-        audio.pause(); // Stop the audio
-        audio.currentTime = 0; // Reset audio
+        // TODO: sweetalert2의 A message with auto close timer를 참고해 설정 페이지에서 정한 시간만큼 울리도록 하는 기능도 추가
+        Swal.fire({
+            title: '📢 Timer Finished!',
+            text: 'Your timer has completed. ⏱️',
+            confirmButtonColor: pointColor,
+        }).then((result) => {
+            if (!result.isDenied) {
+                audio.pause(); // Stop the audio
+                audio.currentTime = 0; // Reset audio
+            }
+        });
     }
 };
 

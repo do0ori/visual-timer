@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTimer } from '../../hooks/useTimer';
 import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
@@ -17,6 +17,10 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     if (pointColor) currentTheme.color.point = pointColor;
     if (title) currentTheme.text = title;
 
+    const onFinish = useCallback(() => {
+        handleFinish(currentTheme.color.point);
+    }, [currentTheme]);
+
     const {
         totalTime,
         count,
@@ -34,7 +38,7 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
         initialTime: storedTime,
         unit: storedIsMinutes ? 'minutes' : 'seconds',
         maxTime: 60,
-        onFinish: () => handleFinish(),
+        onFinish,
     });
 
     const progress = count / currentUnit.denominator;
