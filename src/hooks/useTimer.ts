@@ -155,15 +155,15 @@ export function useTimer({
                 if (isRunning) {
                     lastUpdateTimeRef.current = Date.now();
                     stopCountdown();
-                }
 
-                // Send remaining time to service worker
-                const remainingMs = count * intervalMs;
-                navigator.serviceWorker.controller?.postMessage({
-                    command: 'start-timer',
-                    id,
-                    delay: remainingMs,
-                });
+                    // Send remaining time to service worker
+                    const remainingMs = count * intervalMs;
+                    navigator.serviceWorker.controller?.postMessage({
+                        command: 'start-timer',
+                        id,
+                        delay: remainingMs,
+                    });
+                }
             } else if (document.visibilityState === 'visible') {
                 if (wasRunningRef.current) {
                     // Restore timer based on remaining time when the tab becomes active
