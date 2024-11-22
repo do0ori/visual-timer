@@ -37,6 +37,7 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
         setTime,
         add,
     } = useTimer({
+        id: timer.id,
         initialTime: storedTime,
         unit: storedIsMinutes ? 'minutes' : 'seconds',
         maxTime: 60,

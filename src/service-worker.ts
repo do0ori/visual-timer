@@ -78,3 +78,44 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+const timers: Record<string, NodeJS.Timeout> = {};
+
+self.addEventListener('message', (event) => {
+    const { command, id, delay } = event.data;
+
+    if (!id) {
+        console.error('Timer ID is missing in the message data.');
+        return;
+    }
+
+    if (command === 'start-timer') {
+        console.log(`Starting timer with ID: ${id}, Delay: ${delay}ms`);
+        const timerId = setTimeout(() => {
+            self.registration.showNotification('📢 Timer Finished!', {
+                body: `Your timer has completed. ⏱️`,
+                icon: '/logo500.png',
+                tag: 'timer-finished',
+                requireInteraction: true,
+            });
+        }, delay);
+
+        timers[id] = timerId;
+    } else if (command === 'clear-timer') {
+        console.log(`Clearing timer with ID: ${id}`);
+        if (timers[id]) {
+            clearTimeout(timers[id]);
+            delete timers[id];
+        } else {
+            console.warn(`No timer found with ID: ${id}`);
+        }
+    } else {
+        console.warn(`Unknown command: ${command}`);
+    }
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        self.clients.openWindow('/') // 알림 클릭 시 앱으로 이동
+    );
+});
