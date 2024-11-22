@@ -122,7 +122,7 @@ self.addEventListener('notificationclick', (event) => {
             console.log('Client List:', clientList);
             for (const client of clientList) {
                 console.log('Checking client URL:', client.url);
-                if (client.url === '/visual-timer' && 'focus' in client) {
+                if (client.url.includes('/visual-timer/') && 'focus' in client) {
                     console.log('Focusing existing client:', client.url);
                     return client.focus();
                 }
