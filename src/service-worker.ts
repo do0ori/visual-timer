@@ -78,9 +78,15 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+const clientIds = new Set<string>();
 const timers: Record<string, NodeJS.Timeout> = {};
 
 self.addEventListener('message', (event) => {
+    if (event.source) {
+        const clientId = (event.source as Client).id; // Get client ID
+        clientIds.add(clientId); // Store client ID
+    }
+
     const { command, id, delay } = event.data;
 
     if (!id) {
@@ -122,7 +128,7 @@ self.addEventListener('notificationclick', (event) => {
             console.log('Client List:', clientList);
             for (const client of clientList) {
                 console.log('Checking client URL:', client.url);
-                if (client.url.includes('/visual-timer/') && 'focus' in client) {
+                if (clientIds.has(client.id)) {
                     console.log('Focusing existing client:', client.url);
                     return client.focus();
                 }
