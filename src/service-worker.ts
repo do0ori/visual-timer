@@ -114,15 +114,20 @@ self.addEventListener('message', (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
+    console.log('Notification clicked!');
     event.notification.close();
 
     event.waitUntil(
         self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            console.log('Client List:', clientList);
             for (const client of clientList) {
+                console.log('Checking client URL:', client.url);
                 if (client.url === '/visual-timer' && 'focus' in client) {
+                    console.log('Focusing existing client:', client.url);
                     return client.focus();
                 }
             }
+            console.log('Opening new window');
             return self.clients.openWindow('/visual-timer');
         })
     );
