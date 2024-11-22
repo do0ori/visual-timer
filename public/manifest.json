@@ -13,7 +13,8 @@
             "sizes": "500x500"
         }
     ],
-    "start_url": ".",
+    "start_url": "/visual-timer/",
+    "scope": "/visual-timer/",
     "display": "fullscreen",
     "theme_color": "#000000",
     "background_color": "#ffffff"
