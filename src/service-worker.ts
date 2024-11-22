@@ -78,49 +78,53 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-const clientIds = new Set<string>();
+const notificationMap = new Map<string, string>(); // Map to store notificationId → clientId mapping
 const timers: Record<string, NodeJS.Timeout> = {};
 
 self.addEventListener('message', (event) => {
     if (event.source) {
-        const clientId = (event.source as Client).id; // Get client ID
-        clientIds.add(clientId); // Store client ID
-    }
+        const clientId = (event.source as Client).id;
+        const { command, id, delay } = event.data;
 
-    const { command, id, delay } = event.data;
-
-    if (!id) {
-        console.error('Timer ID is missing in the message data.');
-        return;
-    }
-
-    if (command === 'start-timer') {
-        console.log(`Starting timer with ID: ${id}, Delay: ${delay}ms`);
-        const timerId = setTimeout(() => {
-            self.registration.showNotification('📢 Timer Finished!', {
-                body: `Your timer has completed. ⏱️`,
-                icon: '/logo500.png',
-                tag: 'timer-finished',
-                requireInteraction: true,
-            });
-        }, delay);
-
-        timers[id] = timerId;
-    } else if (command === 'clear-timer') {
-        console.log(`Clearing timer with ID: ${id}`);
-        if (timers[id]) {
-            clearTimeout(timers[id]);
-            delete timers[id];
-        } else {
-            console.warn(`No timer found with ID: ${id}`);
+        if (!id) {
+            console.error('Timer ID is missing in the message data.');
+            return;
         }
-    } else {
-        console.warn(`Unknown command: ${command}`);
+
+        if (command === 'start-timer') {
+            const notificationId = `${id}-${Date.now()}`;
+            notificationMap.set(notificationId, clientId);
+
+            console.log(`Starting timer with ID: ${id}, Delay: ${delay}ms`);
+            const timerId = setTimeout(() => {
+                self.registration.showNotification('📢 Timer Finished!', {
+                    body: `Your timer has completed. ⏱️`,
+                    icon: '/logo500.png',
+                    tag: notificationId,
+                    requireInteraction: true,
+                });
+            }, delay);
+
+            timers[id] = timerId;
+        } else if (command === 'clear-timer') {
+            console.log(`Clearing timer with ID: ${id}`);
+            if (timers[id]) {
+                clearTimeout(timers[id]);
+                delete timers[id];
+            } else {
+                console.warn(`No timer found with ID: ${id}`);
+            }
+        } else {
+            console.warn(`Unknown command: ${command}`);
+        }
     }
 });
 
 self.addEventListener('notificationclick', (event) => {
     console.log('Notification clicked!');
+    const notificationId = event.notification.tag;
+    const clientId = notificationMap.get(notificationId);
+
     event.notification.close();
 
     event.waitUntil(
@@ -128,7 +132,7 @@ self.addEventListener('notificationclick', (event) => {
             console.log('Client List:', clientList);
             for (const client of clientList) {
                 console.log('Checking client URL:', client.url);
-                if (clientIds.has(client.id)) {
+                if (client.id === clientId) {
                     console.log('Focusing existing client:', client.url);
                     return client.focus();
                 }
@@ -137,4 +141,7 @@ self.addEventListener('notificationclick', (event) => {
             return self.clients.openWindow('/visual-timer');
         })
     );
+
+    // Cleanup: Remove mapping after handling
+    notificationMap.delete(notificationId);
 });
