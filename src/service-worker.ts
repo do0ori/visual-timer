@@ -115,7 +115,15 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
+
     event.waitUntil(
-        self.clients.openWindow('/') // 알림 클릭 시 앱으로 이동
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if (client.url === '/visual-timer' && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            return self.clients.openWindow('/visual-timer');
+        })
     );
 });
