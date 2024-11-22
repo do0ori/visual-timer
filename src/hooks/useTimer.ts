@@ -187,7 +187,7 @@ export function useTimer({
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
-    }, [isRunning, intervalMs, startCountdown, stopCountdown, setCount]);
+    }, [count, isRunning, intervalMs, startCountdown, stopCountdown, setCount]);
 
     // Reset timer with new input data
     useEffect(() => {
