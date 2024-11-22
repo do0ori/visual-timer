@@ -20,7 +20,7 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     if (title) currentTheme.text = title;
 
     const onFinish = useCallback(() => {
-        handleFinish(volume, currentTheme.color.point);
+        handleFinish(timer, volume, currentTheme.color.point);
     }, [volume, currentTheme]);
 
     const {
