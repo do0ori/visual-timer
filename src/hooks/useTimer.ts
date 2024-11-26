@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useBoolean, useCounter, useInterval } from 'usehooks-ts';
 import { timerUnits, Unit } from '../config/timer/units';
+import { convertMsToMmSs } from '../utils/timeUtils';
 
 type TimerOptions = {
     /** Unique id for the timer. */
@@ -22,6 +23,8 @@ type TimerControllers = {
     totalTime: number;
     /** Current countdown value. */
     count: number;
+    /** Current time in mm:ss format. */
+    currentTime: string;
     /** The current unit details (interval and multiple values). */
     currentUnit: Unit;
     /** If true, the timer is currently running. */
@@ -215,9 +218,15 @@ export function useTimer({
         setCount(initialTime * currentUnit.multiple);
     }, [initialTime, unit, currentUnit.multiple, setCount]);
 
+    const currentTime = useMemo(() => {
+        const remainingMs = count * intervalMs;
+        return convertMsToMmSs(remainingMs);
+    }, [count]);
+
     return {
         totalTime: time,
         count,
+        currentTime,
         currentUnit,
         isRunning,
         isMinutes,
