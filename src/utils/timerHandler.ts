@@ -1,4 +1,3 @@
-import { isMobile } from 'react-device-detect';
 import Swal from 'sweetalert2';
 import alarmSound from '../assets/alarmSound.mp3';
 import { MainTimerData } from '../store/mainTimerStore';
@@ -11,41 +10,17 @@ export const handleFinish = (timer: MainTimerData, volume: number, pointColor: s
     // Play audio
     audio.play().catch((error) => console.error('Audio play error:', error));
 
-    const title = `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`;
-    const body = `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`;
-
     // Send notification
-    if ('Notification' in window && !isMobile) {
-        const notification = new Notification(title, {
-            body,
-            icon: 'logo500.png',
-            tag: 'timer-finished', // Unique identifier for the notification
-            requireInteraction: true, // Keep notification until user interacts
-        });
-
-        // Handle notification event
-        notification.onclick = () => notification.close();
-        notification.onclose = () => {
-            if (document.visibilityState !== 'visible') {
-                window.focus(); // Focus the app
-            }
+    Swal.fire({
+        title: `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`,
+        text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
+        confirmButtonColor: pointColor,
+    }).then((result) => {
+        if (!result.isDenied) {
             audio.pause(); // Stop the audio
             audio.currentTime = 0; // Reset audio
-        };
-    } else {
-        // Fallback to alert
-        // TODO: sweetalert2의 A message with auto close timer를 참고해 설정 페이지에서 정한 시간만큼 울리도록 하는 기능도 추가
-        Swal.fire({
-            title,
-            text: body,
-            confirmButtonColor: pointColor,
-        }).then((result) => {
-            if (!result.isDenied) {
-                audio.pause(); // Stop the audio
-                audio.currentTime = 0; // Reset audio
-            }
-        });
-    }
+        }
+    });
 };
 
 export const handleDragEvent = (e: React.MouseEvent | React.TouchEvent, setTime: (time: number) => void) => {

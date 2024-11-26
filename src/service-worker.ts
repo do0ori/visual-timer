@@ -78,7 +78,6 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-const notificationMap = new Map<string, string>(); // Map to store notificationId → clientId mapping
 const timers: Record<string, NodeJS.Timeout> = {};
 
 self.addEventListener('message', (event) => {
@@ -92,16 +91,16 @@ self.addEventListener('message', (event) => {
         }
 
         if (command === 'start-timer') {
-            const notificationId = `${id}-${Date.now()}`;
-            notificationMap.set(notificationId, clientId);
-
             console.log(`Starting timer with ID: ${id}, Delay: ${delay}ms`);
             const timerId = setTimeout(() => {
-                self.registration.showNotification('📢 Timer Finished!', {
-                    body: `Your timer has completed. ⏱️`,
-                    icon: '/logo500.png',
-                    tag: notificationId,
-                    requireInteraction: true,
+                self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+                    const targetClient = clientList.find((client) => client.id === clientId);
+
+                    if (targetClient) {
+                        targetClient.postMessage({ command: 'finished', id });
+                    } else {
+                        console.warn('No matching client found for timer ID:', clientId);
+                    }
                 });
             }, delay);
 
@@ -118,30 +117,4 @@ self.addEventListener('message', (event) => {
             console.warn(`Unknown command: ${command}`);
         }
     }
-});
-
-self.addEventListener('notificationclick', (event) => {
-    console.log('Notification clicked!');
-    const notificationId = event.notification.tag;
-    const clientId = notificationMap.get(notificationId);
-
-    event.notification.close();
-
-    event.waitUntil(
-        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            console.log('Client List:', clientList);
-            for (const client of clientList) {
-                console.log('Checking client URL:', client.url);
-                if (client.id === clientId) {
-                    console.log('Focusing existing client:', client.url);
-                    return client.focus();
-                }
-            }
-            console.log('Opening new window');
-            return self.clients.openWindow('/visual-timer');
-        })
-    );
-
-    // Cleanup: Remove mapping after handling
-    notificationMap.delete(notificationId);
 });

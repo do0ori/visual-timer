@@ -87,6 +87,7 @@ export function useTimer({
     // Resets the countdown to the initial value and stops it
     const resetCountdown = useCallback(() => {
         stopCountdown();
+        wasRunningRef.current = false;
         setCount(countStart);
         setIsInitialized(true);
     }, [stopCountdown, setCount, countStart]);
@@ -146,6 +147,24 @@ export function useTimer({
         },
         [count, maxCountStart, currentUnit.multiple, setCount]
     );
+
+    useEffect(() => {
+        const handleServiceWorkerMessage = (event: MessageEvent) => {
+            const { command, id: messageId } = event.data;
+
+            if (command === 'finished' && messageId === id) {
+                console.log('Timer finished in background.');
+                setCount(0);
+                startCountdown();
+            }
+        };
+
+        navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+
+        return () => {
+            navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+        };
+    }, [setCount, startCountdown]);
 
     // Visibility change handling
     useEffect(() => {
