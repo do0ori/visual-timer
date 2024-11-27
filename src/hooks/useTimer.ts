@@ -15,7 +15,7 @@ type TimerOptions = {
     /** Maximum possible time for the timer. */
     maxTime?: number;
     /** Callback function triggered when the timer reaches the countStop. */
-    onFinish?: () => void;
+    onFinish: (reset: () => void) => void;
 };
 
 type TimerControllers = {
@@ -97,10 +97,8 @@ export function useTimer({
 
     // The callback for the countdown logic
     const countdownCallback = useCallback(() => {
-        if (count === 0) {
-            resetCountdown();
-            if (onFinish) onFinish();
-            return;
+        if (count === 0 && onFinish) {
+            onFinish(resetCountdown);
         }
 
         decrement();

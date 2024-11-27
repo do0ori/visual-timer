@@ -1,7 +1,12 @@
 import Swal from 'sweetalert2';
 import { MainTimerData } from '../store/mainTimerStore';
 
-export const handleFinish = (timer: MainTimerData, audioRef: React.RefObject<HTMLAudioElement>, pointColor: string) => {
+export const handleFinish = (
+    timer: MainTimerData,
+    audioRef: React.RefObject<HTMLAudioElement>,
+    pointColor: string,
+    onSuccess: () => void
+) => {
     const audio = audioRef.current;
     if (!audio) {
         console.error('Audio not initialized');
@@ -18,6 +23,7 @@ export const handleFinish = (timer: MainTimerData, audioRef: React.RefObject<HTM
         confirmButtonColor: pointColor,
     }).then((result) => {
         if (!result.isDenied) {
+            onSuccess();
             audio.pause(); // Stop the audio
             audio.currentTime = 0; // Reset audio
         }

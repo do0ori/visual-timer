@@ -23,9 +23,12 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     if (pointColor) currentTheme.color.point = pointColor;
     if (title) currentTheme.text = title;
 
-    const onFinish = useCallback(() => {
-        handleFinish(timer, audioRef, currentTheme.color.point);
-    }, [volume, currentTheme]);
+    const onFinish = useCallback(
+        (reset: () => void) => {
+            handleFinish(timer, audioRef, currentTheme.color.point, reset);
+        },
+        [volume, currentTheme, timer]
+    );
 
     const {
         totalTime,
@@ -49,7 +52,7 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
         onFinish,
     });
 
-    const progress = count / currentUnit.denominator;
+    const progress = Math.max(0, count / currentUnit.denominator);
 
     useEffect(() => {
         updateTimer(timer.id, { isRunning });
