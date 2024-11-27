@@ -88,7 +88,6 @@ const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
                                 fontSize={3}
                                 fontWeight={1000}
                                 fill={currentTheme.color.point}
-                                className={'select-none'}
                                 style={{ pointerEvents: 'none' }}
                             >
                                 {value}
@@ -133,7 +132,7 @@ const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
                         fontSize={4}
                         fontWeight="bold"
                         fill={currentTheme.color.point}
-                        className="select-none"
+                        style={{ pointerEvents: 'none' }}
                     >
                         {currentTheme.text.split('\n').map((line, index) => (
                             <tspan key={index} x="0" dy={`${index === 0 ? 0 : 1.2}em`}>

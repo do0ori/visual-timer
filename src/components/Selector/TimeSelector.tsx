@@ -88,7 +88,6 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             fontSize={3}
                             fontWeight={1000}
                             fill={currentTheme.color.point}
-                            className={'select-none'}
                             style={{ pointerEvents: 'none' }}
                         >
                             {value}

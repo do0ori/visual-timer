@@ -40,10 +40,11 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({ currentTime, timerDisplayRef,
 
     return (
         <div
-            className="absolute text-2xl font-bold"
+            className="absolute text-3xl font-bold"
             style={{
                 top: `${position}px`,
                 color: currentTheme.color.point,
+                WebkitTextStroke: '0.5px white',
             }}
         >
             {currentTime}

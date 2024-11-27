@@ -17,7 +17,7 @@ function App() {
     }, [currentTheme, compColor]);
 
     return (
-        <div className={`flex w-full flex-col`}>
+        <div className={`flex w-full select-none flex-col`}>
             <Outlet />
         </div>
     );
