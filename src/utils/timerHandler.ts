@@ -1,11 +1,12 @@
 import Swal from 'sweetalert2';
-import alarmSound from '../assets/alarmSound.mp3';
 import { MainTimerData } from '../store/mainTimerStore';
 
-export const handleFinish = (timer: MainTimerData, volume: number, pointColor: string) => {
-    const audio = new Audio(alarmSound);
-    audio.loop = true;
-    audio.volume = volume;
+export const handleFinish = (timer: MainTimerData, audioRef: React.RefObject<HTMLAudioElement>, pointColor: string) => {
+    const audio = audioRef.current;
+    if (!audio) {
+        console.error('Audio not initialized');
+        return;
+    }
 
     // Play audio
     audio.play().catch((error) => console.error('Audio play error:', error));

@@ -9,11 +9,13 @@ import UnitToggleButton from './UnitToggleButton';
 import TimeDisplay from './TimeDisplay';
 import TimerDisplay from './TimerDisplay';
 import ControlButtons from './ControlButtons';
+import { useAudio } from '../../hooks/useAudio';
 
 const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     const { selectTimer, updateTimer } = useMainTimerStore();
     const { themes, globalThemeKey } = useThemeStore();
     const { volume } = useSettingsStore();
+    const audioRef = useAudio(volume);
     const timerDisplayRef = useRef<SVGCircleElement>(null);
 
     const { time: storedTime, isMinutes: storedIsMinutes, pointColor, title } = timer;
@@ -22,7 +24,7 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
     if (title) currentTheme.text = title;
 
     const onFinish = useCallback(() => {
-        handleFinish(timer, volume, currentTheme.color.point);
+        handleFinish(timer, audioRef, currentTheme.color.point);
     }, [volume, currentTheme]);
 
     const {
