@@ -1,4 +1,5 @@
 import TopBar from '../components/Navigation/TopBar';
+import AlarmSelector from '../components/Selector/AlarmSelector';
 import ThemeSelector from '../components/Selector/ThemeSelector';
 import VolumeSelector from '../components/Selector/VolumeSelector';
 
@@ -18,6 +19,7 @@ const SettingsPage: React.FC = () => {
                 <h3 className="text-lg font-semibold">Alarm</h3>
                 <div className="mt-6 space-y-4">
                     <VolumeSelector />
+                    <AlarmSelector />
                 </div>
             </div>
         </>

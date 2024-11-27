@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
-import alarmSound from '../assets/alarmSound.mp3';
+import { useSettingsStore } from '../store/settingsStore';
 
 export const useAudio = (volume: number) => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const { selectedAlarm } = useSettingsStore();
 
     useEffect(() => {
-        const audio = new Audio(alarmSound);
+        const audio = new Audio(selectedAlarm);
         audio.loop = true;
         audio.volume = volume;
 
@@ -33,7 +34,7 @@ export const useAudio = (volume: number) => {
             window.removeEventListener('click', initializeAudio);
             window.removeEventListener('touchstart', initializeAudio);
         };
-    }, [volume]);
+    }, [volume, selectedAlarm]);
 
     return audioRef;
 };
