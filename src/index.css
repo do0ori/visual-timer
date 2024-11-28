@@ -9,3 +9,13 @@ body {
 .color-picker::-webkit-color-swatch {
     border: none; /* 안쪽 테두리 제거 */
 }
+
+.no-scrollbar {
+    /* Hide scrollbar for Chrome, Edge, Safari */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}

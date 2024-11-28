@@ -94,7 +94,7 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="w-full rounded border px-2 py-1"
+                            className="w-full rounded border px-2 py-1 text-black"
                             placeholder="New Timer"
                         />
                     </label>

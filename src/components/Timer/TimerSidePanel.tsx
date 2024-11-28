@@ -89,7 +89,7 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                             <FaPlus size={24} />
                         </button>
                     </div>
-                    <ul className="space-y-5">
+                    <ul className="no-scrollbar max-h-[calc(100vh-8rem)] space-y-5 overflow-y-auto">
                         {timers.map((timer: MainTimerData) => (
                             <li
                                 key={timer.id}
