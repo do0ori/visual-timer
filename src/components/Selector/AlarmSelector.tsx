@@ -12,7 +12,7 @@ const AlarmSelector: React.FC = () => {
 
     const currentTheme = themes[globalThemeKey];
 
-    const alarmIcon = <BiSolidBellRing size={24} className="h-full w-full" />;
+    const alarmIcon = <BiSolidBellRing size={24} className="size-full" />;
     const alarmSelector = (
         <div className="flex w-full flex-col gap-2">
             <div className="text-lg">Sound</div>

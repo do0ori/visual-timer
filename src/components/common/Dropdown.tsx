@@ -54,9 +54,9 @@ const Dropdown: React.FC<DropdownProps> = ({
             >
                 <span>{options.find((option) => option.value === selectedValue)?.label || placeholder}</span>
                 {isOpen ? (
-                    <BiChevronUp className="h-5 w-5" style={{ color: currentTheme.color.point }} />
+                    <BiChevronUp className="size-5" style={{ color: currentTheme.color.point }} />
                 ) : (
-                    <BiChevronDown className="h-5 w-5" style={{ color: currentTheme.color.point }} />
+                    <BiChevronDown className="size-5" style={{ color: currentTheme.color.point }} />
                 )}
             </button>
 

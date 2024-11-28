@@ -10,7 +10,7 @@ const VolumeSelector: React.FC = () => {
 
     const pointColor = themes[globalThemeKey].color.point;
 
-    const volumeIcon = <IoVolumeMedium size={24} className="h-full w-full" />;
+    const volumeIcon = <IoVolumeMedium size={24} className="size-full" />;
     const volumeSlider = (
         <div className="flex w-full flex-col gap-2">
             <label htmlFor="volume" className="text-lg">

@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
-import { useAspectRatio } from '../../hooks/useAspectRatio';
-import { useMainTimerStore, MainTimerData } from '../../store/mainTimerStore';
+import { useEffect, useRef, useState } from 'react';
+import { FaCircle, FaPlus, FaTrash } from 'react-icons/fa';
 import { IoList } from 'react-icons/io5';
 import { MdEdit } from 'react-icons/md';
-import { FaCircle, FaPlus, FaTrash } from 'react-icons/fa';
+import { useAspectRatio } from '../../hooks/useAspectRatio';
+import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import TimerOverlay from './TimerOverlay';
 
 const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
@@ -89,7 +89,7 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                             <FaPlus size={24} />
                         </button>
                     </div>
-                    <ul className="no-scrollbar max-h-[calc(100vh-8rem)] space-y-5 overflow-y-auto">
+                    <ul className="max-h-[calc(100vh-8rem)] space-y-5 overflow-y-auto no-scrollbar">
                         {timers.map((timer: MainTimerData) => (
                             <li
                                 key={timer.id}
@@ -97,8 +97,8 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                                 onClick={() => handleSelectTimer(timer.id)}
                             >
                                 <div className="flex grow gap-5">
-                                    <div className="flex-shrink-0">
-                                        <FaCircle size={50} fill={timer.pointColor} className="h-full w-full" />
+                                    <div className="shrink-0">
+                                        <FaCircle size={50} fill={timer.pointColor} className="size-full" />
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="line-clamp-2 overflow-hidden text-ellipsis">

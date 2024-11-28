@@ -20,7 +20,7 @@ const ControlButton: React.FC<ControlButtonProps> = ({
         <button
             onClick={onClick}
             aria-label={ariaLabel}
-            className={`flex h-16 w-16 items-center justify-center rounded-full border-2 border-white p-2 text-white active:brightness-90 ${visible ? 'visible' : 'invisible'}`}
+            className={`flex size-16 items-center justify-center rounded-full border-2 border-white p-2 text-white active:brightness-90 ${visible ? 'visible' : 'invisible'}`}
             style={{
                 backgroundColor: currentTheme.color.point,
             }}

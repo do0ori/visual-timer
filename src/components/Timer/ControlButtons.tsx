@@ -83,7 +83,7 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
                 currentTheme={currentTheme}
                 visible={!isInitialized}
             >
-                <IoRefresh size={25} className="scale-x-[-1] transform" />
+                <IoRefresh size={25} className="-scale-x-100" />
             </ControlButton>
         </div>
     );

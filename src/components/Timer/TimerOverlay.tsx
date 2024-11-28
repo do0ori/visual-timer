@@ -75,7 +75,7 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex ${isOpen ? 'translate-x-0' : 'translate-x-full'} h-full w-full`}
+            className={`fixed inset-0 z-50 flex ${isOpen ? 'translate-x-0' : 'translate-x-full'} size-full`}
             style={{
                 backgroundColor: currentTheme.color.main,
             }}
@@ -107,7 +107,7 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
                                 setPointColor(e.target.value);
                                 currentTheme.color.point = e.target.value;
                             }}
-                            className="color-picker w-full rounded"
+                            className="w-full rounded color-picker"
                         />
                     </label>
                     <label className="flex items-center gap-8">

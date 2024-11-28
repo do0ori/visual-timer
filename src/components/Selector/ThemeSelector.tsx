@@ -14,7 +14,7 @@ const ThemeSelector: React.FC = () => {
                 >
                     <div className="flex items-center space-x-4">
                         <button
-                            className="h-12 w-12 rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]"
+                            className="size-12 rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]"
                             style={{
                                 background: `linear-gradient(135deg, ${theme.color.main} 50%, ${theme.color.point} 50%)`,
                             }}
@@ -25,7 +25,7 @@ const ThemeSelector: React.FC = () => {
                         type="checkbox"
                         checked={key === globalThemeKey}
                         onChange={() => setGlobalTheme(key)}
-                        className="form-checkbox h-5 w-5"
+                        className="form-checkbox size-5"
                         style={{
                             accentColor: theme.color.point,
                         }}

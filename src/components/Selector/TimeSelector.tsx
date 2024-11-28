@@ -24,7 +24,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
 
     return (
         <div className="h-full">
-            <svg className="h-full w-full" viewBox="-50 -50 100 100">
+            <svg className="size-full" viewBox="-50 -50 100 100">
                 {/* Timer Background */}
                 <circle
                     cx={0}
@@ -119,7 +119,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                         rx={1}
                         ry={1}
                         fill={currentTheme.color.sub}
-                        className="brightness-90 saturate-200 filter"
+                        className="brightness-90 saturate-200"
                     />
                 </g>
             </svg>

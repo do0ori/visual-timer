@@ -11,7 +11,7 @@ const ListElement: React.FC<ListElementProps> = ({ icon, content, onClick }) => 
         <div className="flex items-center justify-between gap-2" onClick={onClick}>
             <div className="flex grow gap-5">
                 {/* Icon Section */}
-                <div className="flex-shrink-0">{icon}</div>
+                <div className="shrink-0">{icon}</div>
                 {/* Content */}
                 {content}
             </div>

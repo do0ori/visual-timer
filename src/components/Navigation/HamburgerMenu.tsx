@@ -62,7 +62,7 @@ const HamburgerMenu: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                     <ul className="space-y-5">
                         <li>
                             <Link to="/" onClick={toggleMenu} className="flex items-center space-x-2">
-                                <RxLapTimer size={24} className="-scale-x-100 transform" />
+                                <RxLapTimer size={24} className="-scale-x-100" />
                                 <span>Basic Timer</span>
                             </Link>
                         </li>
