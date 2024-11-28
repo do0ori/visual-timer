@@ -90,7 +90,7 @@ const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
             </div>
 
             <div className="flex grow items-center justify-center">
-                <TimeDisplay currentTime={currentTime} timerDisplayRef={timerDisplayRef} currentTheme={currentTheme} />
+                <TimeDisplay currentTime={currentTime} timerDisplayRef={timerDisplayRef} />
                 <TimerDisplay
                     ref={timerDisplayRef}
                     progress={progress}

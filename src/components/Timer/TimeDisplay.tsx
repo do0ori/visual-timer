@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Theme } from '../../config/timer/themes';
-
 interface TimeDisplayProps {
     currentTime: string;
     timerDisplayRef: React.RefObject<SVGCircleElement>;
-    currentTheme: Theme;
 }
 
-const TimeDisplay: React.FC<TimeDisplayProps> = ({ currentTime, timerDisplayRef, currentTheme }) => {
+const TimeDisplay: React.FC<TimeDisplayProps> = ({ currentTime, timerDisplayRef }) => {
     const [position, setPosition] = useState<number | null>(null);
 
     const updatePosition = () => {
@@ -40,11 +37,9 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({ currentTime, timerDisplayRef,
 
     return (
         <div
-            className="absolute text-3xl font-bold"
+            className="absolute text-3xl font-semibold"
             style={{
                 top: `${position}px`,
-                color: currentTheme.color.point,
-                WebkitTextStroke: '0.5px white',
             }}
         >
             {currentTime}
