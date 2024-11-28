@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { useAudio } from '../../hooks/useAudio';
 import { useTimer } from '../../hooks/useTimer';
-import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
-import { useThemeStore } from '../../store/themeStore';
+import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useSettingsStore } from '../../store/settingsStore';
-import { handleFinish, handleDragEvent } from '../../utils/timerHandler';
+import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
-import UnitToggleButton from './UnitToggleButton';
+import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
+import ControlButtons from './ControlButtons';
 import TimeDisplay from './TimeDisplay';
 import TimerDisplay from './TimerDisplay';
-import ControlButtons from './ControlButtons';
-import { useAudio } from '../../hooks/useAudio';
+import UnitToggleButton from './UnitToggleButton';
 
-const Timer: React.FC<{ timer: MainTimerData }> = ({ timer }) => {
+const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     const { selectTimer, updateTimer } = useMainTimerStore();
     const { themes, globalThemeKey } = useThemeStore();
     const { volume } = useSettingsStore();

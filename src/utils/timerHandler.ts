@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
-import { MainTimerData } from '../store/mainTimerStore';
+import { TimerData } from '../store/mainTimerStore';
 
 export const handleFinish = (
-    timer: MainTimerData,
+    timer: TimerData,
     audioRef: React.RefObject<HTMLAudioElement>,
     pointColor: string,
     onSuccess: () => void

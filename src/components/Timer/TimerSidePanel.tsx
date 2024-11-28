@@ -3,7 +3,7 @@ import { FaCircle, FaPlus, FaTrash } from 'react-icons/fa';
 import { IoList } from 'react-icons/io5';
 import { MdEdit } from 'react-icons/md';
 import { useAspectRatio } from '../../hooks/useAspectRatio';
-import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
+import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import TimerOverlay from './TimerOverlay';
 
 const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
@@ -11,7 +11,7 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
     const { timers, selectTimer, removeTimer } = useMainTimerStore();
     const [isOpen, setIsOpen] = useState(false);
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-    const [targetTimer, setTargetTimer] = useState<MainTimerData | null>(null);
+    const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +49,7 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
         setIsOpen(false);
     };
 
-    const openOverlay = (timer?: MainTimerData) => {
+    const openOverlay = (timer?: TimerData) => {
         setTargetTimer(timer || null);
         setMode(timer ? 'edit' : 'add');
         setIsOverlayOpen(true);
@@ -90,7 +90,7 @@ const TimerSidePanel: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {
                         </button>
                     </div>
                     <ul className="max-h-[calc(100vh-8rem)] space-y-5 overflow-y-auto no-scrollbar">
-                        {timers.map((timer: MainTimerData) => (
+                        {timers.map((timer: TimerData) => (
                             <li
                                 key={timer.id}
                                 className="flex cursor-pointer items-center justify-between"

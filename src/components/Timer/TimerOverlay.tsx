@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
+import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
-import { MainTimerData, useMainTimerStore } from '../../store/mainTimerStore';
-import { MdTextFields, MdOutlinePalette, MdOutlineTimer } from 'react-icons/md';
-import TimerTopBar from '../Navigation/TimerTopBar';
 import { deepCopy } from '../../utils/deepCopy';
+import TimerTopBar from '../Navigation/TimerTopBar';
 import TimeSelector from '../Selector/TimeSelector';
 
 interface TimerOverlayProps {
     isOpen: boolean;
-    initialTimerData: MainTimerData | null;
+    initialTimerData: TimerData | null;
     onClose: () => void;
     mode: 'add' | 'edit';
 }

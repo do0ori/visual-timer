@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export interface MainTimerData {
+export interface TimerData {
     id: string;
     title?: string;
     time: number;
@@ -11,13 +11,13 @@ export interface MainTimerData {
 }
 
 interface MainTimerState {
-    defaultTimer: MainTimerData;
+    defaultTimer: TimerData;
     selectedTimerId: string;
-    timers: MainTimerData[];
+    timers: TimerData[];
     selectTimer: (id: string) => void;
-    addTimer: (newTimer: MainTimerData) => void;
-    getTimer: (id: string) => MainTimerData;
-    updateTimer: (id: string, updatedProps: Partial<MainTimerData>) => void;
+    addTimer: (newTimer: TimerData) => void;
+    getTimer: (id: string) => TimerData;
+    updateTimer: (id: string, updatedProps: Partial<TimerData>) => void;
     removeTimer: (id: string) => void;
 }
 
@@ -59,7 +59,7 @@ export const useMainTimerStore = create<MainTimerState>()(
                     : state.timers.find((t) => t.id === id) || state.defaultTimer;
             },
 
-            updateTimer: (id: string, updatedProps: Partial<MainTimerData>) => {
+            updateTimer: (id: string, updatedProps: Partial<TimerData>) => {
                 set((state) => {
                     return id === 'default'
                         ? {
