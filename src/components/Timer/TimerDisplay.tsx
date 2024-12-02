@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Theme } from '../../config/timer/themes';
 
 type TimerDisplayProps = {
@@ -22,7 +22,7 @@ const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
         }));
 
         return (
-            <div className="my-5 h-full">
+            <div className="h-full">
                 <svg className="size-full" viewBox="-50 -50 100 100">
                     {/* Timer Background */}
                     <circle

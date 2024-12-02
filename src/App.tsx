@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useThemeStore } from './store/themeStore';
 import { Outlet } from 'react-router-dom';
+import { useThemeStore } from './store/themeStore';
 
 function App() {
     const { themes, globalThemeKey, compColor } = useThemeStore();
@@ -17,7 +17,7 @@ function App() {
     }, [currentTheme, compColor]);
 
     return (
-        <div className={`flex w-full select-none flex-col`}>
+        <div className={`select-none`}>
             <Outlet />
         </div>
     );
