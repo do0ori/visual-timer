@@ -1,8 +1,7 @@
-import React from 'react';
-import { useThemeStore } from '../../store/themeStore';
-import { useSettingsStore } from '../../store/settingsStore';
-import { alarmOptions } from '../../config/timer/alarms';
 import { BiSolidBellRing } from 'react-icons/bi';
+import { alarmOptions } from '../../config/timer/alarms';
+import { useSettingsStore } from '../../store/settingsStore';
+import { useThemeStore } from '../../store/themeStore';
 import Dropdown from '../common/Dropdown';
 import ListElement from '../common/ListElement';
 

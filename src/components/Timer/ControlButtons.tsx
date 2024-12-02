@@ -1,4 +1,3 @@
-import React from 'react';
 import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { Theme } from '../../config/timer/themes';

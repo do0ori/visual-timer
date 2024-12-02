@@ -1,5 +1,5 @@
+import { IoIosSave, IoMdClose } from 'react-icons/io';
 import { useThemeStore } from '../../store/themeStore';
-import { IoMdClose, IoIosSave } from 'react-icons/io';
 
 interface TimerTopBarProps {
     title: string;

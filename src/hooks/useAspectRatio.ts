@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function useAspectRatio() {
     const [aspectRatio, setAspectRatio] = useState(window.innerWidth / window.innerHeight);

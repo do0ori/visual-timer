@@ -1,4 +1,3 @@
-import React from 'react';
 import { useThemeStore } from '../../store/themeStore';
 
 const ThemeSelector: React.FC = () => {

@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
-import { useAspectRatio } from '../../hooks/useAspectRatio';
-import { Link } from 'react-router-dom';
-import { IoSettingsSharp, IoAlbums } from 'react-icons/io5';
-import { IoMenu } from 'react-icons/io5';
-import { MdRepeatOn, MdEmail } from 'react-icons/md';
+import { useEffect, useRef, useState } from 'react';
+import { IoAlbums, IoMenu, IoSettingsSharp } from 'react-icons/io5';
+import { MdEmail, MdRepeatOn } from 'react-icons/md';
 import { RxLapTimer } from 'react-icons/rx';
+import { Link } from 'react-router-dom';
+import { useAspectRatio } from '../../hooks/useAspectRatio';
 
 // TODO: 선택된 메뉴 시각적 표시
 const HamburgerMenu: React.FC<{ isRunning: boolean }> = ({ isRunning }) => {

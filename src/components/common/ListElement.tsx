@@ -1,5 +1,3 @@
-import React from 'react';
-
 type ListElementProps = {
     icon: React.ReactNode;
     content: React.ReactNode;

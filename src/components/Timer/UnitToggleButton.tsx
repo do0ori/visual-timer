@@ -1,4 +1,3 @@
-import React from 'react';
 import { IoSwapVertical } from 'react-icons/io5';
 import { Theme } from '../../config/timer/themes';
 

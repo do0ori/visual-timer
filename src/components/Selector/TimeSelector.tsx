@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Theme } from '../../config/timer/themes';
 import { handleDragEvent } from '../../utils/timerHandler';
 

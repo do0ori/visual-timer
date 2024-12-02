@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, useRef } from 'react';
-import { Theme } from '../../config/timer/themes';
+import { useEffect, useRef, useState } from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { Theme } from '../../config/timer/themes';
 
 type DropdownOption = {
     label: string;

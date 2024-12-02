@@ -1,8 +1,7 @@
-import React from 'react';
-import { useSettingsStore } from '../../store/settingsStore';
 import { IoVolumeMedium } from 'react-icons/io5';
-import ListElement from '../common/ListElement';
+import { useSettingsStore } from '../../store/settingsStore';
 import { useThemeStore } from '../../store/themeStore';
+import ListElement from '../common/ListElement';
 
 const VolumeSelector: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
