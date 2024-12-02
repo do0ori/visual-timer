@@ -1,7 +1,8 @@
 import React from 'react';
-import { IoAdd, IoPlay, IoPause, IoRefresh } from 'react-icons/io5';
+import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
 import { Theme } from '../../config/timer/themes';
-import ControlButton from './ControlButton';
+import Button from '../common/Button';
 
 type ControlButtonsProps = {
     isMinutes: boolean;
@@ -54,37 +55,44 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
 
     return (
         <div className="flex justify-around">
-            {/* Add Button */}
-            <ControlButton
-                onClick={() => add(isMinutes ? 1 : 10)}
-                aria-label="Add one"
-                currentTheme={currentTheme}
-                visible={!isInitialized}
-            >
-                <div className="flex items-center justify-center">
-                    <IoAdd size={20} />
-                    <span className="text-lg">{isMinutes ? 1 : 10}</span>
-                </div>
-            </ControlButton>
+            {isInitialized ? (
+                /* Timer List Button */
+                // TODO: timer list overlay 적용하기
+                <Button aria-label="Timer List">
+                    <IoList size={30} />
+                </Button>
+            ) : (
+                /* Add Button */
+                <Button onClick={() => add(isMinutes ? 1 : 10)} aria-label="Add one" currentTheme={currentTheme}>
+                    <div className="flex items-center justify-center">
+                        <IoAdd size={20} />
+                        <span className="text-lg">{isMinutes ? 1 : 10}</span>
+                    </div>
+                </Button>
+            )}
 
             {/* Stop/Start Button */}
-            <ControlButton
+            <Button
                 onClick={isRunning ? stop : startWithPermissionCheck}
                 aria-label={isRunning ? 'Pause Timer' : 'Start Timer'}
                 currentTheme={currentTheme}
             >
                 {isRunning ? <IoPause size={25} /> : <IoPlay size={25} />}
-            </ControlButton>
+            </Button>
 
-            {/* Reset Button */}
-            <ControlButton
-                onClick={reset}
-                aria-label="Reset Timer"
-                currentTheme={currentTheme}
-                visible={!isInitialized}
-            >
-                <IoRefresh size={25} className="-scale-x-100" />
-            </ControlButton>
+            {isInitialized ? (
+                /* Settings Button */
+                <Link to={'/settings'}>
+                    <Button aria-label="Settings">
+                        <IoSettingsSharp size={30} />
+                    </Button>
+                </Link>
+            ) : (
+                /* Reset Button */
+                <Button onClick={reset} aria-label="Reset Timer" currentTheme={currentTheme}>
+                    <IoRefresh size={25} className="-scale-x-100" />
+                </Button>
+            )}
         </div>
     );
 };
