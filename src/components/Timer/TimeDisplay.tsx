@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 interface TimeDisplayProps {
     currentTime: string;
-    timerDisplayRef: React.RefObject<SVGCircleElement>;
+    timerDisplayRef?: React.RefObject<SVGCircleElement>;
 }
 
 const TimeDisplay: React.FC<TimeDisplayProps> = ({ currentTime, timerDisplayRef }) => {
+    if (!timerDisplayRef) {
+        return <div className="text-3xl">{currentTime}</div>;
+    }
+
     const [position, setPosition] = useState<number | null>(null);
 
     const updatePosition = () => {
@@ -37,7 +41,7 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({ currentTime, timerDisplayRef 
 
     return (
         <div
-            className="absolute text-3xl font-semibold"
+            className="absolute text-3xl"
             style={{
                 top: `${position}px`,
             }}
