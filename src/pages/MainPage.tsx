@@ -1,4 +1,4 @@
-import Timer from '../components/Timer/Timer';
+import Timer from '../components/timer/Timer';
 import { useMainTimerStore } from '../store/mainTimerStore';
 
 const MainPage: React.FC = () => {

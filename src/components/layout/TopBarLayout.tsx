@@ -1,4 +1,4 @@
-import TopBar from '../Navigation/TopBar';
+import TopBar from '../navigation/TopBar';
 
 const TopBarLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (

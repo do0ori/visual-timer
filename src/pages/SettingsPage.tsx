@@ -1,7 +1,7 @@
-import TopBar from '../components/Navigation/TopBar';
-import AlarmSelector from '../components/Selector/AlarmSelector';
-import ThemeSelector from '../components/Selector/ThemeSelector';
-import VolumeSelector from '../components/Selector/VolumeSelector';
+import TopBar from '../components/navigation/TopBar';
+import AlarmSelector from '../components/selector/AlarmSelector';
+import ThemeSelector from '../components/selector/ThemeSelector';
+import VolumeSelector from '../components/selector/VolumeSelector';
 
 const SettingsPage: React.FC = () => {
     return (

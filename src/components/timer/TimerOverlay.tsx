@@ -3,8 +3,8 @@ import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
-import TimerTopBar from '../Navigation/TimerTopBar';
-import TimeSelector from '../Selector/TimeSelector';
+import TimerTopBar from '../navigation/TimerTopBar';
+import TimeSelector from '../selector/TimeSelector';
 
 interface TimerOverlayProps {
     isOpen: boolean;
