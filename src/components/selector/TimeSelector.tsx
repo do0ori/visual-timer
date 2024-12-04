@@ -55,7 +55,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             stroke={currentTheme.color.point}
                             strokeWidth={0.3}
                             transform={`rotate(${6 * marker})`}
-                            style={{ pointerEvents: 'none' }}
+                            className="pointer-events-none"
                         />
                     ) : (
                         <line
@@ -67,7 +67,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             stroke={currentTheme.color.point}
                             strokeWidth={0.5}
                             transform={`rotate(${(30 * marker) / 5})`}
-                            style={{ pointerEvents: 'none' }}
+                            className="pointer-events-none"
                         />
                     )
                 )}
@@ -88,7 +88,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             fontSize={3}
                             fontWeight={1000}
                             fill={currentTheme.color.point}
-                            style={{ pointerEvents: 'none' }}
+                            className="pointer-events-none"
                         >
                             {value}
                         </text>
@@ -106,10 +106,10 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                     strokeDasharray={`${progress * fullProgress} ${fullProgress}`}
                     strokeDashoffset="0"
                     transform="rotate(-90)"
-                    style={{ pointerEvents: 'none' }}
+                    className="pointer-events-none"
                 />
                 {/* Center Knob Shape */}
-                <g transform={`rotate(${360 * progress})`} style={{ pointerEvents: 'none' }}>
+                <g transform={`rotate(${360 * progress})`} className="pointer-events-none">
                     <circle cx={0} cy={0} r={6} fill={currentTheme.color.sub} />
                     <rect
                         width={1.5}
