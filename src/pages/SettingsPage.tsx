@@ -1,12 +1,12 @@
-import TopBar from '../components/navigation/TopBar';
+import BasicTopBar from '../components/navigation/BasicTopBar';
 import AlarmSelector from '../components/selector/AlarmSelector';
 import ThemeSelector from '../components/selector/ThemeSelector';
 import VolumeSelector from '../components/selector/VolumeSelector';
 
 const SettingsPage: React.FC = () => {
     return (
-        <>
-            <TopBar title="Settings" />
+        <div className="max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar">
+            <BasicTopBar title="Settings" />
 
             <div className="p-5 pt-20">
                 <h3 className="text-lg font-semibold">Theme</h3>
@@ -22,7 +22,7 @@ const SettingsPage: React.FC = () => {
                     <AlarmSelector />
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
