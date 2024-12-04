@@ -9,11 +9,11 @@ import TimeSelector from '../selector/TimeSelector';
 interface TimerOverlayProps {
     isOpen: boolean;
     initialTimerData: TimerData | null;
-    onClose: () => void;
     mode: 'add' | 'edit';
+    onClose: () => void;
 }
 
-const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, onClose, mode }) => {
+const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, mode, onClose }) => {
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
@@ -75,9 +75,9 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex ${isOpen ? 'translate-x-0' : 'translate-x-full'} size-full`}
+            className={`fixed inset-0 z-50 flex ${isOpen ? 'visible' : 'invisible'} size-full`}
             style={{
-                backgroundColor: currentTheme.color.main,
+                backgroundColor: originalTheme.color.main,
             }}
         >
             <TimerTopBar
@@ -86,8 +86,8 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, o
                 onSave={handleSave}
             />
 
-            <div className="w-full p-5 pt-16">
-                <div className="mt-6 flex h-full flex-col space-y-7">
+            <div className="w-full p-5 pt-20">
+                <div className="flex h-full flex-col space-y-7">
                     <label className="flex items-center gap-8">
                         <MdTextFields size={30} />
                         <input
