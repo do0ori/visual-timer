@@ -14,7 +14,7 @@ import TimeDisplay from './TimeDisplay';
 import TimerDisplay from './TimerDisplay';
 import UnitToggleButton from './UnitToggleButton';
 
-const TimerTest: React.FC<{ timer: TimerData }> = ({ timer }) => {
+const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     const aspectRatio = useAspectRatio();
     const { selectTimer, updateTimer } = useMainTimerStore();
     const { themes, globalThemeKey } = useThemeStore();
@@ -141,4 +141,4 @@ const TimerTest: React.FC<{ timer: TimerData }> = ({ timer }) => {
     );
 };
 
-export default TimerTest;
+export default Timer;
