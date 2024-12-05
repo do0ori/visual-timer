@@ -3,7 +3,7 @@ import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'reac
 import { Link } from 'react-router-dom';
 import { Theme } from '../../config/timer/themes';
 import Button from '../common/Button';
-import TimerList from './TimerList';
+import TimerListOverlay from './TimerListOverlay';
 
 type ControlButtonsProps = {
     isMinutes: boolean;
@@ -98,7 +98,7 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
                 )}
             </div>
 
-            <TimerList isOpen={isOpen} onClose={() => setIsOpen(false)} />
+            <TimerListOverlay isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </>
     );
 };

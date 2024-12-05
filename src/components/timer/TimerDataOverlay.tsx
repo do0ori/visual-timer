@@ -13,7 +13,7 @@ interface TimerOverlayProps {
     onClose: () => void;
 }
 
-const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, mode, onClose }) => {
+const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, mode, onClose }) => {
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
@@ -152,4 +152,4 @@ const TimerOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, m
     );
 };
 
-export default TimerOverlay;
+export default TimerDataOverlay;

@@ -5,9 +5,9 @@ import { MdEdit } from 'react-icons/md';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
 import TimerListTopBar from '../navigation/TimerListTopBar';
-import TimerOverlay from './TimerOverlay';
+import TimerDataOverlay from './TimerDataOverlay';
 
-const TimerList: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
@@ -70,14 +70,16 @@ const TimerList: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
                                 <div className="flex gap-5">
                                     <MdEdit
                                         size={24}
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             openOverlay(timer);
                                         }}
                                         aria-label="Edit Timer"
                                     />
                                     <IoMdTrash
                                         size={24}
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             removeTimer(timer.id);
                                         }}
                                         aria-label="Delete Timer"
@@ -89,9 +91,14 @@ const TimerList: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen,
                 </div>
             </div>
 
-            <TimerOverlay isOpen={isOverlayOpen} initialTimerData={targetTimer} onClose={closeOverlay} mode={mode} />
+            <TimerDataOverlay
+                isOpen={isOverlayOpen}
+                initialTimerData={targetTimer}
+                onClose={closeOverlay}
+                mode={mode}
+            />
         </>
     );
 };
 
-export default TimerList;
+export default TimerListOverlay;
