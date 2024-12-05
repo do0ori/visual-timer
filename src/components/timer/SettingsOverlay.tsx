@@ -23,7 +23,7 @@ const SettingsOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ i
         >
             <SettingsTopBar title="Settings" onClose={onClose} />
 
-            <div className="max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar">
+            <div className="h-[95%] overflow-y-auto no-scrollbar">
                 <div className="p-5 pt-20">
                     <h3 className="text-lg font-semibold">Theme</h3>
                     <div className="mt-6 space-y-4">
