@@ -92,7 +92,7 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerDat
             />
 
             <div className="w-full p-5 pt-20">
-                <div className="flex h-full flex-col space-y-7">
+                <div className="flex h-full max-h-[calc(100vh-6.25rem)] flex-col space-y-7 overflow-y-auto no-scrollbar">
                     <label className="flex items-center gap-8">
                         <MdTextFields size={30} />
                         <input

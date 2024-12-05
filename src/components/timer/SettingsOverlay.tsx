@@ -18,6 +18,7 @@ const SettingsOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ i
             className="absolute inset-0 z-40 size-full shadow-lg"
             style={{
                 backgroundColor: originalTheme.color.main,
+                outline: `2px solid ${originalTheme.color.sub}33`,
             }}
         >
             <SettingsTopBar title="Settings" onClose={onClose} />

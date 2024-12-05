@@ -42,6 +42,7 @@ const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
                 className="absolute inset-0 z-40 size-full shadow-lg"
                 style={{
                     backgroundColor: originalTheme.color.main,
+                    outline: `2px solid ${originalTheme.color.sub}33`,
                 }}
             >
                 <TimerListTopBar title="Timer List" onClose={onClose} onAdd={openOverlay} />
