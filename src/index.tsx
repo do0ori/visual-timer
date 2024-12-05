@@ -3,7 +3,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import MainPage from './pages/MainPage';
-import SettingsPage from './pages/SettingsPage';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const router = createBrowserRouter(
@@ -17,10 +16,6 @@ const router = createBrowserRouter(
                     index: true,
                     path: '/',
                     element: <MainPage />,
-                },
-                {
-                    path: 'settings',
-                    element: <SettingsPage />,
                 },
             ],
         },
