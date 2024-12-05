@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
+import useOverlayClose from '../../hooks/useOverlayClose';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
 import TimerListTopBar from '../navigation/TimerListTopBar';
@@ -15,6 +16,8 @@ const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
+
+    useOverlayClose(isOpen, onClose);
 
     const handleSelectTimer = (timerId: string) => {
         selectTimer(timerId);
@@ -31,10 +34,12 @@ const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
         setIsOverlayOpen(false);
     };
 
+    if (!isOpen) return null;
+
     return (
         <>
             <div
-                className={`absolute inset-0 z-40 size-full shadow-lg ${isOpen ? 'visible' : 'invisible'}`}
+                className="absolute inset-0 z-40 size-full shadow-lg"
                 style={{
                     backgroundColor: originalTheme.color.main,
                 }}

@@ -1,3 +1,4 @@
+import useOverlayClose from '../../hooks/useOverlayClose';
 import { useThemeStore } from '../../store/themeStore';
 import SettingsTopBar from '../navigation/SettingsTopBar';
 import AlarmSelector from '../selector/AlarmSelector';
@@ -8,9 +9,13 @@ const SettingsOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ i
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
+    useOverlayClose(isOpen, onClose);
+
+    if (!isOpen) return null;
+
     return (
         <div
-            className={`absolute inset-0 z-40 size-full shadow-lg ${isOpen ? 'visible' : 'invisible'}`}
+            className="absolute inset-0 z-40 size-full shadow-lg"
             style={{
                 backgroundColor: originalTheme.color.main,
             }}

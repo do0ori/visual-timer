@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
+import useOverlayClose from '../../hooks/useOverlayClose';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
@@ -25,6 +26,8 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerDat
 
     const currentTheme = deepCopy(themes[globalThemeKey]);
     currentTheme.color.point = pointColor;
+
+    useOverlayClose(isOpen, onClose);
 
     // Update form values if the initialTimerData changes (e.g., switching between edit targets)
     useEffect(() => {
@@ -73,9 +76,11 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerDat
         onClose();
     };
 
+    if (!isOpen) return null;
+
     return (
         <div
-            className={`fixed inset-0 z-50 flex ${isOpen ? 'visible' : 'invisible'} size-full`}
+            className="fixed inset-0 z-50 flex size-full"
             style={{
                 backgroundColor: originalTheme.color.main,
             }}
