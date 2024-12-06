@@ -2,22 +2,21 @@ import { useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
-import useOverlayClose from '../../hooks/useOverlayClose';
+import useOverlay from '../../hooks/useOverlay';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
 import TimerListTopBar from '../navigation/TimerListTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
 
-const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+const TimerListOverlay: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
     const { timers, selectTimer, removeTimer } = useMainTimerStore();
-    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
 
-    useOverlayClose(isOpen, onClose);
+    const { isOpen, close } = useOverlay('timer-list');
 
     const handleSelectTimer = (timerId: string) => {
         selectTimer(timerId);
@@ -26,12 +25,11 @@ const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
     const openOverlay = (timer?: TimerData) => {
         setTargetTimer(timer || null);
         setMode(timer ? 'edit' : 'add');
-        setIsOverlayOpen(true);
+        window.location.hash = 'timer-list&timer-data';
     };
 
     const closeOverlay = () => {
         setTargetTimer(null);
-        setIsOverlayOpen(false);
     };
 
     if (!isOpen) return null;
@@ -45,7 +43,7 @@ const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
                     outline: `2px solid ${originalTheme.color.sub}33`,
                 }}
             >
-                <TimerListTopBar title="Timer List" onClose={onClose} onAdd={() => openOverlay()} />
+                <TimerListTopBar title="Timer List" onClose={close} onAdd={() => openOverlay()} />
 
                 <div className="w-full p-5 pt-20">
                     <ul className="max-h-[calc(100vh-6.25rem)] space-y-5 overflow-y-auto no-scrollbar">
@@ -55,7 +53,7 @@ const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
                                 className="flex cursor-pointer items-center justify-between"
                                 onClick={() => {
                                     handleSelectTimer(timer.id);
-                                    onClose();
+                                    close();
                                 }}
                             >
                                 <div className="flex grow gap-5">
@@ -97,12 +95,7 @@ const TimerListOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
                 </div>
             </div>
 
-            <TimerDataOverlay
-                isOpen={isOverlayOpen}
-                initialTimerData={targetTimer}
-                onClose={closeOverlay}
-                mode={mode}
-            />
+            <TimerDataOverlay initialTimerData={targetTimer} onClose={closeOverlay} mode={mode} />
         </>
     );
 };

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'react-icons/io5';
 import { Theme } from '../../config/timer/themes';
 import Button from '../common/Button';
@@ -26,9 +25,6 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
     reset,
     add,
 }) => {
-    const [isTimerListOpen, setIsTimerListOpen] = useState(false);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
     const startWithPermissionCheck = async () => {
         if (!('Notification' in window)) {
             alert('Your browser does not support notifications.');
@@ -62,10 +58,10 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
             {isInitialized ? (
                 <>
                     {/* Timer List Button */}
-                    <Button onClick={() => setIsTimerListOpen(true)} aria-label="Timer List">
+                    <Button onClick={() => (window.location.hash = 'timer-list')} aria-label="Timer List">
                         <IoList size={30} />
                     </Button>
-                    <TimerListOverlay isOpen={isTimerListOpen} onClose={() => setIsTimerListOpen(false)} />
+                    <TimerListOverlay />
                 </>
             ) : (
                 /* Add Button */
@@ -89,10 +85,10 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
             {isInitialized ? (
                 <>
                     {/* Settings Button */}
-                    <Button onClick={() => setIsSettingsOpen(true)} aria-label="Settings">
+                    <Button onClick={() => (window.location.hash = 'settings')} aria-label="Settings">
                         <IoSettingsSharp size={30} />
                     </Button>
-                    <SettingsOverlay isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+                    <SettingsOverlay />
                 </>
             ) : (
                 /* Reset Button */

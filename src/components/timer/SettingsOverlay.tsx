@@ -1,15 +1,15 @@
-import useOverlayClose from '../../hooks/useOverlayClose';
+import useOverlay from '../../hooks/useOverlay';
 import { useThemeStore } from '../../store/themeStore';
 import SettingsTopBar from '../navigation/SettingsTopBar';
 import AlarmSelector from '../selector/AlarmSelector';
 import ThemeSelector from '../selector/ThemeSelector';
 import VolumeSelector from '../selector/VolumeSelector';
 
-const SettingsOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+const SettingsOverlay: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
-    useOverlayClose(isOpen, onClose);
+    const { isOpen, close } = useOverlay('settings');
 
     if (!isOpen) return null;
 
@@ -21,7 +21,7 @@ const SettingsOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ i
                 outline: `2px solid ${originalTheme.color.sub}33`,
             }}
         >
-            <SettingsTopBar title="Settings" onClose={onClose} />
+            <SettingsTopBar title="Settings" onClose={close} />
 
             <div className="h-[95%] overflow-y-auto no-scrollbar">
                 <div className="p-5 pt-20">

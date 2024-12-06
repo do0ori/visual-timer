@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
-import useOverlayClose from '../../hooks/useOverlayClose';
+import useOverlay from '../../hooks/useOverlay';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
@@ -8,13 +8,12 @@ import TimerTopBar from '../navigation/TimerTopBar';
 import TimeSelector from '../selector/TimeSelector';
 
 interface TimerOverlayProps {
-    isOpen: boolean;
     initialTimerData: TimerData | null;
     mode: 'add' | 'edit';
     onClose: () => void;
 }
 
-const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerData, mode, onClose }) => {
+const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode, onClose }) => {
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
@@ -27,7 +26,7 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerDat
     const currentTheme = deepCopy(themes[globalThemeKey]);
     currentTheme.color.point = pointColor;
 
-    useOverlayClose(isOpen, onClose);
+    const { isOpen, close } = useOverlay('timer-data', onClose);
 
     // Update form values if the initialTimerData changes (e.g., switching between edit targets)
     useEffect(() => {
@@ -68,12 +67,12 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ isOpen, initialTimerDat
             });
         }
         resetFields();
-        onClose();
+        close();
     };
 
     const handleCancel = () => {
         resetFields();
-        onClose();
+        close();
     };
 
     if (!isOpen) return null;
