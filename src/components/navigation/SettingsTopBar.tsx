@@ -1,4 +1,4 @@
-import { IoMdClose } from 'react-icons/io';
+import { IoIosArrowBack } from 'react-icons/io';
 import TopBar from '../common/TopBar';
 
 interface SettingsTopBarProps {
@@ -7,7 +7,7 @@ interface SettingsTopBarProps {
 }
 
 const SettingsTopBar: React.FC<SettingsTopBarProps> = ({ title, onClose }) => {
-    return <TopBar title={title} leftIcon={<IoMdClose size={24} />} onLeftClick={onClose} />;
+    return <TopBar title={title} leftIcon={<IoIosArrowBack size={24} />} onLeftClick={onClose} />;
 };
 
 export default SettingsTopBar;
