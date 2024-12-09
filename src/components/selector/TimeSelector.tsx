@@ -52,7 +52,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             y1={-45}
                             x2={0}
                             y2={-43}
-                            stroke={currentTheme.color.point}
+                            stroke="rgba(0, 0, 0, 0.4)"
                             strokeWidth={0.3}
                             transform={`rotate(${6 * marker})`}
                             className="pointer-events-none"
@@ -64,7 +64,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             y1={-45}
                             x2={0}
                             y2={-42}
-                            stroke={currentTheme.color.point}
+                            stroke="rgba(0, 0, 0, 0.6)"
                             strokeWidth={0.5}
                             transform={`rotate(${(30 * marker) / 5})`}
                             className="pointer-events-none"
@@ -87,7 +87,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             dominantBaseline="central"
                             fontSize={3}
                             fontWeight={1000}
-                            fill={currentTheme.color.point}
+                            fill="rgba(0, 0, 0, 0.8)"
                             className="pointer-events-none"
                         >
                             {value}
