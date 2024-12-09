@@ -16,11 +16,19 @@ export const handleFinish = (
     // Play audio
     audio.play().catch((error) => console.error('Audio play error:', error));
 
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const leftSideWidth = isLandscape ? window.innerWidth / 2 : window.innerWidth;
+
     // Send notification
     Swal.fire({
         title: `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`,
         text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
         confirmButtonColor: pointColor,
+        width: isLandscape ? `${leftSideWidth * 0.95}px` : '95%',
+        position: 'center',
+        customClass: {
+            container: isLandscape ? 'landscape-alert' : '',
+        },
     }).then((result) => {
         if (!result.isDenied) {
             onSuccess();

@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.landscape-alert {
+    margin-right: 50% !important;
+}
