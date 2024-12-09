@@ -5,6 +5,7 @@ import { MdEdit } from 'react-icons/md';
 import useOverlay from '../../hooks/useOverlay';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
+import { getTimerPointColor } from '../../utils/themeUtils';
 import TimerListTopBar from '../navigation/TimerListTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
 
@@ -50,7 +51,7 @@ const TimerListOverlay: React.FC = () => {
                         {timers.map((timer: TimerData) => (
                             <li
                                 key={timer.id}
-                                className="flex cursor-pointer items-center justify-between"
+                                className="flex items-center justify-between"
                                 onClick={() => {
                                     handleSelectTimer(timer.id);
                                     close();
@@ -60,7 +61,7 @@ const TimerListOverlay: React.FC = () => {
                                     <div className="shrink-0 self-center">
                                         <FaCircle
                                             size={50}
-                                            fill={timer.pointColor}
+                                            fill={getTimerPointColor(originalTheme, timer.pointColorIndex)}
                                             className="rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]"
                                         />
                                     </div>
@@ -79,6 +80,7 @@ const TimerListOverlay: React.FC = () => {
                                             openOverlay(timer);
                                         }}
                                         aria-label="Edit Timer"
+                                        className="cursor-pointer"
                                     />
                                     <IoMdTrash
                                         size={24}
@@ -87,6 +89,7 @@ const TimerListOverlay: React.FC = () => {
                                             removeTimer(timer.id);
                                         }}
                                         aria-label="Delete Timer"
+                                        className="cursor-pointer"
                                     />
                                 </div>
                             </li>

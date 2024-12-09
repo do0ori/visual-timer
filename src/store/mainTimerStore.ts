@@ -7,7 +7,7 @@ export interface TimerData {
     time: number;
     isMinutes: boolean;
     isRunning: boolean;
-    pointColor?: string;
+    pointColorIndex?: number;
 }
 
 interface MainTimerState {
@@ -40,7 +40,7 @@ export const useMainTimerStore = create<MainTimerState>()(
                     time: 9,
                     isMinutes: true,
                     isRunning: false,
-                    pointColor: '#5D6DB6',
+                    pointColorIndex: 0,
                 },
             ],
 
@@ -62,9 +62,7 @@ export const useMainTimerStore = create<MainTimerState>()(
             updateTimer: (id: string, updatedProps: Partial<TimerData>) => {
                 set((state) => {
                     return id === 'default'
-                        ? {
-                              defaultTimer: { ...state.defaultTimer, ...updatedProps },
-                          }
+                        ? { defaultTimer: { ...state.defaultTimer, ...updatedProps } }
                         : {
                               timers: state.timers.map((timer) =>
                                   timer.id === id ? { ...timer, ...updatedProps } : timer

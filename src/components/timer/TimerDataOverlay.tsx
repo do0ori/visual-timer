@@ -4,6 +4,7 @@ import useOverlay from '../../hooks/useOverlay';
 import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
+import { getTimerPointColor } from '../../utils/themeUtils';
 import TimerTopBar from '../navigation/TimerTopBar';
 import TimeSelector from '../selector/TimeSelector';
 import TimeDisplay from './TimeDisplay';
@@ -20,12 +21,12 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
 
     const { addTimer, updateTimer } = useMainTimerStore();
     const [title, setTitle] = useState(initialTimerData?.title || '');
-    const [pointColor, setPointColor] = useState(initialTimerData?.pointColor || originalTheme.color.point);
+    const [pointColorIndex, setPointColorIndex] = useState(initialTimerData?.pointColorIndex || 0);
     const [isMinutes, setIsMinutes] = useState(initialTimerData?.isMinutes || false);
     const [time, setTime] = useState(initialTimerData?.time || 5);
 
     const currentTheme = deepCopy(themes[globalThemeKey]);
-    currentTheme.color.point = pointColor;
+    currentTheme.color.point = getTimerPointColor(currentTheme, pointColorIndex);
 
     const { isOpen, close } = useOverlay('timer-data', onClose);
 
@@ -33,13 +34,13 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
     useEffect(() => {
         if (initialTimerData) {
             setTitle(initialTimerData.title || '');
-            setPointColor(initialTimerData.pointColor || currentTheme.color.point);
+            setPointColorIndex(initialTimerData.pointColorIndex || 0);
             setIsMinutes(initialTimerData.isMinutes || false);
             setTime(initialTimerData.time || 5);
         } else {
             // Reset fields for a new timer
             setTitle('');
-            setPointColor(originalTheme.color.point);
+            setPointColorIndex(0);
             setIsMinutes(false);
             setTime(5);
         }
@@ -47,7 +48,7 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
 
     const resetFields = () => {
         setTitle('');
-        setPointColor(originalTheme.color.point);
+        setPointColorIndex(0);
         setIsMinutes(false);
         setTime(5);
     };
@@ -56,12 +57,12 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
         const finalTitle = title.trim() || `Timer-${time}`;
 
         if (initialTimerData) {
-            updateTimer(initialTimerData.id, { title: finalTitle, pointColor, isMinutes, time });
+            updateTimer(initialTimerData.id, { title: finalTitle, pointColorIndex, isMinutes, time });
         } else {
             addTimer({
                 id: Date.now().toString(),
                 title: finalTitle,
-                pointColor,
+                pointColorIndex,
                 isMinutes,
                 time,
                 isRunning: false,
@@ -105,15 +106,20 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
                     </label>
                     <label className="flex items-center gap-8">
                         <MdOutlinePalette size={30} />
-                        <input
-                            type="color"
-                            value={pointColor}
-                            onChange={(e) => {
-                                setPointColor(e.target.value);
-                                currentTheme.color.point = e.target.value;
-                            }}
-                            className="w-full rounded color-picker"
-                        />
+                        <div className="flex flex-wrap gap-3">
+                            {currentTheme.color.pointOptions.map((color, index) => (
+                                <button
+                                    key={index}
+                                    className={`size-10 rounded-full border-2 transition-all ${
+                                        pointColorIndex === index
+                                            ? 'scale-110 border-white'
+                                            : 'border-transparent hover:scale-105'
+                                    }`}
+                                    style={{ backgroundColor: color }}
+                                    onClick={() => setPointColorIndex(index)}
+                                />
+                            ))}
+                        </div>
                     </label>
                     <label className="flex items-center gap-8">
                         <MdOutlineTimer size={30} />

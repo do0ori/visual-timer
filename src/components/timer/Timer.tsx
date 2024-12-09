@@ -6,6 +6,7 @@ import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
+import { getTimerPointColor } from '../../utils/themeUtils';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
 import HorizontalLayout from '../layout/HorizontalLayout';
 import VerticalLayout from '../layout/VerticalLayout';
@@ -22,9 +23,9 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     const audioRef = useAudio(volume);
     const timerDisplayRef = useRef<SVGCircleElement>(null);
 
-    const { time: storedTime, isMinutes: storedIsMinutes, pointColor, title } = timer;
+    const { time: storedTime, isMinutes: storedIsMinutes, pointColorIndex, title } = timer;
     const currentTheme = deepCopy(themes[globalThemeKey]);
-    if (pointColor) currentTheme.color.point = pointColor;
+    if (pointColorIndex) currentTheme.color.point = getTimerPointColor(currentTheme, pointColorIndex);
     if (title) currentTheme.text = title;
 
     const onFinish = useCallback(
