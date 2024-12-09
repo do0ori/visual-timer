@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
-import useOverlay from '../../hooks/useOverlay';
-import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
-import { useThemeStore } from '../../store/themeStore';
-import { getTimerPointColor } from '../../utils/themeUtils';
-import TimerListTopBar from '../navigation/TimerListTopBar';
+import useOverlay from '../../../hooks/useOverlay';
+import { TimerData, useMainTimerStore } from '../../../store/mainTimerStore';
+import { useThemeStore } from '../../../store/themeStore';
+import { getTimerPointColor } from '../../../utils/themeUtils';
+import TimerListTopBar from '../../navigation/TimerListTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
 
 const TimerListOverlay: React.FC = () => {

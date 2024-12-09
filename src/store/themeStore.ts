@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Theme, themes } from '../config/timer/themes';
+import { Theme, themes } from '../config/theme/themes';
 import { isDarkColor } from '../utils/colorUtils';
 
 interface ThemeState {

@@ -1,5 +1,5 @@
 import { BiSolidBellRing } from 'react-icons/bi';
-import { alarmOptions } from '../../config/timer/alarms';
+import { alarmOptions } from '../../config/audio/alarms';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useThemeStore } from '../../store/themeStore';
 import Dropdown from '../common/Dropdown';

@@ -10,10 +10,10 @@ import { getTimerPointColor } from '../../utils/themeUtils';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
 import HorizontalLayout from '../layout/HorizontalLayout';
 import VerticalLayout from '../layout/VerticalLayout';
-import ControlButtons from './ControlButtons';
-import TimeDisplay from './TimeDisplay';
-import TimerDisplay from './TimerDisplay';
-import UnitToggleButton from './UnitToggleButton';
+import ControlButtons from './controls/ControlButtons';
+import UnitToggleButton from './controls/UnitToggleButton';
+import TimeDisplay from './display/TimeDisplay';
+import TimerDisplay from './display/TimerDisplay';
 
 const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     const aspectRatio = useAspectRatio();

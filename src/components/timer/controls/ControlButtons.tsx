@@ -1,8 +1,8 @@
 import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'react-icons/io5';
-import { Theme } from '../../config/timer/themes';
-import Button from '../common/Button';
-import SettingsOverlay from './SettingsOverlay';
-import TimerListOverlay from './TimerListOverlay';
+import { Theme } from '../../../config/theme/themes';
+import Button from '../../common/Button';
+import SettingsOverlay from '../overlay/SettingsOverlay';
+import TimerListOverlay from '../overlay/TimerListOverlay';
 
 type ControlButtonsProps = {
     isMinutes: boolean;

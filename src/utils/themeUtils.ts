@@ -1,4 +1,4 @@
-import { Theme } from '../config/timer/themes';
+import { Theme } from '../config/theme/themes';
 
 export const getTimerPointColor = (theme: Theme, colorIndex?: number): string => {
     if (colorIndex === undefined) {

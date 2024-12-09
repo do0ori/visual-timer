@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-interface TimerDisplayTextProps {
+interface TimerTextDisplayProps {
     className?: string;
     text: string;
     timerDisplayRef: React.RefObject<SVGCircleElement>;
 }
 
-const TimerDisplayText: React.FC<TimerDisplayTextProps> = ({ className, text, timerDisplayRef }) => {
+const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, text, timerDisplayRef }) => {
     const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
 
     const updatePosition = () => {
@@ -53,4 +53,4 @@ const TimerDisplayText: React.FC<TimerDisplayTextProps> = ({ className, text, ti
     );
 };
 
-export default TimerDisplayText;
+export default TimerTextDisplay;

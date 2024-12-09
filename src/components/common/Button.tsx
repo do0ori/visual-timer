@@ -1,4 +1,4 @@
-import { Theme } from '../../config/timer/themes';
+import { Theme } from '../../config/theme/themes';
 
 type ButtonProps = {
     'aria-label': string;

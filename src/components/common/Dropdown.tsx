@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
-import { Theme } from '../../config/timer/themes';
+import { Theme } from '../../config/theme/themes';
 
 type DropdownOption = {
     label: string;

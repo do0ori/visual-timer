@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
-import useOverlay from '../../hooks/useOverlay';
-import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
-import { useThemeStore } from '../../store/themeStore';
-import { deepCopy } from '../../utils/deepCopy';
-import { getTimerPointColor } from '../../utils/themeUtils';
-import TimerTopBar from '../navigation/TimerTopBar';
-import TimeSelector from '../selector/TimeSelector';
-import TimeDisplay from './TimeDisplay';
+import useOverlay from '../../../hooks/useOverlay';
+import { TimerData, useMainTimerStore } from '../../../store/mainTimerStore';
+import { useThemeStore } from '../../../store/themeStore';
+import { deepCopy } from '../../../utils/deepCopy';
+import { getTimerPointColor } from '../../../utils/themeUtils';
+import TimeSelector from '../../forms/TimeSelector';
+import TimerTopBar from '../../navigation/TimerTopBar';
+import TimeDisplay from '../display/TimeDisplay';
 
 interface TimerOverlayProps {
     initialTimerData: TimerData | null;

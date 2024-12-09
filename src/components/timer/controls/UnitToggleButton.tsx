@@ -1,5 +1,5 @@
 import { IoSwapVertical } from 'react-icons/io5';
-import { Theme } from '../../config/timer/themes';
+import { Theme } from '../../../config/theme/themes';
 
 type UnitToggleButtonProps = {
     onClick: () => void;
