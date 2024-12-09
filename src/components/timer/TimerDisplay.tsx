@@ -1,5 +1,6 @@
 import { forwardRef, useState } from 'react';
 import { Theme } from '../../config/timer/themes';
+import TimerDisplayText from './TimerTextDisplay';
 
 type TimerDisplayProps = {
     progress: number;
@@ -122,25 +123,12 @@ const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
                             className="brightness-90 saturate-200"
                         />
                     </g>
-
-                    {/* Timer Text */}
-                    <text
-                        x={0}
-                        y={baseRadius / 2 - 5}
-                        textAnchor="middle"
-                        alignmentBaseline="hanging"
-                        fontSize={4}
-                        fontWeight="bold"
-                        fill={currentTheme.color.point}
-                        className="pointer-events-none"
-                    >
-                        {currentTheme.text.split('\n').map((line, index) => (
-                            <tspan key={index} x="0" dy={`${index === 0 ? 0 : 1.2}em`}>
-                                {line}
-                            </tspan>
-                        ))}
-                    </text>
                 </svg>
+                <TimerDisplayText
+                    timerDisplayRef={ref as React.RefObject<SVGCircleElement>}
+                    text={currentTheme.text}
+                    className="font-bold text-black"
+                />
             </div>
         );
     }
