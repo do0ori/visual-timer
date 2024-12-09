@@ -6,6 +6,7 @@ import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
 import TimerTopBar from '../navigation/TimerTopBar';
 import TimeSelector from '../selector/TimeSelector';
+import TimeDisplay from './TimeDisplay';
 
 interface TimerOverlayProps {
     initialTimerData: TimerData | null;
@@ -117,6 +118,10 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
                     <label className="flex items-center gap-8">
                         <MdOutlineTimer size={30} />
                         <div className="flex gap-5">
+                            <TimeDisplay
+                                className="pointer-events-none w-10 text-center text-xl"
+                                currentTime={time.toString()}
+                            />
                             <label className="flex items-center gap-2">
                                 <input
                                     type="radio"
