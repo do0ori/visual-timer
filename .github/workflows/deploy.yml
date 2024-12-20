@@ -36,11 +36,11 @@ jobs:
                   path: node_modules
                   key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-node-
+                      ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
             - name: Install dependencies
               if: steps.cache.outputs.cache-hit != 'true'
-              run: npm install
+              run: npm ci
 
             - name: Build the project
               run: npm run build
