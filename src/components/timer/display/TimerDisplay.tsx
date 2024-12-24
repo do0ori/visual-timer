@@ -126,8 +126,8 @@ const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
                 </svg>
                 <TimerTextDisplay
                     timerDisplayRef={ref as React.RefObject<SVGCircleElement>}
-                    text={currentTheme.text}
-                    className="font-bold text-black"
+                    currentTheme={currentTheme}
+                    className="font-bold"
                 />
             </div>
         );

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { Theme } from '../../../config/theme/themes';
 
 interface TimerTextDisplayProps {
     className?: string;
-    text: string;
+    currentTheme: Theme;
     timerDisplayRef: React.RefObject<SVGCircleElement>;
 }
 
-const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, text, timerDisplayRef }) => {
+const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentTheme, timerDisplayRef }) => {
     const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
 
     const updatePosition = () => {
@@ -44,9 +45,10 @@ const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, text, ti
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
+                color: `${currentTheme.color.point}D9`,
             }}
         >
-            {text.split('\n').map((line, index) => (
+            {currentTheme.text.split('\n').map((line, index) => (
                 <div key={index}>{line}</div>
             ))}
         </div>
