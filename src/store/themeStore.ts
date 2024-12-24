@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Theme, themes } from '../config/theme/themes';
-import { isDarkColor } from '../utils/colorUtils';
+import { getTextColor } from '../utils/colorUtils';
 
 interface ThemeState {
     globalThemeKey: string;
@@ -17,15 +17,14 @@ export const useThemeStore = create<ThemeState>()(
         (set, get) => ({
             globalThemeKey: 'default-classic',
             themes: { ...themes },
-            compColor: isDarkColor(themes['default-classic'].color.main) ? 'white' : 'black',
+            compColor: getTextColor(themes['default-classic'].color.main),
 
             setGlobalTheme: (themeKey) => {
                 const { themes } = get();
                 if (themes[themeKey]) {
-                    const isDark = isDarkColor(themes[themeKey].color.main);
                     set({
                         globalThemeKey: themeKey,
-                        compColor: isDark ? 'white' : 'black',
+                        compColor: getTextColor(themes[themeKey].color.main),
                     });
                 } else {
                     console.warn(`Theme with key "${themeKey}" does not exist.`);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Theme } from '../../../config/theme/themes';
+import { getAdjustedColor } from '../../../utils/colorUtils';
 
 interface TimerTextDisplayProps {
     className?: string;
@@ -41,11 +42,12 @@ const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentT
 
     return (
         <div
-            className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-center brightness-150 ${className || ''}`}
+            className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-center ${className || ''}`}
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
-                color: currentTheme.color.point,
+                color: getAdjustedColor(currentTheme.color.point, ['#FFFFFF', currentTheme.color.main]),
+                transition: 'color 0.3s',
             }}
         >
             {currentTheme.text.split('\n').map((line, index) => (
