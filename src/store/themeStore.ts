@@ -15,9 +15,9 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
     persist(
         (set, get) => ({
-            globalThemeKey: 'default-classic',
+            globalThemeKey: 'beige-green',
             themes: { ...themes },
-            compColor: getTextColor(themes['default-classic'].color.main),
+            compColor: getTextColor(themes['beige-green'].color.main),
 
             setGlobalTheme: (themeKey) => {
                 const { themes } = get();
@@ -49,7 +49,7 @@ export const useThemeStore = create<ThemeState>()(
 
                 set(() => ({
                     themes: remainingThemes,
-                    globalThemeKey: globalThemeKey === themeKey ? 'default-classic' : globalThemeKey,
+                    globalThemeKey: globalThemeKey === themeKey ? 'beige-green' : globalThemeKey,
                 }));
             },
         }),
