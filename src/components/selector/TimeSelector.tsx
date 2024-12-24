@@ -87,7 +87,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                             dominantBaseline="central"
                             fontSize={3}
                             fontWeight={1000}
-                            fill="rgba(0, 0, 0, 0.8)"
+                            fill="rgba(0, 0, 0, 0.6)"
                             className="pointer-events-none"
                         >
                             {value}
