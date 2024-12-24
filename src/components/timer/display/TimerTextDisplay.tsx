@@ -41,7 +41,7 @@ const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentT
 
     return (
         <div
-            className={`absolute -translate-x-1/2 -translate-y-1/2 text-center ${className || ''}`}
+            className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-center ${className || ''}`}
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
