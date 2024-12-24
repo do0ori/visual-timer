@@ -41,11 +41,11 @@ const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentT
 
     return (
         <div
-            className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-center ${className || ''}`}
+            className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-center brightness-150 ${className || ''}`}
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
-                color: `${currentTheme.color.point}D9`,
+                color: currentTheme.color.point,
             }}
         >
             {currentTheme.text.split('\n').map((line, index) => (
