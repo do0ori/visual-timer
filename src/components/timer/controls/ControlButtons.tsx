@@ -54,7 +54,7 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({
     };
 
     return (
-        <div className="flex justify-around">
+        <div className="flex justify-between">
             {isInitialized ? (
                 <>
                     {/* Timer List Button */}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { HiMiniHome } from 'react-icons/hi2';
 import { useAspectRatio } from '../../hooks/useAspectRatio';
 import { useAudio } from '../../hooks/useAudio';
 import { useTimer } from '../../hooks/useTimer';
@@ -8,6 +9,7 @@ import { useThemeStore } from '../../store/themeStore';
 import { deepCopy } from '../../utils/deepCopy';
 import { getTimerPointColor } from '../../utils/themeUtils';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
+import Button from '../common/Button';
 import HorizontalLayout from '../layout/HorizontalLayout';
 import VerticalLayout from '../layout/VerticalLayout';
 import ControlButtons from './controls/ControlButtons';
@@ -78,31 +80,38 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     const handleDragOrClick = (e: React.MouseEvent | React.TouchEvent) => {
         if (timer.id === 'default') {
             handleDragEvent(e, setTime);
-        } else {
-            selectTimer('default');
         }
     };
 
+    const setToDefault = () => selectTimer('default');
+
     const commonContent = {
-        unitSwitch: (
-            <UnitSwitch
-                onClick={toggleUnit}
-                isMinutes={isMinutes}
-                isRunning={timer.id === 'default' ? isRunning : true}
-                currentTheme={currentTheme}
-            />
+        top: (
+            <div className="mt-[5%] flex items-center justify-between px-[5%]">
+                <Button onClick={setToDefault} aria-label="Back to Default Timer" visible={timer.id !== 'default'}>
+                    <HiMiniHome size={30} />
+                </Button>
+                <UnitSwitch
+                    onClick={toggleUnit}
+                    isMinutes={isMinutes}
+                    isRunning={timer.id === 'default' ? isRunning : true}
+                    currentTheme={currentTheme}
+                />
+            </div>
         ),
-        controlButtons: (
-            <ControlButtons
-                isMinutes={isMinutes}
-                isRunning={isRunning}
-                isInitialized={isInitialized}
-                currentTheme={currentTheme}
-                start={start}
-                stop={stop}
-                reset={reset}
-                add={add}
-            />
+        bottom: (
+            <div className="mb-[5%] w-full self-center px-[5%]">
+                <ControlButtons
+                    isMinutes={isMinutes}
+                    isRunning={isRunning}
+                    isInitialized={isInitialized}
+                    currentTheme={currentTheme}
+                    start={start}
+                    stop={stop}
+                    reset={reset}
+                    add={add}
+                />
+            </div>
         ),
         timeDisplaySimple: <TimeDisplay currentTime={currentTime} />,
         timeDisplayRelative: <TimeDisplay currentTime={currentTime} timerDisplayRef={timerDisplayRef} />,
@@ -121,22 +130,22 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
             className="h-screen w-screen"
             leftChildren={commonContent.timerDisplay}
             rightChildren={
-                <div className="flex size-full flex-col justify-around">
-                    <div className="flex self-end pr-[10%]">{commonContent.unitSwitch}</div>
+                <div className="flex size-full flex-col justify-between">
+                    {commonContent.top}
                     <div className="flex flex-col items-center justify-center">{commonContent.timeDisplaySimple}</div>
-                    <div className="w-full self-center">{commonContent.controlButtons}</div>
+                    {commonContent.bottom}
                 </div>
             }
         />
     ) : (
         <VerticalLayout className="h-screen w-screen">
             <div className="flex size-full flex-col justify-between">
-                <div className="flex self-end pr-5 pt-5">{commonContent.unitSwitch}</div>
+                {commonContent.top}
                 <div className="flex grow items-center justify-center">
                     {commonContent.timeDisplayRelative}
                     {commonContent.timerDisplay}
                 </div>
-                <div className="mb-5 w-full self-center">{commonContent.controlButtons}</div>
+                {commonContent.bottom}
             </div>
         </VerticalLayout>
     );
