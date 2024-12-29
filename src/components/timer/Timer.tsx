@@ -11,7 +11,7 @@ import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
 import HorizontalLayout from '../layout/HorizontalLayout';
 import VerticalLayout from '../layout/VerticalLayout';
 import ControlButtons from './controls/ControlButtons';
-import UnitToggleButton from './controls/UnitToggleButton';
+import UnitSwitch from './controls/UnitSwitch';
 import TimeDisplay from './display/TimeDisplay';
 import TimerDisplay from './display/TimerDisplay';
 
@@ -84,8 +84,8 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     };
 
     const commonContent = {
-        unitToggleButton: (
-            <UnitToggleButton
+        unitSwitch: (
+            <UnitSwitch
                 onClick={toggleUnit}
                 isMinutes={isMinutes}
                 isRunning={timer.id === 'default' ? isRunning : true}
@@ -122,7 +122,7 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
             leftChildren={commonContent.timerDisplay}
             rightChildren={
                 <div className="flex size-full flex-col justify-around">
-                    <div className="flex self-end pr-5">{commonContent.unitToggleButton}</div>
+                    <div className="flex self-end pr-[10%]">{commonContent.unitSwitch}</div>
                     <div className="flex flex-col items-center justify-center">{commonContent.timeDisplaySimple}</div>
                     <div className="w-full self-center">{commonContent.controlButtons}</div>
                 </div>
@@ -131,7 +131,7 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     ) : (
         <VerticalLayout className="h-screen w-screen">
             <div className="flex size-full flex-col justify-between">
-                <div className="flex self-end pr-5 pt-5">{commonContent.unitToggleButton}</div>
+                <div className="flex self-end pr-5 pt-5">{commonContent.unitSwitch}</div>
                 <div className="flex grow items-center justify-center">
                     {commonContent.timeDisplayRelative}
                     {commonContent.timerDisplay}
