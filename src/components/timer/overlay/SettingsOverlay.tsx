@@ -1,9 +1,9 @@
 import useOverlay from '../../../hooks/useOverlay';
 import { useThemeStore } from '../../../store/themeStore';
-import AlarmSelector from '../../forms/AlarmSelector';
-import ThemeSelector from '../../forms/ThemeSelector';
-import VolumeSelector from '../../forms/VolumeSelector';
 import SettingsTopBar from '../../navigation/SettingsTopBar';
+import AlarmSelector from '../../selector/AlarmSelector';
+import ThemeSelector from '../../selector/ThemeSelector';
+import VolumeSelector from '../../selector/VolumeSelector';
 
 const SettingsOverlay: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();

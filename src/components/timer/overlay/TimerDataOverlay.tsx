@@ -5,8 +5,8 @@ import { TimerData, useMainTimerStore } from '../../../store/mainTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
 import { deepCopy } from '../../../utils/deepCopy';
 import { getTimerPointColor } from '../../../utils/themeUtils';
-import TimeSelector from '../../forms/TimeSelector';
 import TimerTopBar from '../../navigation/TimerTopBar';
+import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
 
 interface TimerOverlayProps {
