@@ -6,7 +6,7 @@ import useOverlay from '../../../hooks/useOverlay';
 import { TimerData, useMainTimerStore } from '../../../store/mainTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
 import { getTimerPointColor } from '../../../utils/themeUtils';
-import TimerListTopBar from '../../navigation/TimerListTopBar';
+import BackAddTopBar from '../../navigation/BackAddTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
 
 const TimerListOverlay: React.FC = () => {
@@ -44,7 +44,7 @@ const TimerListOverlay: React.FC = () => {
                     outline: `2px solid ${originalTheme.color.sub}33`,
                 }}
             >
-                <TimerListTopBar title="Timer List" onClose={close} onAdd={() => openOverlay()} />
+                <BackAddTopBar title="Timer List" onClose={close} onAdd={() => openOverlay()} />
 
                 <div className="w-full p-5 pt-20">
                     <ul className="max-h-[calc(100vh-6.25rem)] space-y-5 overflow-y-auto no-scrollbar">

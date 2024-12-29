@@ -1,13 +1,13 @@
 import { IoIosArrowBack } from 'react-icons/io';
 import TopBar from '../common/TopBar';
 
-type SettingsTopBarProps = {
+type BackTopBarProps = {
     title: string;
     onClose: () => void;
 };
 
-const SettingsTopBar: React.FC<SettingsTopBarProps> = ({ title, onClose }) => {
+const BackTopBar: React.FC<BackTopBarProps> = ({ title, onClose }) => {
     return <TopBar title={title} leftIcon={<IoIosArrowBack size={24} />} onLeftClick={onClose} />;
 };
 
-export default SettingsTopBar;
+export default BackTopBar;

@@ -1,13 +1,13 @@
 import { IoIosArrowBack, IoMdAdd } from 'react-icons/io';
 import TopBar from '../common/TopBar';
 
-type TimerListTopBarProps = {
+type BackAddTopBarProps = {
     title: string;
     onClose: () => void;
     onAdd: () => void;
 };
 
-const TimerListTopBar: React.FC<TimerListTopBarProps> = ({ title, onClose, onAdd }) => {
+const BackAddTopBar: React.FC<BackAddTopBarProps> = ({ title, onClose, onAdd }) => {
     return (
         <TopBar
             title={title}
@@ -19,4 +19,4 @@ const TimerListTopBar: React.FC<TimerListTopBarProps> = ({ title, onClose, onAdd
     );
 };
 
-export default TimerListTopBar;
+export default BackAddTopBar;

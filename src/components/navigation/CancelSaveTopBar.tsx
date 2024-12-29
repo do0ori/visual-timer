@@ -1,13 +1,13 @@
 import { IoIosSave, IoMdClose } from 'react-icons/io';
 import TopBar from '../common/TopBar';
 
-type TimerTopBarProps = {
+type CancelSaveTopBarProps = {
     title: string;
     onClose: () => void;
     onSave: () => void;
 };
 
-const TimerTopBar: React.FC<TimerTopBarProps> = ({ title, onClose, onSave }) => {
+const CancelSaveTopBar: React.FC<CancelSaveTopBarProps> = ({ title, onClose, onSave }) => {
     return (
         <TopBar
             title={title}
@@ -19,4 +19,4 @@ const TimerTopBar: React.FC<TimerTopBarProps> = ({ title, onClose, onSave }) => 
     );
 };
 
-export default TimerTopBar;
+export default CancelSaveTopBar;

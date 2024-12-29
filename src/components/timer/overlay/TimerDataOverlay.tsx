@@ -5,7 +5,7 @@ import { TimerData, useMainTimerStore } from '../../../store/mainTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
 import { deepCopy } from '../../../utils/deepCopy';
 import { getTimerPointColor } from '../../../utils/themeUtils';
-import TimerTopBar from '../../navigation/TimerTopBar';
+import CancelSaveTopBar from '../../navigation/CancelSaveTopBar';
 import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
 
@@ -86,7 +86,7 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
                 backgroundColor: originalTheme.color.main,
             }}
         >
-            <TimerTopBar
+            <CancelSaveTopBar
                 title={mode === 'edit' ? 'Edit Timer' : 'Add New Timer'}
                 onClose={handleCancel}
                 onSave={handleSave}

@@ -1,6 +1,6 @@
 import useOverlay from '../../../hooks/useOverlay';
 import { useThemeStore } from '../../../store/themeStore';
-import SettingsTopBar from '../../navigation/SettingsTopBar';
+import BackTopBar from '../../navigation/BackTopBar';
 import AlarmSelector from '../../selector/AlarmSelector';
 import ThemeSelector from '../../selector/ThemeSelector';
 import VolumeSelector from '../../selector/VolumeSelector';
@@ -21,7 +21,7 @@ const SettingsOverlay: React.FC = () => {
                 outline: `2px solid ${originalTheme.color.sub}33`,
             }}
         >
-            <SettingsTopBar title="Settings" onClose={close} />
+            <BackTopBar title="Settings" onClose={close} />
 
             <div className="h-[95%] overflow-y-auto no-scrollbar">
                 <div className="p-5 pt-20">
