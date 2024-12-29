@@ -1,11 +1,11 @@
 import { IoIosArrowBack, IoMdAdd } from 'react-icons/io';
 import TopBar from '../common/TopBar';
 
-interface TimerListTopBarProps {
+type TimerListTopBarProps = {
     title: string;
     onClose: () => void;
     onAdd: () => void;
-}
+};
 
 const TimerListTopBar: React.FC<TimerListTopBarProps> = ({ title, onClose, onAdd }) => {
     return (

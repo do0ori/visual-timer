@@ -3,14 +3,14 @@ import { persist } from 'zustand/middleware';
 import { Theme, themes } from '../config/theme/themes';
 import { getTextColor } from '../utils/colorUtils';
 
-interface ThemeState {
+type ThemeState = {
     globalThemeKey: string;
     themes: Record<string, Theme>;
     compColor: 'white' | 'black';
     setGlobalTheme: (themeKey: string) => void;
     addCustomTheme: (themeKey: string, theme: Theme) => void;
     removeCustomTheme: (themeKey: string) => void;
-}
+};
 
 export const useThemeStore = create<ThemeState>()(
     persist(

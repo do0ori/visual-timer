@@ -9,11 +9,11 @@ import TimerTopBar from '../../navigation/TimerTopBar';
 import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
 
-interface TimerOverlayProps {
+type TimerOverlayProps = {
     initialTimerData: TimerData | null;
     mode: 'add' | 'edit';
     onClose: () => void;
-}
+};
 
 const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode, onClose }) => {
     const { themes, globalThemeKey } = useThemeStore();

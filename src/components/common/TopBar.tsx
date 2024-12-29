@@ -1,12 +1,12 @@
 import { useThemeStore } from '../../store/themeStore';
 
-interface TopBarProps {
+type TopBarProps = {
     title: string;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     onLeftClick?: () => void;
     onRightClick?: () => void;
-}
+};
 
 const TopBar: React.FC<TopBarProps> = ({ title, leftIcon, rightIcon, onLeftClick, onRightClick }) => {
     const { themes, globalThemeKey } = useThemeStore();

@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export interface TimerData {
+export type TimerData = {
     id: string;
     title?: string;
     time: number;
     isMinutes: boolean;
     isRunning: boolean;
     pointColorIndex?: number;
-}
+};
 
-interface MainTimerState {
+type MainTimerState = {
     defaultTimer: TimerData;
     selectedTimerId: string;
     timers: TimerData[];
@@ -19,7 +19,7 @@ interface MainTimerState {
     getTimer: (id: string) => TimerData;
     updateTimer: (id: string, updatedProps: Partial<TimerData>) => void;
     removeTimer: (id: string) => void;
-}
+};
 
 export const useMainTimerStore = create<MainTimerState>()(
     persist(

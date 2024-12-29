@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-interface TimeDisplayProps {
+type TimeDisplayProps = {
     className?: string;
     currentTime: string;
     timerDisplayRef?: React.RefObject<SVGCircleElement>;
-}
+};
 
 const TimeDisplay: React.FC<TimeDisplayProps> = ({ className, currentTime, timerDisplayRef }) => {
     if (!timerDisplayRef) {

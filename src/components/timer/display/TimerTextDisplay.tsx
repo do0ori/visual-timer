@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Theme } from '../../../config/theme/themes';
 import { getAdjustedColor } from '../../../utils/colorUtils';
 
-interface TimerTextDisplayProps {
+type TimerTextDisplayProps = {
     className?: string;
     currentTheme: Theme;
     timerDisplayRef: React.RefObject<SVGCircleElement>;
-}
+};
 
 const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentTheme, timerDisplayRef }) => {
     const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
