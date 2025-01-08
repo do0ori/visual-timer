@@ -3,18 +3,21 @@ import { FaCircle } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
 import useOverlay from '../../../hooks/useOverlay';
-import { TimerData, useMainTimerStore } from '../../../store/mainTimerStore';
+import { useBaseTimerStore } from '../../../store/baseTimerStore';
+import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import BackAddTopBar from '../../navigation/BackAddTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
+import { BaseTimerData } from '../../../store/types/timer';
 
 const TimerListOverlay: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
-    const { timers, selectTimer, removeTimer } = useMainTimerStore();
-    const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
+    const selectTimer = useSelectedTimerStore((state) => state.selectTimer);
+    const { timers, removeTimer } = useBaseTimerStore();
+    const [targetTimer, setTargetTimer] = useState<BaseTimerData | null>(null);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
 
     const { isOpen, close } = useOverlay('timer-list');
@@ -23,7 +26,7 @@ const TimerListOverlay: React.FC = () => {
         selectTimer(timerId);
     };
 
-    const openOverlay = (timer?: TimerData) => {
+    const openOverlay = (timer?: BaseTimerData) => {
         setTargetTimer(timer || null);
         setMode(timer ? 'edit' : 'add');
         window.location.hash = 'timer-list&timer-data';
@@ -48,7 +51,7 @@ const TimerListOverlay: React.FC = () => {
 
                 <div className="w-full p-5 pt-20">
                     <ul className="max-h-[calc(100vh-6.25rem)] space-y-5 overflow-y-auto no-scrollbar">
-                        {timers.map((timer: TimerData) => (
+                        {timers.map((timer: BaseTimerData) => (
                             <li
                                 key={timer.id}
                                 className="flex items-center justify-between"

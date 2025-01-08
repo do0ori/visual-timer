@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
 import useOverlay from '../../../hooks/useOverlay';
-import { TimerData, useMainTimerStore } from '../../../store/mainTimerStore';
+import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
+import { BaseTimerData, TIMER_TYPE } from '../../../store/types/timer';
 import { deepCopy } from '../../../utils/deepCopy';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import CancelSaveTopBar from '../../navigation/CancelSaveTopBar';
@@ -10,7 +11,7 @@ import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
 
 type TimerOverlayProps = {
-    initialTimerData: TimerData | null;
+    initialTimerData: BaseTimerData | null;
     mode: 'add' | 'edit';
     onClose: () => void;
 };
@@ -19,7 +20,7 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
     const { themes, globalThemeKey } = useThemeStore();
     const originalTheme = themes[globalThemeKey];
 
-    const { addTimer, updateTimer } = useMainTimerStore();
+    const { addTimer, updateTimer } = useBaseTimerStore();
     const [title, setTitle] = useState(initialTimerData?.title || '');
     const [pointColorIndex, setPointColorIndex] = useState(initialTimerData?.pointColorIndex || 0);
     const [isMinutes, setIsMinutes] = useState(initialTimerData?.isMinutes || false);
@@ -61,6 +62,7 @@ const TimerDataOverlay: React.FC<TimerOverlayProps> = ({ initialTimerData, mode,
         } else {
             addTimer({
                 id: Date.now().toString(),
+                type: TIMER_TYPE.BASE,
                 title: finalTitle,
                 pointColorIndex,
                 isMinutes,
