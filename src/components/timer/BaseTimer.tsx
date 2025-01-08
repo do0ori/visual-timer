@@ -3,9 +3,11 @@ import { HiMiniHome } from 'react-icons/hi2';
 import { useAspectRatio } from '../../hooks/useAspectRatio';
 import { useAudio } from '../../hooks/useAudio';
 import { useTimer } from '../../hooks/useTimer';
-import { TimerData, useMainTimerStore } from '../../store/mainTimerStore';
+import { useBaseTimerStore } from '../../store/baseTimerStore';
+import { useSelectedTimerStore } from '../../store/selectedTimerStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useThemeStore } from '../../store/themeStore';
+import { BaseTimerData } from '../../store/types/timer';
 import { deepCopy } from '../../utils/deepCopy';
 import { getTimerPointColor } from '../../utils/themeUtils';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
@@ -17,9 +19,10 @@ import UnitSwitch from './controls/UnitSwitch';
 import TimeDisplay from './display/TimeDisplay';
 import TimerDisplay from './display/TimerDisplay';
 
-const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
+const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
     const aspectRatio = useAspectRatio();
-    const { selectTimer, updateTimer } = useMainTimerStore();
+    const { selectTimer, updateDefaultTimer } = useSelectedTimerStore();
+    const updateTimer = useBaseTimerStore((state) => state.updateTimer);
     const { themes, globalThemeKey } = useThemeStore();
     const { volume } = useSettingsStore();
     const audioRef = useAudio(volume);
@@ -62,20 +65,24 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     const progress = Math.max(0, count / currentUnit.denominator);
 
     useEffect(() => {
-        updateTimer(timer.id, { isRunning });
+        if (timer.id === 'default') {
+            updateDefaultTimer({ isRunning });
+        } else {
+            updateTimer(timer.id, { isRunning });
+        }
     }, [isRunning, updateTimer]);
 
     useEffect(() => {
         if (timer.id === 'default') {
-            updateTimer(timer.id, { time: totalTime });
+            updateDefaultTimer({ time: totalTime });
         }
-    }, [totalTime, updateTimer]);
+    }, [totalTime, updateDefaultTimer]);
 
     useEffect(() => {
         if (timer.id === 'default') {
-            updateTimer(timer.id, { isMinutes });
+            updateDefaultTimer({ isMinutes });
         }
-    }, [isMinutes, updateTimer]);
+    }, [isMinutes, updateDefaultTimer]);
 
     const handleDragOrClick = (e: React.MouseEvent | React.TouchEvent) => {
         if (timer.id === 'default') {
@@ -151,4 +158,4 @@ const Timer: React.FC<{ timer: TimerData }> = ({ timer }) => {
     );
 };
 
-export default Timer;
+export default BaseTimer;
