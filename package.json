@@ -3,7 +3,6 @@
     "version": "0.1.0",
     "private": false,
     "dependencies": {
-        "@hookform/resolvers": "^3.10.0",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
@@ -31,7 +30,6 @@
         "workbox-routing": "^6.6.0",
         "workbox-strategies": "^6.6.0",
         "workbox-streams": "^6.6.0",
-        "zod": "^3.24.1",
         "zustand": "^5.0.0"
     },
     "scripts": {
