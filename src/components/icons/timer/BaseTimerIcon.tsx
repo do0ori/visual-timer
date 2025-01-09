@@ -1,7 +1,11 @@
 import { IconBaseProps } from 'react-icons';
 
+interface TimerIconProps extends IconBaseProps {
+    time?: number;
+}
+
 // lu/LuTimer
-const BaseTimerIcon = ({ size = '1em', ...props }: IconBaseProps) => (
+const BaseTimerIcon = ({ size = '1em', time = 7, ...props }: TimerIconProps) => (
     <svg
         stroke="currentColor"
         fill="none"
@@ -15,7 +19,9 @@ const BaseTimerIcon = ({ size = '1em', ...props }: IconBaseProps) => (
         {...props}
     >
         <line x1="10" x2="14" y1="2" y2="2"></line>
-        <line x1="12" x2="15" y1="14" y2="11"></line>
+        <g transform={`rotate(${(time / 60) * 360}, 12, 14)`}>
+            <path d="M12 14v-4"></path>
+        </g>
         <circle cx="12" cy="14" r="8"></circle>
     </svg>
 );
