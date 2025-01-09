@@ -1,9 +1,9 @@
 import BaseTimer from '../components/timer/BaseTimer';
 import RoutineTimer from '../components/timer/RoutineTimer';
+import { TIMER_TYPE } from '../config/timer/type';
 import { useBaseTimerStore } from '../store/baseTimerStore';
 import { useRoutineTimerStore } from '../store/routineTimerStore';
 import { useSelectedTimerStore } from '../store/selectedTimerStore';
-import { TIMER_TYPE } from '../store/types/timer';
 
 const MainPage: React.FC = () => {
     const { selectedTimerId, defaultTimer } = useSelectedTimerStore();

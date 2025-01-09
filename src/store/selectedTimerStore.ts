@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { BaseTimerData, TIMER_TYPE } from './types/timer';
+import { BaseTimerData } from './types/timer';
+import { TIMER_TYPE } from '../config/timer/type';
 
 type SelectedTimerState = {
     defaultTimer: BaseTimerData;

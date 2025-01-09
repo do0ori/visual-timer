@@ -1,9 +1,4 @@
-export const TIMER_TYPE = {
-    BASE: 'base',
-    ROUTINE: 'routine',
-} as const;
-
-export type TimerType = (typeof TIMER_TYPE)[keyof typeof TIMER_TYPE];
+import { TIMER_TYPE } from '../../config/timer/type';
 
 export type BaseTimerData = {
     id: string;
