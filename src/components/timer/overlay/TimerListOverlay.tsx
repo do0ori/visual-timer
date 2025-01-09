@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { FaCircle } from 'react-icons/fa';
 import { IoMdTrash } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
+import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
 import useOverlay from '../../../hooks/useOverlay';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
-import { getTimerPointColor } from '../../../utils/themeUtils';
+import { BaseTimerData, TimerData } from '../../../store/types/timer';
 import BackAddTopBar from '../../navigation/BackAddTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
-import { BaseTimerData } from '../../../store/types/timer';
+import { getTimerPointColor } from '../../../utils/themeUtils';
 
 const TimerListOverlay: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
@@ -34,6 +34,20 @@ const TimerListOverlay: React.FC = () => {
 
     const closeOverlay = () => {
         setTargetTimer(null);
+    };
+
+    const getTimerIcon = (timer: TimerData) => {
+        const config = TIMER_TYPE_CONFIG[timer.type];
+        const Icon = config.icon;
+
+        const commonProps = {
+            size: 50,
+            className: 'rounded-full',
+            stroke:
+                timer.type === TIMER_TYPE.BASE ? getTimerPointColor(originalTheme, timer.pointColorIndex) : undefined,
+        };
+
+        return <Icon {...commonProps} />;
     };
 
     if (!isOpen) return null;
@@ -61,13 +75,7 @@ const TimerListOverlay: React.FC = () => {
                                 }}
                             >
                                 <div className="flex grow gap-5">
-                                    <div className="shrink-0 self-center">
-                                        <FaCircle
-                                            size={50}
-                                            fill={getTimerPointColor(originalTheme, timer.pointColorIndex)}
-                                            className="rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]"
-                                        />
-                                    </div>
+                                    <div className="shrink-0 self-center">{getTimerIcon(timer)}</div>
                                     <div className="flex flex-col">
                                         <span className="line-clamp-2 overflow-hidden text-ellipsis">
                                             {timer.title}
