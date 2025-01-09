@@ -7,9 +7,9 @@ import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
 import { BaseTimerData, TimerData } from '../../../store/types/timer';
+import { getTimerPointColor } from '../../../utils/themeUtils';
 import BackAddTopBar from '../../navigation/BackAddTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
-import { getTimerPointColor } from '../../../utils/themeUtils';
 
 const TimerListOverlay: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
@@ -43,9 +43,17 @@ const TimerListOverlay: React.FC = () => {
         const commonProps = {
             size: 50,
             className: 'rounded-full',
-            stroke:
-                timer.type === TIMER_TYPE.BASE ? getTimerPointColor(originalTheme, timer.pointColorIndex) : undefined,
         };
+
+        if (timer.type === TIMER_TYPE.BASE) {
+            return (
+                <Icon
+                    {...commonProps}
+                    stroke={getTimerPointColor(originalTheme, timer.pointColorIndex)}
+                    time={timer.time}
+                />
+            );
+        }
 
         return <Icon {...commonProps} />;
     };
