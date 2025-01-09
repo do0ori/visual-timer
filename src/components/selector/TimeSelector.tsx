@@ -5,7 +5,7 @@ import { handleDragEvent } from '../../utils/timerHandler';
 type TimeSelectorProps = {
     time: number;
     currentTheme: Theme;
-    setTime: React.Dispatch<React.SetStateAction<number>>;
+    setTime: (value: number) => void;
 };
 
 const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime }) => {
