@@ -1,4 +1,5 @@
 import { NUM_TIMER_TYPES, TIMER_TYPE_CONFIG, TimerType } from '../../config/timer/type';
+import { useThemeStore } from '../../store/themeStore';
 
 type TimerTypeSelectorProps = {
     selectedType: TimerType;
@@ -6,6 +7,9 @@ type TimerTypeSelectorProps = {
 };
 
 const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onTypeSelect }) => {
+    const { themes, globalThemeKey } = useThemeStore();
+    const currentTheme = themes[globalThemeKey];
+
     return (
         <div
             className={`grid gap-4`}
@@ -18,8 +22,11 @@ const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onT
                     key={type}
                     onClick={() => onTypeSelect(type as TimerType)}
                     className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 ${
-                        selectedType === type ? 'border-white' : 'border-transparent hover:scale-105'
+                        selectedType === type ? '' : 'border-transparent hover:scale-105'
                     }`}
+                    style={{
+                        borderColor: selectedType === type ? currentTheme.color.point : undefined,
+                    }}
                 >
                     <config.icon size={24} />
                     <span>{config.label}</span>

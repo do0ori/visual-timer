@@ -12,10 +12,10 @@ import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
 
 type BaseTimerFormData = {
-    time: number;
-    isMinutes: boolean;
-    pointColorIndex: number;
     title?: string | undefined;
+    pointColorIndex: number;
+    isMinutes: boolean;
+    time: number;
 };
 
 type BaseTimerFormProps = {
@@ -79,17 +79,17 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                     {mode === 'add' && <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />}
 
                     <label className="flex items-center gap-8">
-                        <MdTextFields size={30} />
+                        <MdTextFields size={30} className="shrink-0" />
                         <input
                             {...register('title')}
                             type="text"
-                            placeholder="New Timer"
+                            placeholder="New Basic Timer"
                             className="w-full rounded border px-2 py-1 text-black"
                         />
                     </label>
 
                     <label className="flex items-center gap-8">
-                        <MdOutlinePalette size={30} />
+                        <MdOutlinePalette size={30} className="shrink-0" />
                         <div className="flex flex-wrap gap-3">
                             {currentTheme.color.pointOptions.map((color, index) => (
                                 <button
@@ -108,7 +108,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                     </label>
 
                     <label className="flex items-center gap-8">
-                        <MdOutlineTimer size={30} />
+                        <MdOutlineTimer size={30} className="shrink-0" />
                         <div className="flex gap-5">
                             <TimeDisplay
                                 className="pointer-events-none w-10 text-center text-xl"
