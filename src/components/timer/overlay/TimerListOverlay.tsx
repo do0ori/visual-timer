@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { IoMdTrash } from 'react-icons/io';
-import { MdEdit } from 'react-icons/md';
+import { MdDeleteOutline, MdEdit } from 'react-icons/md';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
 import useOverlay from '../../../hooks/useOverlay';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
+import { useRoutineTimerStore } from '../../../store/routineTimerStore';
 import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
-import { BaseTimerData, TimerData } from '../../../store/types/timer';
+import { TimerData } from '../../../store/types/timer';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import BackAddTopBar from '../../navigation/BackAddTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
@@ -16,17 +16,20 @@ const TimerListOverlay: React.FC = () => {
     const originalTheme = themes[globalThemeKey];
 
     const selectTimer = useSelectedTimerStore((state) => state.selectTimer);
-    const { timers, removeTimer } = useBaseTimerStore();
-    const [targetTimer, setTargetTimer] = useState<BaseTimerData | null>(null);
+    const { timers: baseTimers, removeTimer: removeBaseTimer } = useBaseTimerStore();
+    const { timers: routineTimers, removeTimer: removeRoutineTimer } = useRoutineTimerStore();
+    const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
 
     const { isOpen, close } = useOverlay('timer-list');
+
+    const timers = [...baseTimers, ...routineTimers];
 
     const handleSelectTimer = (timerId: string) => {
         selectTimer(timerId);
     };
 
-    const openOverlay = (timer?: BaseTimerData) => {
+    const openOverlay = (timer?: TimerData) => {
         setTargetTimer(timer || null);
         setMode(timer ? 'edit' : 'add');
         window.location.hash = 'timer-list&timer-data';
@@ -58,6 +61,20 @@ const TimerListOverlay: React.FC = () => {
         return <Icon {...commonProps} />;
     };
 
+    const handleEditTimer = (e: React.MouseEvent, timer: TimerData) => {
+        e.stopPropagation();
+        openOverlay(timer);
+    };
+
+    const handleDeleteTimer = (e: React.MouseEvent, timer: TimerData) => {
+        e.stopPropagation();
+        if (timer.type === TIMER_TYPE.BASE) {
+            removeBaseTimer(timer.id);
+        } else {
+            removeRoutineTimer(timer.id);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -73,7 +90,7 @@ const TimerListOverlay: React.FC = () => {
 
                 <div className="w-full p-5 pt-20">
                     <ul className="max-h-[calc(100vh-6.25rem)] space-y-5 overflow-y-auto no-scrollbar">
-                        {timers.map((timer: BaseTimerData) => (
+                        {timers.map((timer: TimerData) => (
                             <li
                                 key={timer.id}
                                 className="flex items-center justify-between"
@@ -88,25 +105,23 @@ const TimerListOverlay: React.FC = () => {
                                         <span className="line-clamp-2 overflow-hidden text-ellipsis">
                                             {timer.title}
                                         </span>
-                                        <span className="text-gray-500">{`${timer.time} ${timer.isMinutes ? 'min' : 'sec'}`}</span>
+                                        <span className="text-gray-500">
+                                            {timer.type === TIMER_TYPE.BASE
+                                                ? `${timer.time} ${timer.isMinutes ? 'min' : 'sec'}`
+                                                : `${timer.items.length} ${timer.items.length === 1 ? 'item' : 'items'}`}
+                                        </span>
                                     </div>
                                 </div>
                                 <div className="flex gap-5">
                                     <MdEdit
                                         size={24}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            openOverlay(timer);
-                                        }}
+                                        onClick={(e) => handleEditTimer(e, timer)}
                                         aria-label="Edit Timer"
                                         className="cursor-pointer"
                                     />
-                                    <IoMdTrash
+                                    <MdDeleteOutline
                                         size={24}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            removeTimer(timer.id);
-                                        }}
+                                        onClick={(e) => handleDeleteTimer(e, timer)}
                                         aria-label="Delete Timer"
                                         className="cursor-pointer"
                                     />

@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/type';
 import useOverlay from '../../../hooks/useOverlay';
 import { useThemeStore } from '../../../store/themeStore';
-import { BaseTimerData } from '../../../store/types/timer';
+import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
 import CancelSaveTopBar from '../../navigation/CancelSaveTopBar';
 import BaseTimerForm from '../form/BaseTimerForm';
+import RoutineTimerForm from '../form/RoutineTimerForm';
 
 type TimerDataOverlayProps = {
-    initialTimerData: BaseTimerData | null;
+    initialTimerData: TimerData | null;
     mode: 'add' | 'edit';
     onClose: () => void;
 };
@@ -21,7 +22,7 @@ const TimerDataOverlay: React.FC<TimerDataOverlayProps> = ({ initialTimerData, m
 
     useEffect(() => {
         if (isOpen) {
-            setTimerType(TIMER_TYPE.BASE);
+            setTimerType(initialTimerData?.type || TIMER_TYPE.BASE);
         }
     }, [isOpen]);
 
@@ -37,7 +38,7 @@ const TimerDataOverlay: React.FC<TimerDataOverlayProps> = ({ initialTimerData, m
             style={{ backgroundColor: themes[globalThemeKey].color.main }}
         >
             <CancelSaveTopBar
-                title={mode === 'add' ? 'Add Timer' : `Edit ${TIMER_TYPE_CONFIG[timerType].label}`}
+                title={`${mode === 'add' ? 'Add' : 'Edit'} ${TIMER_TYPE_CONFIG[timerType].label}`}
                 onClose={close}
                 onSave={handleSave}
             />
@@ -45,7 +46,18 @@ const TimerDataOverlay: React.FC<TimerDataOverlayProps> = ({ initialTimerData, m
             {timerType === TIMER_TYPE.BASE && (
                 <BaseTimerForm
                     ref={formRef}
-                    initialData={initialTimerData}
+                    initialData={initialTimerData as BaseTimerData}
+                    mode={mode}
+                    timerType={timerType}
+                    setTimerType={setTimerType}
+                    close={close}
+                />
+            )}
+
+            {timerType === TIMER_TYPE.ROUTINE && (
+                <RoutineTimerForm
+                    ref={formRef}
+                    initialData={initialTimerData as RoutineTimerData}
                     mode={mode}
                     timerType={timerType}
                     setTimerType={setTimerType}
