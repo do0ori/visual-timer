@@ -1,6 +1,6 @@
 import { TIMER_TYPE } from '../../config/timer/type';
 
-export type BaseTimerData = {
+export interface BaseTimerData {
     id: string;
     type: typeof TIMER_TYPE.BASE;
     title?: string;
@@ -8,12 +8,11 @@ export type BaseTimerData = {
     isMinutes: boolean;
     isRunning: boolean;
     pointColorIndex?: number;
-};
+}
 
-export type RoutineTimerItem = {
-    timer: BaseTimerData;
+export interface RoutineTimerItem extends BaseTimerData {
     interval: number; // 다음 타이머와의 간격 (초 단위)
-};
+}
 
 export type RoutineTimerData = {
     id: string;
