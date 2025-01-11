@@ -20,6 +20,7 @@ const AlarmSelector: React.FC = () => {
                 selectedValue={selectedAlarm}
                 onChange={setSelectedAlarm}
                 currentTheme={currentTheme}
+                buttonBorderColor={currentTheme.color.point}
             />
         </div>
     );

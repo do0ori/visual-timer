@@ -1,87 +1,88 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from 'react';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@headlessui/react';
+import { MdExpandMore } from 'react-icons/md';
 import { Theme } from '../../config/theme/themes';
 
-type DropdownOption = {
+type DropdownOption<T> = {
     label: string;
-    value: any;
+    value: T;
+    prefix?: string;
+    subLabel?: string;
 };
 
-type DropdownProps = {
-    options: DropdownOption[];
-    selectedValue: any;
+type DropdownProps<T> = {
+    options: DropdownOption<T>[];
+    selectedValue: T;
     currentTheme: Theme;
-    onChange: (value: any) => void;
+    onChange: (value: T) => void;
+    customHeader?: React.ReactNode;
     placeholder?: string;
+    buttonBorderColor?: string;
 };
 
-const Dropdown: React.FC<DropdownProps> = ({
+const Dropdown = <T,>({
     options,
     selectedValue,
     currentTheme,
     onChange,
+    customHeader,
     placeholder = 'Select an option',
-}) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    const handleOptionClick = (value: any) => {
-        onChange(value);
-        setIsOpen(false);
-    };
-
-    // Close dropdown on outside click
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
+    buttonBorderColor,
+}: DropdownProps<T>) => {
     return (
-        <div className="relative w-full" ref={dropdownRef}>
-            {/* Selected Value Button */}
-            <button
-                className={`flex w-full cursor-pointer items-center justify-between rounded border px-4 py-2 text-left text-lg`}
-                style={{ borderColor: currentTheme.color.point }}
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                <span>{options.find((option) => option.value === selectedValue)?.label || placeholder}</span>
-                {isOpen ? (
-                    <BiChevronUp className="size-5" style={{ color: currentTheme.color.point }} />
-                ) : (
-                    <BiChevronDown className="size-5" style={{ color: currentTheme.color.point }} />
-                )}
-            </button>
+        <Disclosure>
+            {({ open }) => (
+                <div className="relative">
+                    <DisclosureButton
+                        className={`${buttonBorderColor ? 'border' : ''} flex w-full items-center rounded-lg bg-white/5 px-4 py-2`}
+                        style={{ borderColor: buttonBorderColor }}
+                    >
+                        {customHeader ?? (
+                            <div className="flex w-full items-center justify-between">
+                                <span>
+                                    {options.find((option) => option.value === selectedValue)?.label || placeholder}
+                                </span>
+                            </div>
+                        )}
+                        <MdExpandMore
+                            className={`${open ? 'rotate-180' : ''} size-5 transition-transform duration-200`}
+                        />
+                    </DisclosureButton>
 
-            {/* Dropdown Menu */}
-            {isOpen && (
-                <ul
-                    className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded border bg-white"
-                    style={{ borderColor: currentTheme.color.point }}
-                >
-                    {options.map((option) => (
-                        <li
-                            key={option.value}
-                            className={`cursor-pointer border-b border-gray-300 px-4 py-2 text-lg text-black last:border-none hover:bg-gray-100`}
-                            style={{
-                                backgroundColor:
-                                    option.value === selectedValue ? `${currentTheme.color.point}55` : 'white',
-                            }}
-                            onClick={() => handleOptionClick(option.value)}
-                        >
-                            {option.label}
-                        </li>
-                    ))}
-                </ul>
+                    <Transition
+                        enter="transition duration-100 ease-out"
+                        enterFrom="transform scale-95 opacity-0"
+                        enterTo="transform scale-100 opacity-100"
+                        leave="transition duration-75 ease-out"
+                        leaveFrom="transform scale-100 opacity-100"
+                        leaveTo="transform scale-95 opacity-0"
+                    >
+                        <DisclosurePanel className="absolute inset-x-0 top-full z-10 mt-2 max-h-[calc(30vh)] overflow-y-auto rounded-lg bg-white no-scrollbar">
+                            {options.map((option) => (
+                                <button
+                                    key={`${option.value}`}
+                                    onClick={() => onChange(option.value)}
+                                    className={`flex w-full items-center justify-between px-4 py-2 text-black transition-colors ${
+                                        option.value === selectedValue ? 'bg-black/20' : 'hover:bg-black/10'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div
+                                            className={`size-2 rounded-full ${
+                                                option.value === selectedValue ? 'opacity-100' : 'opacity-0'
+                                            }`}
+                                            style={{ backgroundColor: currentTheme.color.point }}
+                                        />
+                                        {option.prefix && <span>{option.prefix}</span>}
+                                        <span>{option.label}</span>
+                                    </div>
+                                    {option.subLabel && <span className="text-sm">{option.subLabel}</span>}
+                                </button>
+                            ))}
+                        </DisclosurePanel>
+                    </Transition>
+                </div>
             )}
-        </div>
+        </Disclosure>
     );
 };
 
