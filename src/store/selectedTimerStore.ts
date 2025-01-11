@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { BaseTimerData } from './types/timer';
 import { TIMER_TYPE } from '../config/timer/type';
+import { BaseTimerData } from './types/timer';
 
 type SelectedTimerState = {
     defaultTimer: BaseTimerData;
@@ -18,7 +18,6 @@ export const useSelectedTimerStore = create<SelectedTimerState>()(
                 type: TIMER_TYPE.BASE,
                 time: 10,
                 isMinutes: false,
-                isRunning: false,
             },
             selectedTimerId: 'default',
             selectTimer: (id) => set({ selectedTimerId: id }),
