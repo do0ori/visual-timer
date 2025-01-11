@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
-import { BaseTimerData } from '../store/types/timer';
+import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 
 export const handleFinish = (
-    timer: BaseTimerData,
+    timer: BaseTimerData | RoutineTimerItem,
     audioRef: React.RefObject<HTMLAudioElement>,
     pointColor: string,
     onSuccess: () => void
@@ -19,23 +19,47 @@ export const handleFinish = (
     const isLandscape = window.innerWidth > window.innerHeight;
     const leftSideWidth = isLandscape ? window.innerWidth / 2 : window.innerWidth;
 
-    // Send notification
-    Swal.fire({
+    // Configure notification
+    const swalConfig = {
         title: `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`,
         text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
         confirmButtonColor: pointColor,
         width: isLandscape ? `${leftSideWidth * 0.95}px` : '95%',
-        position: 'center',
+        position: 'center' as const,
         customClass: {
             container: isLandscape ? 'landscape-alert' : '',
         },
-    }).then((result) => {
-        if (!result.isDenied) {
+    };
+
+    if ('interval' in timer) {
+        if (timer.interval > 0) {
+            // With interval > 0: auto-close after interval
+            Swal.fire({
+                ...swalConfig,
+                timer: timer.interval * 1000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+            }).then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                onSuccess();
+            });
+        } else {
+            // With interval = 0: direct success without notification
+            audio.pause();
+            audio.currentTime = 0;
             onSuccess();
-            audio.pause(); // Stop the audio
-            audio.currentTime = 0; // Reset audio
         }
-    });
+    } else {
+        // Without interval: show notification with confirm button
+        Swal.fire(swalConfig).then((result) => {
+            if (!result.isDenied) {
+                audio.pause();
+                audio.currentTime = 0;
+                onSuccess();
+            }
+        });
+    }
 };
 
 export const handleDragEvent = (e: React.MouseEvent | React.TouchEvent, setTime: (time: number) => void) => {
