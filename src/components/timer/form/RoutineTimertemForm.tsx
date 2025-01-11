@@ -130,7 +130,7 @@ const RoutineTimerItemForm = ({
                                     <label className="flex items-center gap-2">
                                         <input
                                             type="radio"
-                                            name="timeUnit"
+                                            name={`timeUnit-${index}`}
                                             onChange={() => setValue(`items.${index}.isMinutes`, true)}
                                             checked={item.isMinutes}
                                             className="form-radio"
@@ -141,7 +141,7 @@ const RoutineTimerItemForm = ({
                                     <label className="flex items-center gap-2">
                                         <input
                                             type="radio"
-                                            name="timeUnit"
+                                            name={`timeUnit-${index}`}
                                             onChange={() => setValue(`items.${index}.isMinutes`, false)}
                                             checked={!item.isMinutes}
                                             className="form-radio"
