@@ -16,6 +16,8 @@ type TimerOptions = {
     maxTime?: number;
     /** Callback function triggered when the timer reaches the countStop. */
     onFinish: (reset: () => void) => void;
+    /** If true, the timer will start automatically. */
+    autoStart?: boolean;
 };
 
 type TimerControllers = {
@@ -53,6 +55,7 @@ export function useTimer({
     unit = 'minutes',
     maxTime = undefined,
     onFinish,
+    autoStart = false,
 }: TimerOptions): TimerControllers {
     // Validation check for initialTime and maxTime
     if (initialTime < 0) {
@@ -220,6 +223,8 @@ export function useTimer({
         const remainingMs = count * intervalMs;
         return convertMsToMmSs(remainingMs);
     }, [count]);
+
+    if (autoStart && isInitialized) start();
 
     return {
         totalTime: time,
