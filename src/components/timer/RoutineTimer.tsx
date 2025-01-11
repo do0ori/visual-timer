@@ -97,6 +97,11 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
 
     const setToDefault = () => selectTimer('default');
 
+    const handleItemChange = (index: number) => {
+        reset();
+        setCurrentItemIndex(index);
+    };
+
     const commonContent = {
         top: (
             <div className="mt-[5%] flex items-center justify-between px-[5%]">
@@ -127,7 +132,7 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
                     <TimerItemsList
                         items={items}
                         currentItemIndex={currentItemIndex}
-                        setCurrentItemIndex={setCurrentItemIndex}
+                        onChange={handleItemChange}
                         currentTime={currentTime}
                         currentTheme={currentTheme}
                     />

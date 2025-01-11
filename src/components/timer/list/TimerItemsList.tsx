@@ -6,17 +6,17 @@ import TimeDisplay from '../display/TimeDisplay';
 interface TimerItemsListProps {
     items: RoutineTimerItem[];
     currentItemIndex: number;
-    setCurrentItemIndex: (index: number) => void;
     currentTime: string;
     currentTheme: Theme;
+    onChange: (index: number) => void;
 }
 
 const TimerItemsList: React.FC<TimerItemsListProps> = ({
     items,
     currentItemIndex,
-    setCurrentItemIndex,
     currentTime,
     currentTheme,
+    onChange,
 }) => {
     const options = items.map((item, index) => ({
         label: item.title || `Timer ${index + 1}`,
@@ -38,7 +38,7 @@ const TimerItemsList: React.FC<TimerItemsListProps> = ({
         <Dropdown
             options={options}
             selectedValue={currentItemIndex}
-            onChange={setCurrentItemIndex}
+            onChange={onChange}
             currentTheme={currentTheme}
             customHeader={customHeader}
         />
