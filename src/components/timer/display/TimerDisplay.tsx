@@ -5,7 +5,7 @@ import TimerTextDisplay from './TimerTextDisplay';
 type TimerDisplayProps = {
     progress: number;
     currentTheme: Theme;
-    handleDragEvent: (e: React.MouseEvent | React.TouchEvent) => void;
+    handleDragEvent?: (e: React.MouseEvent | React.TouchEvent) => void;
 };
 
 const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
@@ -36,10 +36,10 @@ const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
                         strokeWidth={2}
                         onMouseDown={() => setIsDragging(true)}
                         onMouseUp={() => setIsDragging(false)}
-                        onMouseMove={(e) => isDragging && handleDragEvent(e)}
+                        onMouseMove={(e) => isDragging && handleDragEvent && handleDragEvent(e)}
                         onTouchStart={() => setIsDragging(true)}
                         onTouchEnd={() => setIsDragging(false)}
-                        onTouchMove={(e) => isDragging && handleDragEvent(e)}
+                        onTouchMove={(e) => isDragging && handleDragEvent && handleDragEvent(e)}
                         onClick={handleDragEvent}
                         style={{ pointerEvents: 'visiblePainted' }}
                         className="relative"
