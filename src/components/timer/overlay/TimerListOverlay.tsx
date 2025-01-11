@@ -58,7 +58,7 @@ const TimerListOverlay: React.FC = () => {
             );
         }
 
-        return <Icon {...commonProps} />;
+        return <Icon {...commonProps} opacity={0.8} />;
     };
 
     const handleEditTimer = (e: React.MouseEvent, timer: TimerData) => {
