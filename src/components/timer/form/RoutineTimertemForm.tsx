@@ -54,8 +54,8 @@ const RoutineTimerItemForm = ({
             <Disclosure defaultOpen={mode === 'add'}>
                 {({ open }) => (
                     <>
-                        <DisclosureButton className="flex w-full items-center justify-between">
-                            <div className="flex items-center gap-8">
+                        <DisclosureButton className="flex w-full items-center justify-between gap-8">
+                            <div className="flex items-center gap-4">
                                 <div {...dragHandleProps}>
                                     <MdDragIndicator size={24} className="cursor-move" />
                                 </div>
@@ -96,7 +96,7 @@ const RoutineTimerItemForm = ({
                             leaveFrom="transform scale-100 opacity-100"
                             leaveTo="transform scale-95 opacity-0"
                         >
-                            <DisclosurePanel className="flex flex-col gap-4 pl-14 pt-6">
+                            <DisclosurePanel className="flex flex-col gap-4 pl-11 pt-6">
                                 <label className="flex items-center gap-4">
                                     <MdOutlinePalette size={20} className="shrink-0" />
                                     <div className="flex flex-wrap gap-2">
@@ -118,37 +118,41 @@ const RoutineTimerItemForm = ({
 
                                 <div className="flex items-center gap-4">
                                     <MdOutlineTimer size={20} className="shrink-0" />
-                                    <TimeSelector
-                                        time={item.time}
-                                        currentTheme={currentTheme}
-                                        setTime={(newTime) => setValue(`items.${index}.time`, newTime)}
-                                    />
-                                    <TimeDisplay
-                                        className="pointer-events-none w-10 text-center text-xl"
-                                        currentTime={item.time.toString()}
-                                    />
-                                    <label className="flex items-center gap-2">
-                                        <input
-                                            type="radio"
-                                            name={`timeUnit-${index}`}
-                                            onChange={() => setValue(`items.${index}.isMinutes`, true)}
-                                            checked={item.isMinutes}
-                                            className="form-radio"
-                                            style={{ accentColor: currentTheme.color.point }}
+                                    <div className="flex flex-col gap-2">
+                                        <div className="flex items-center justify-center gap-4">
+                                            <TimeDisplay
+                                                className="pointer-events-none w-10 text-center text-xl"
+                                                currentTime={item.time.toString()}
+                                            />
+                                            <label className="flex items-center gap-2">
+                                                <input
+                                                    type="radio"
+                                                    name={`timeUnit-${index}`}
+                                                    onChange={() => setValue(`items.${index}.isMinutes`, true)}
+                                                    checked={item.isMinutes}
+                                                    className="form-radio"
+                                                    style={{ accentColor: currentTheme.color.point }}
+                                                />
+                                                <span>Min</span>
+                                            </label>
+                                            <label className="flex items-center gap-2">
+                                                <input
+                                                    type="radio"
+                                                    name={`timeUnit-${index}`}
+                                                    onChange={() => setValue(`items.${index}.isMinutes`, false)}
+                                                    checked={!item.isMinutes}
+                                                    className="form-radio"
+                                                    style={{ accentColor: currentTheme.color.point }}
+                                                />
+                                                <span>Sec</span>
+                                            </label>
+                                        </div>
+                                        <TimeSelector
+                                            time={item.time}
+                                            currentTheme={currentTheme}
+                                            setTime={(newTime) => setValue(`items.${index}.time`, newTime)}
                                         />
-                                        <span>Min</span>
-                                    </label>
-                                    <label className="flex items-center gap-2">
-                                        <input
-                                            type="radio"
-                                            name={`timeUnit-${index}`}
-                                            onChange={() => setValue(`items.${index}.isMinutes`, false)}
-                                            checked={!item.isMinutes}
-                                            className="form-radio"
-                                            style={{ accentColor: currentTheme.color.point }}
-                                        />
-                                        <span>Sec</span>
-                                    </label>
+                                    </div>
                                 </div>
 
                                 <label className="flex items-center gap-4">
