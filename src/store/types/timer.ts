@@ -6,7 +6,6 @@ export interface BaseTimerData {
     title?: string;
     time: number;
     isMinutes: boolean;
-    isRunning: boolean;
     pointColorIndex?: number;
 }
 
@@ -19,9 +18,6 @@ export type RoutineTimerData = {
     type: typeof TIMER_TYPE.ROUTINE;
     title?: string;
     items: RoutineTimerItem[];
-    currentItemIndex: number;
-    isRunning: boolean;
-    repeat: boolean;
 };
 
 export type TimerData = BaseTimerData | RoutineTimerData;

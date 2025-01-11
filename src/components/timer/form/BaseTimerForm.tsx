@@ -60,7 +60,6 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                 ...data,
                 id: initialData?.id || crypto.randomUUID(),
                 title: data.title?.trim() || `Timer-${data.time}`,
-                isRunning: false,
                 type: TIMER_TYPE.BASE,
             };
 

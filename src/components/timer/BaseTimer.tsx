@@ -3,7 +3,6 @@ import { HiMiniHome } from 'react-icons/hi2';
 import { useAspectRatio } from '../../hooks/useAspectRatio';
 import { useAudio } from '../../hooks/useAudio';
 import { useTimer } from '../../hooks/useTimer';
-import { useBaseTimerStore } from '../../store/baseTimerStore';
 import { useSelectedTimerStore } from '../../store/selectedTimerStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useThemeStore } from '../../store/themeStore';
@@ -22,7 +21,6 @@ import TimerDisplay from './display/TimerDisplay';
 const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
     const aspectRatio = useAspectRatio();
     const { selectTimer, updateDefaultTimer } = useSelectedTimerStore();
-    const updateTimer = useBaseTimerStore((state) => state.updateTimer);
     const { themes, globalThemeKey } = useThemeStore();
     const { volume } = useSettingsStore();
     const audioRef = useAudio(volume);
@@ -37,7 +35,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
         (reset: () => void) => {
             handleFinish(timer, audioRef, currentTheme.color.point, reset);
         },
-        [volume, currentTheme, timer]
+        [volume, timer, audioRef, currentTheme]
     );
 
     const {
@@ -63,14 +61,6 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
     });
 
     const progress = Math.max(0, count / currentUnit.denominator);
-
-    useEffect(() => {
-        if (timer.id === 'default') {
-            updateDefaultTimer({ isRunning });
-        } else {
-            updateTimer(timer.id, { isRunning });
-        }
-    }, [isRunning, updateTimer]);
 
     useEffect(() => {
         if (timer.id === 'default') {
