@@ -3,7 +3,7 @@ import { TIMER_TYPE } from '../../config/timer/type';
 export interface BaseTimerData {
     id: string;
     type: typeof TIMER_TYPE.BASE;
-    title?: string;
+    title: string;
     time: number;
     isMinutes: boolean;
     pointColorIndex?: number;
@@ -16,7 +16,7 @@ export interface RoutineTimerItem extends BaseTimerData {
 export type RoutineTimerData = {
     id: string;
     type: typeof TIMER_TYPE.ROUTINE;
-    title?: string;
+    title: string;
     items: RoutineTimerItem[];
 };
 

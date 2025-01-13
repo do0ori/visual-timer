@@ -6,32 +6,39 @@ import { BaseTimerData } from './types/timer';
 type SelectedTimerState = {
     defaultTimer: BaseTimerData;
     selectedTimerId: string;
+    selectDefaultTimer: () => void;
     selectTimer: (id: string) => void;
     updateDefaultTimer: (updatedProps: Partial<BaseTimerData>) => void;
 };
 
 export const useSelectedTimerStore = create<SelectedTimerState>()(
     persist(
-        (set) => ({
-            defaultTimer: {
+        (set) => {
+            const defaultTimer: BaseTimerData = {
                 id: 'default',
                 type: TIMER_TYPE.BASE,
+                title: '',
                 time: 10,
                 isMinutes: false,
-            },
-            selectedTimerId: 'default',
-            selectTimer: (id) => set({ selectedTimerId: id }),
-            updateDefaultTimer: (updatedProps) =>
-                set((state) => ({
-                    defaultTimer: { ...state.defaultTimer, ...updatedProps },
-                })),
-        }),
+            };
+
+            return {
+                defaultTimer,
+                selectedTimerId: defaultTimer.id,
+                selectTimer: (id) => set({ selectedTimerId: id }),
+                selectDefaultTimer: () => set((state) => ({ selectedTimerId: state.defaultTimer.id })),
+                updateDefaultTimer: (updatedProps) =>
+                    set((state) => ({
+                        defaultTimer: { ...state.defaultTimer, ...updatedProps },
+                    })),
+            };
+        },
         {
             name: 'selected-timer-store',
             onRehydrateStorage: () => (state) => {
                 if (state) {
                     setTimeout(() => {
-                        state.selectedTimerId = 'default';
+                        state.selectedTimerId = state.defaultTimer.id;
                     }, 0);
                 }
             },
