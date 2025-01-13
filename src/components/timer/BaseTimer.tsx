@@ -10,7 +10,6 @@ import { BaseTimerData } from '../../store/types/timer';
 import { deepCopy } from '../../utils/deepCopy';
 import { getTimerPointColor } from '../../utils/themeUtils';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
-import Button from '../common/Button';
 import HorizontalLayout from '../layout/HorizontalLayout';
 import VerticalLayout from '../layout/VerticalLayout';
 import ControlButtons from './controls/ControlButtons';
@@ -20,13 +19,15 @@ import TimerDisplay from './display/TimerDisplay';
 
 const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
     const aspectRatio = useAspectRatio();
-    const { selectTimer, updateDefaultTimer } = useSelectedTimerStore();
     const { themes, globalThemeKey } = useThemeStore();
+
+    const { selectTimer, updateDefaultTimer } = useSelectedTimerStore();
     const { volume } = useSettingsStore();
     const audioRef = useAudio(volume);
     const timerDisplayRef = useRef<SVGCircleElement>(null);
 
     const { time: storedTime, isMinutes: storedIsMinutes, pointColorIndex, title } = timer;
+
     const currentTheme = deepCopy(themes[globalThemeKey]);
     if (pointColorIndex) currentTheme.color.point = getTimerPointColor(currentTheme, pointColorIndex);
     if (title) currentTheme.text = title;
@@ -85,9 +86,13 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
     const commonContent = {
         top: (
             <div className="mt-[5%] flex items-center justify-between px-[5%]">
-                <Button onClick={setToDefault} aria-label="Back to Default Timer" visible={timer.id !== 'default'}>
+                <button
+                    onClick={setToDefault}
+                    aria-label="Back to Default Timer"
+                    className={`${timer.id !== 'default' ? 'visible' : 'invisible'}`}
+                >
                     <HiMiniHome size={30} />
-                </Button>
+                </button>
                 <UnitSwitch
                     onClick={toggleUnit}
                     isMinutes={isMinutes}
