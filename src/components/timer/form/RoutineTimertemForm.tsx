@@ -17,7 +17,7 @@ import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
 import { RoutineTimerFormData } from './RoutineTimerForm';
 
-interface RoutineTimerItemFormProps {
+type RoutineTimerItemFormProps = {
     index: number;
     mode: 'add' | 'edit';
     currentTheme: Theme;
@@ -26,7 +26,7 @@ interface RoutineTimerItemFormProps {
     setValue: UseFormSetValue<RoutineTimerFormData>;
     watch: UseFormWatch<RoutineTimerFormData>;
     onDelete: () => void;
-}
+};
 
 const RoutineTimerItemForm = ({
     index,

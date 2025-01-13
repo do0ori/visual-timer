@@ -3,13 +3,13 @@ import { RoutineTimerItem } from '../../../store/types/timer';
 import Dropdown from '../../common/Dropdown';
 import TimeDisplay from '../display/TimeDisplay';
 
-interface TimerItemsListProps {
+type TimerItemsListProps = {
     items: RoutineTimerItem[];
     currentItemIndex: number;
     currentTime: string;
     currentTheme: Theme;
     onChange: (index: number) => void;
-}
+};
 
 const TimerItemsList: React.FC<TimerItemsListProps> = ({
     items,
