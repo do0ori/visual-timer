@@ -21,7 +21,7 @@ const TimerContent: React.FC<TimerContentProps> = ({ top, bottom, timerInfo, tim
             </div>
         ),
         bottom: <div className="mb-[5%] w-full self-center px-[5%]">{bottom}</div>,
-        timerInfo: <div className="flex flex-col items-center justify-center">{timerInfo}</div>,
+        timerInfo: <div className="mt-[5%] flex flex-col items-center justify-center">{timerInfo}</div>,
         timer,
     };
 

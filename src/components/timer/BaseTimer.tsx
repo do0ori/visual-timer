@@ -90,7 +90,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
                 add={add}
             />
         ),
-        timerInfo: <TimeDisplay currentTime={currentTime} timerDisplayRef={timerDisplayRef} />,
+        timerInfo: <TimeDisplay currentTime={currentTime} className="my-3" />,
         timer: (
             <TimerDisplay
                 ref={timerDisplayRef}
