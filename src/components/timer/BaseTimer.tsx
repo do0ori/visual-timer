@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { HiMiniHome } from 'react-icons/hi2';
 import { useAudio } from '../../hooks/useAudio';
 import { useTheme } from '../../hooks/useTheme';
 import { useTimerBase } from '../../hooks/useTimerBase';
@@ -8,13 +7,12 @@ import { BaseTimerData } from '../../store/types/timer';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
 import TimerContent, { TimerContentProps } from './TimerContent';
 import ControlButtons from './controls/ControlButtons';
+import HomeButton from './controls/HomeButton';
 import UnitSwitch from './controls/UnitSwitch';
 import TimeDisplay from './display/TimeDisplay';
 import TimerDisplay from './display/TimerDisplay';
 
 const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
-    // const aspectRatio = useAspectRatio();
-
     const { defaultTimer, selectDefaultTimer, updateDefaultTimer } = useSelectedTimerStore();
     const audioRef = useAudio();
     const timerDisplayRef = useRef<SVGCircleElement>(null);
@@ -70,15 +68,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
 
     const content: TimerContentProps = {
         top: {
-            leftChildren: (
-                <button
-                    onClick={selectDefaultTimer}
-                    aria-label="Back to Default Timer"
-                    className={`${timer.id !== defaultTimer.id ? 'visible' : 'invisible'}`}
-                >
-                    <HiMiniHome size={30} />
-                </button>
-            ),
+            leftChildren: <HomeButton isVisible={timer.id !== defaultTimer.id} onClick={selectDefaultTimer} />,
             rightChildren: (
                 <UnitSwitch
                     onClick={toggleUnit}

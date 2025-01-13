@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { HiMiniHome } from 'react-icons/hi2';
 import { useBoolean } from 'usehooks-ts';
 import { useAudio } from '../../hooks/useAudio';
 import { useTheme } from '../../hooks/useTheme';
@@ -12,6 +11,7 @@ import RepeatSwitch from './controls/RepeatSwitch';
 import TimerDisplay from './display/TimerDisplay';
 import TimerItemsList from './list/TimerItemsList';
 import TimerContent, { TimerContentProps } from './TimerContent';
+import HomeButton from './controls/HomeButton';
 
 const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
     const { defaultTimer, selectDefaultTimer } = useSelectedTimerStore();
@@ -81,15 +81,7 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
 
     const content: TimerContentProps = {
         top: {
-            leftChildren: (
-                <button
-                    onClick={selectDefaultTimer}
-                    aria-label="Back to Default Timer"
-                    className={`${timer.id !== defaultTimer.id ? 'visible' : 'invisible'}`}
-                >
-                    <HiMiniHome size={30} />
-                </button>
-            ),
+            leftChildren: <HomeButton isVisible={timer.id !== defaultTimer.id} onClick={selectDefaultTimer} />,
             rightChildren: <RepeatSwitch onClick={toggleRepeat} repeat={repeat} currentTheme={currentTheme} />,
         },
         bottom: (
