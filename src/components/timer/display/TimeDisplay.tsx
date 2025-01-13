@@ -1,51 +1,50 @@
 import { useEffect, useState } from 'react';
 
-type TimeDisplayProps = {
-    className?: string;
+interface TimeDisplayProps {
     currentTime: string;
+    className?: string;
     timerDisplayRef?: React.RefObject<SVGCircleElement>;
-};
+}
 
-const TimeDisplay: React.FC<TimeDisplayProps> = ({ className, currentTime, timerDisplayRef }) => {
+const TimeDisplay: React.FC<TimeDisplayProps> = ({ currentTime, className, timerDisplayRef }) => {
     if (!timerDisplayRef) {
         return <div className={`text-3xl ${className || ''}`}>{currentTime}</div>;
     }
 
+    const [isCentered, setIsCentered] = useState(false);
     const [position, setPosition] = useState<number | null>(null);
 
-    const updatePosition = () => {
+    const checkPosition = () => {
         if (timerDisplayRef.current) {
             const rect = timerDisplayRef.current.getBoundingClientRect();
-            setPosition(rect.top / 2);
+            const windowCenter = window.innerWidth / 2;
+            const timerCenter = rect.left + rect.width / 2;
+
+            setIsCentered(Math.abs(windowCenter - timerCenter) < 1);
+            setPosition(rect.top / 2 - 40);
         }
     };
 
     useEffect(() => {
-        updatePosition();
-
-        // 화면 크기 변경 또는 회전 시 위치 업데이트
-        const handleResizeOrOrientationChange = () => {
-            updatePosition();
-        };
-
-        window.addEventListener('resize', handleResizeOrOrientationChange);
-        window.addEventListener('orientationchange', handleResizeOrOrientationChange);
+        checkPosition();
+        window.addEventListener('resize', checkPosition);
+        window.addEventListener('orientationchange', checkPosition);
 
         return () => {
-            window.removeEventListener('resize', handleResizeOrOrientationChange);
-            window.removeEventListener('orientationchange', handleResizeOrOrientationChange);
+            window.removeEventListener('resize', checkPosition);
+            window.removeEventListener('orientationchange', checkPosition);
         };
     }, [timerDisplayRef]);
 
-    if (position === null) {
-        return null;
+    if (!isCentered || position === null) {
+        return <div className={`text-3xl ${className || ''}`}>{currentTime}</div>;
     }
 
     return (
         <div
-            className={`absolute text-3xl ${className || ''}`}
+            className={`text-3xl ${className || ''}`}
             style={{
-                top: `${position}px`,
+                marginTop: `${position}px`,
             }}
         >
             {currentTime}

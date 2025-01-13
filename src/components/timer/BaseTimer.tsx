@@ -1,21 +1,19 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { HiMiniHome } from 'react-icons/hi2';
-import { useAspectRatio } from '../../hooks/useAspectRatio';
 import { useAudio } from '../../hooks/useAudio';
 import { useTheme } from '../../hooks/useTheme';
 import { useTimerBase } from '../../hooks/useTimerBase';
 import { useSelectedTimerStore } from '../../store/selectedTimerStore';
 import { BaseTimerData } from '../../store/types/timer';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';
-import HorizontalLayout from '../layout/HorizontalLayout';
-import VerticalLayout from '../layout/VerticalLayout';
+import TimerContent, { TimerContentProps } from './TimerContent';
 import ControlButtons from './controls/ControlButtons';
 import UnitSwitch from './controls/UnitSwitch';
 import TimeDisplay from './display/TimeDisplay';
 import TimerDisplay from './display/TimerDisplay';
 
 const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
-    const aspectRatio = useAspectRatio();
+    // const aspectRatio = useAspectRatio();
 
     const { defaultTimer, selectDefaultTimer, updateDefaultTimer } = useSelectedTimerStore();
     const audioRef = useAudio();
@@ -70,9 +68,9 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
         }
     };
 
-    const commonContent = {
-        top: (
-            <div className="mt-[5%] flex items-center justify-between px-[5%]">
+    const content: TimerContentProps = {
+        top: {
+            leftChildren: (
                 <button
                     onClick={selectDefaultTimer}
                     aria-label="Back to Default Timer"
@@ -80,31 +78,30 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
                 >
                     <HiMiniHome size={30} />
                 </button>
+            ),
+            rightChildren: (
                 <UnitSwitch
                     onClick={toggleUnit}
                     isMinutes={isMinutes}
                     isRunning={timer.id === defaultTimer.id ? isRunning : true}
                     currentTheme={currentTheme}
                 />
-            </div>
-        ),
+            ),
+        },
         bottom: (
-            <div className="mb-[5%] w-full self-center px-[5%]">
-                <ControlButtons
-                    isMinutes={isMinutes}
-                    isRunning={isRunning}
-                    isInitialized={isInitialized}
-                    currentTheme={currentTheme}
-                    start={start}
-                    stop={stop}
-                    reset={reset}
-                    add={add}
-                />
-            </div>
+            <ControlButtons
+                isMinutes={isMinutes}
+                isRunning={isRunning}
+                isInitialized={isInitialized}
+                currentTheme={currentTheme}
+                start={start}
+                stop={stop}
+                reset={reset}
+                add={add}
+            />
         ),
-        timeDisplaySimple: <TimeDisplay currentTime={currentTime} />,
-        timeDisplayRelative: <TimeDisplay currentTime={currentTime} timerDisplayRef={timerDisplayRef} />,
-        timerDisplay: (
+        timerInfo: <TimeDisplay currentTime={currentTime} timerDisplayRef={timerDisplayRef} />,
+        timer: (
             <TimerDisplay
                 ref={timerDisplayRef}
                 progress={progress}
@@ -114,30 +111,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
         ),
     };
 
-    return aspectRatio > 1 ? (
-        <HorizontalLayout
-            className="h-screen w-screen"
-            leftChildren={commonContent.timerDisplay}
-            rightChildren={
-                <div className="flex size-full flex-col justify-between">
-                    {commonContent.top}
-                    <div className="flex flex-col items-center justify-center">{commonContent.timeDisplaySimple}</div>
-                    {commonContent.bottom}
-                </div>
-            }
-        />
-    ) : (
-        <VerticalLayout className="h-screen w-screen">
-            <div className="flex size-full flex-col justify-between">
-                {commonContent.top}
-                <div className="flex grow items-center justify-center">
-                    {commonContent.timeDisplayRelative}
-                    {commonContent.timerDisplay}
-                </div>
-                {commonContent.bottom}
-            </div>
-        </VerticalLayout>
-    );
+    return <TimerContent {...content} />;
 };
 
 export default BaseTimer;
