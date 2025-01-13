@@ -93,7 +93,7 @@ const TimerListOverlay: React.FC = () => {
                         {timers.map((timer: TimerData) => (
                             <li
                                 key={timer.id}
-                                className="flex items-center justify-between"
+                                className="flex items-center justify-between gap-5"
                                 onClick={() => {
                                     handleSelectTimer(timer.id);
                                     close();
