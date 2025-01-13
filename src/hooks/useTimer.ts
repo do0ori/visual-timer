@@ -25,6 +25,8 @@ type TimerControllers = {
     totalTime: number;
     /** Current countdown value. */
     count: number;
+    /** Current progress value between 0 and 1. */
+    progress: number;
     /** Current time in mm:ss format. */
     currentTime: string;
     /** The current unit details (interval and multiple values). */
@@ -67,7 +69,7 @@ export function useTimer({
 
     // State to track the current time in minutes or seconds
     const [time, setTime] = useState<number>(initialTime);
-    const [isMinutes, setIsMinutes] = useState<boolean>(unit === 'minutes');
+    const { value: isMinutes, setValue: setIsMinutes, toggle: toggleIsMinutes } = useBoolean(unit === 'minutes');
 
     // Manage the initialized state of the timer
     const [isInitialized, setIsInitialized] = useState<boolean>(true);
@@ -133,7 +135,7 @@ export function useTimer({
     // Toggles between minutes and seconds mode
     const toggleUnit = useCallback(() => {
         const newCountStart = time * (isMinutes ? timerUnits.seconds.multiple : timerUnits.minutes.multiple);
-        setIsMinutes(!isMinutes);
+        toggleIsMinutes();
         setCount(newCountStart);
         setIsInitialized(true);
         stopCountdown();
@@ -224,11 +226,14 @@ export function useTimer({
         return convertMsToMmSs(remainingMs);
     }, [count]);
 
+    const progress = Math.max(0, count / currentUnit.denominator);
+
     if (autoStart && isInitialized) start();
 
     return {
         totalTime: time,
         count,
+        progress,
         currentTime,
         currentUnit,
         isRunning,

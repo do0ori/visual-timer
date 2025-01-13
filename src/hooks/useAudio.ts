@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useSettingsStore } from '../store/settingsStore';
 
-export const useAudio = (volume: number) => {
+export const useAudio = () => {
+    const { volume, selectedAlarm } = useSettingsStore();
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const { selectedAlarm } = useSettingsStore();
 
     useEffect(() => {
         const audio = new Audio(selectedAlarm);
