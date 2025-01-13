@@ -7,12 +7,12 @@ import { useRoutineTimerStore } from '../store/routineTimerStore';
 import { useSelectedTimerStore } from '../store/selectedTimerStore';
 
 const MainPage: React.FC = () => {
-    const { selectedTimerId, defaultTimer } = useSelectedTimerStore();
+    const { defaultTimer, selectedTimerId } = useSelectedTimerStore();
     const { timers: baseTimers, getTimer: getBaseTimer } = useBaseTimerStore();
     const { timers: routineTimers, getTimer: getRoutineTimer } = useRoutineTimerStore();
 
     const timer = useMemo(() => {
-        if (selectedTimerId === 'default') return defaultTimer;
+        if (selectedTimerId === defaultTimer.id) return defaultTimer;
         return getBaseTimer(selectedTimerId) || getRoutineTimer(selectedTimerId) || defaultTimer;
     }, [selectedTimerId, defaultTimer, baseTimers, routineTimers]);
 

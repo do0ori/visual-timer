@@ -2,21 +2,14 @@ import { forwardRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../config/timer/type';
+import { useTheme } from '../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
-import { useThemeStore } from '../../../store/themeStore';
 import { BaseTimerData } from '../../../store/types/timer';
-import { deepCopy } from '../../../utils/deepCopy';
-import { getTimerPointColor } from '../../../utils/themeUtils';
 import TimerTypeSelector from '../../selector/TimerTypeSelector';
 import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
 
-type BaseTimerFormData = {
-    title?: string | undefined;
-    pointColorIndex: number;
-    isMinutes: boolean;
-    time: number;
-};
+type BaseTimerFormData = Omit<BaseTimerData, 'id' | 'type'>;
 
 type BaseTimerFormProps = {
     initialData?: BaseTimerData | null;
@@ -28,9 +21,6 @@ type BaseTimerFormProps = {
 
 const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
     ({ initialData, mode, timerType, setTimerType, close }, ref) => {
-        const { themes, globalThemeKey } = useThemeStore();
-        const currentTheme = deepCopy(themes[globalThemeKey]);
-
         const { addTimer, updateTimer } = useBaseTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<BaseTimerFormData>({
             defaultValues: {
@@ -40,9 +30,8 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                 time: initialData?.time || 5,
             },
         });
-
         const { pointColorIndex, time, isMinutes } = watch();
-        currentTheme.color.point = getTimerPointColor(currentTheme, pointColorIndex);
+        const { currentTheme } = useTheme(pointColorIndex);
 
         useEffect(() => {
             if (initialData) {

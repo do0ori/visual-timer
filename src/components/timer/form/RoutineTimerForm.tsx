@@ -3,17 +3,13 @@ import { forwardRef, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../config/timer/type';
+import { useTheme } from '../../../hooks/useTheme';
 import { useRoutineTimerStore } from '../../../store/routineTimerStore';
-import { useThemeStore } from '../../../store/themeStore';
-import { RoutineTimerData, RoutineTimerItem } from '../../../store/types/timer';
-import { deepCopy } from '../../../utils/deepCopy';
+import { RoutineTimerData } from '../../../store/types/timer';
 import TimerTypeSelector from '../../selector/TimerTypeSelector';
 import RoutineTimerItemForm from './RoutineTimertemForm';
 
-export type RoutineTimerFormData = {
-    title?: string | undefined;
-    items: RoutineTimerItem[];
-};
+export type RoutineTimerFormData = Omit<RoutineTimerData, 'id' | 'type'>;
 
 type RoutineTimerFormProps = {
     initialData?: RoutineTimerData | null;
@@ -26,8 +22,7 @@ type RoutineTimerFormProps = {
 const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
     ({ initialData, mode, timerType, setTimerType, close }, ref) => {
         const [errorMessage, setErrorMessage] = useState<string>('');
-        const { themes, globalThemeKey } = useThemeStore();
-        const currentTheme = deepCopy(themes[globalThemeKey]);
+        const { currentTheme } = useTheme();
 
         const { addTimer, updateTimer } = useRoutineTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<RoutineTimerFormData>({

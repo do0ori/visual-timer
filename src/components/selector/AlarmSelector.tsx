@@ -1,15 +1,13 @@
 import { BiSolidBellRing } from 'react-icons/bi';
 import { alarmOptions } from '../../config/audio/alarms';
+import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../store/settingsStore';
-import { useThemeStore } from '../../store/themeStore';
 import Dropdown from '../common/Dropdown';
 import ListElement from '../common/ListElement';
 
 const AlarmSelector: React.FC = () => {
-    const { themes, globalThemeKey } = useThemeStore();
+    const { originalTheme } = useTheme();
     const { selectedAlarm, setSelectedAlarm } = useSettingsStore();
-
-    const currentTheme = themes[globalThemeKey];
 
     const alarmIcon = <BiSolidBellRing size={24} className="size-full" />;
     const alarmSelector = (
@@ -19,8 +17,8 @@ const AlarmSelector: React.FC = () => {
                 options={alarmOptions}
                 selectedValue={selectedAlarm}
                 onChange={setSelectedAlarm}
-                currentTheme={currentTheme}
-                buttonBorderColor={currentTheme.color.point}
+                currentTheme={originalTheme}
+                buttonBorderColor={originalTheme.color.point}
             />
         </div>
     );

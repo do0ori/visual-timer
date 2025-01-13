@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HiMiniHome } from 'react-icons/hi2';
+import { useBoolean } from 'usehooks-ts';
 import { useAspectRatio } from '../../hooks/useAspectRatio';
 import { useAudio } from '../../hooks/useAudio';
-import { useTimer } from '../../hooks/useTimer';
+import { useTheme } from '../../hooks/useTheme';
+import { useTimerBase } from '../../hooks/useTimerBase';
 import { useSelectedTimerStore } from '../../store/selectedTimerStore';
-import { useSettingsStore } from '../../store/settingsStore';
-import { useThemeStore } from '../../store/themeStore';
 import { RoutineTimerData } from '../../store/types/timer';
-import { deepCopy } from '../../utils/deepCopy';
-import { getTimerPointColor } from '../../utils/themeUtils';
 import { handleFinish } from '../../utils/timerHandler';
 import HorizontalLayout from '../layout/HorizontalLayout';
 import VerticalLayout from '../layout/VerticalLayout';
@@ -20,15 +18,13 @@ import TimerItemsList from './list/TimerItemsList';
 
 const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
     const aspectRatio = useAspectRatio();
-    const { themes, globalThemeKey } = useThemeStore();
 
-    const { selectTimer } = useSelectedTimerStore();
-    const { volume } = useSettingsStore();
-    const audioRef = useAudio(volume);
+    const { defaultTimer, selectDefaultTimer } = useSelectedTimerStore();
+    const audioRef = useAudio();
     const timerDisplayRef = useRef<SVGCircleElement>(null);
 
     const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
-    const [repeat, setRepeat] = useState<boolean>(false);
+    const { value: repeat, toggle: toggleRepeat } = useBoolean(false);
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
     useEffect(() => {
@@ -38,11 +34,7 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
     const { title, items } = timer;
     const currentItem = items[currentItemIndex];
 
-    const currentTheme = deepCopy(themes[globalThemeKey]);
-    if (currentItem.pointColorIndex) {
-        currentTheme.color.point = getTimerPointColor(currentTheme, currentItem.pointColorIndex);
-    }
-    if (currentItem.title) currentTheme.text = currentItem.title;
+    const { currentTheme } = useTheme(currentItem.pointColorIndex, currentItem.title);
 
     const moveToNextItem = useCallback(() => {
         const nextIndex = (currentItemIndex + 1) % items.length;
@@ -60,13 +52,12 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
                 moveToNextItem();
             });
         },
-        [volume, currentItem, audioRef, currentTheme, moveToNextItem]
+        [currentItem, audioRef, currentTheme, moveToNextItem]
     );
 
     const {
-        count,
+        progress,
         currentTime,
-        currentUnit,
         isRunning: isItemRunning,
         isMinutes,
         isInitialized,
@@ -74,28 +65,19 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
         stop,
         reset,
         add,
-    } = useTimer({
+    } = useTimerBase({
         id: currentItem.id,
         initialTime: currentItem.time,
-        unit: currentItem.isMinutes ? 'minutes' : 'seconds',
-        maxTime: 60,
+        isMinutes: currentItem.isMinutes,
         onFinish,
         autoStart: isRunning,
     });
-
-    const progress = Math.max(0, count / currentUnit.denominator);
 
     const resetRoutine = () => {
         reset();
         setCurrentItemIndex(0);
         setIsRunning(false);
     };
-
-    const toggleRepeat = () => {
-        setRepeat(!repeat);
-    };
-
-    const setToDefault = () => selectTimer('default');
 
     const handleItemChange = (index: number) => {
         reset();
@@ -106,9 +88,9 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
         top: (
             <div className="mt-[5%] flex items-center justify-between px-[5%]">
                 <button
-                    onClick={setToDefault}
+                    onClick={selectDefaultTimer}
                     aria-label="Back to Default Timer"
-                    className={`${timer.id !== 'default' ? 'visible' : 'invisible'}`}
+                    className={`${timer.id !== defaultTimer.id ? 'visible' : 'invisible'}`}
                 >
                     <HiMiniHome size={30} />
                 </button>

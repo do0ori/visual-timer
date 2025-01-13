@@ -1,13 +1,12 @@
 import useOverlay from '../../../hooks/useOverlay';
-import { useThemeStore } from '../../../store/themeStore';
+import { useTheme } from '../../../hooks/useTheme';
 import BackTopBar from '../../navigation/BackTopBar';
 import AlarmSelector from '../../selector/AlarmSelector';
 import ThemeSelector from '../../selector/ThemeSelector';
 import VolumeSelector from '../../selector/VolumeSelector';
 
 const SettingsOverlay: React.FC = () => {
-    const { themes, globalThemeKey } = useThemeStore();
-    const originalTheme = themes[globalThemeKey];
+    const { originalTheme } = useTheme();
 
     const { isOpen, close } = useOverlay('settings');
 

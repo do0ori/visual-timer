@@ -2,18 +2,17 @@ import { useState } from 'react';
 import { MdDeleteOutline, MdEdit } from 'react-icons/md';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
 import useOverlay from '../../../hooks/useOverlay';
+import { useTheme } from '../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useRoutineTimerStore } from '../../../store/routineTimerStore';
 import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
-import { useThemeStore } from '../../../store/themeStore';
 import { TimerData } from '../../../store/types/timer';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import BackAddTopBar from '../../navigation/BackAddTopBar';
 import TimerDataOverlay from './TimerDataOverlay';
 
 const TimerListOverlay: React.FC = () => {
-    const { themes, globalThemeKey } = useThemeStore();
-    const originalTheme = themes[globalThemeKey];
+    const { originalTheme } = useTheme();
 
     const selectTimer = useSelectedTimerStore((state) => state.selectTimer);
     const { timers: baseTimers, removeTimer: removeBaseTimer } = useBaseTimerStore();
