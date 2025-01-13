@@ -10,6 +10,7 @@ type TimerTextDisplayProps = {
 
 const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentTheme, timerDisplayRef }) => {
     const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+    const [fontSize, setFontSize] = useState<number>(16);
 
     const updatePosition = () => {
         if (timerDisplayRef.current) {
@@ -18,6 +19,7 @@ const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentT
                 x: rect.left + rect.width / 2,
                 y: rect.top + rect.height * (3 / 4),
             });
+            setFontSize(rect.width / 25);
         }
     };
 
@@ -48,6 +50,7 @@ const TimerTextDisplay: React.FC<TimerTextDisplayProps> = ({ className, currentT
                 top: `${position.y}px`,
                 color: getAdjustedColor(currentTheme.color.point, ['#FFFFFF', currentTheme.color.main]),
                 transition: 'color 0.3s',
+                fontSize: `${fontSize}px`,
             }}
         >
             {currentTheme.text.split('\n').map((line, index) => (
