@@ -77,6 +77,15 @@ function registerValidSW(swUrl: string, config?: Config) {
                                     'tabs for this page are closed. See https://cra.link/PWA.'
                             );
 
+                            caches.keys().then((cacheNames) => {
+                                cacheNames.forEach((cacheName) => {
+                                    caches.delete(cacheName);
+                                });
+                                console.log('Clear cache.');
+                            });
+
+                            window.location.reload();
+
                             // Execute callback
                             if (config && config.onUpdate) {
                                 config.onUpdate(registration);
@@ -113,6 +122,13 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
                 // No service worker found. Probably a different app. Reload the page.
                 navigator.serviceWorker.ready.then((registration) => {
                     registration.unregister().then(() => {
+                        caches.keys().then((cacheNames) => {
+                            cacheNames.forEach((cacheName) => {
+                                caches.delete(cacheName);
+                            });
+                            console.log('Clear cache.');
+                        });
+
                         window.location.reload();
                     });
                 });
