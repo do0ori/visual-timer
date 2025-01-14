@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { TIMER_TYPE } from '../config/timer/type';
 import { BaseTimerData } from './types/timer';
 
 type BaseTimerState = {
@@ -13,7 +14,16 @@ type BaseTimerState = {
 export const useBaseTimerStore = create<BaseTimerState>()(
     persist(
         (set, get) => ({
-            timers: [],
+            timers: [
+                {
+                    id: 'base-example',
+                    type: TIMER_TYPE.BASE,
+                    title: 'Pasta Al Dente',
+                    time: 9,
+                    isMinutes: true,
+                    pointColorIndex: 3,
+                },
+            ],
             addTimer: (newTimer) => set((state) => ({ timers: [...state.timers, newTimer] })),
             updateTimer: (id, updatedProps) =>
                 set((state) => ({
