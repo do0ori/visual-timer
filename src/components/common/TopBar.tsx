@@ -13,7 +13,7 @@ const TopBar: React.FC<TopBarProps> = ({ title, leftIcon, rightIcon, onLeftClick
 
     return (
         <div
-            className="absolute left-0 top-0 flex h-14 w-full items-center px-4 text-white shadow-md"
+            className="absolute left-0 top-0 z-50 flex h-14 w-full items-center px-4 text-white shadow-md"
             style={{
                 backgroundColor: originalTheme.color.point,
             }}
