@@ -15,7 +15,7 @@
     ],
     "start_url": "/visual-timer/",
     "scope": "/visual-timer/",
-    "display": "fullscreen",
+    "display": "standalone",
     "theme_color": "#000000",
     "background_color": "#ffffff"
 }
