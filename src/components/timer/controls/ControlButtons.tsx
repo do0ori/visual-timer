@@ -1,7 +1,7 @@
 import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'react-icons/io5';
 import { Theme } from '../../../config/theme/themes';
 import Button from '../../common/Button';
-import SettingsOverlay from '../overlay/SettingsOverlay';
+import SettingsOverlay from '../overlay/settings/SettingsOverlay';
 import TimerListOverlay from '../overlay/TimerListOverlay';
 
 type ControlButtonsProps = {

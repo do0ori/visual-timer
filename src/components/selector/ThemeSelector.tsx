@@ -1,10 +1,13 @@
+import { IoMdColorPalette } from 'react-icons/io';
 import { useThemeStore } from '../../store/themeStore';
+import ListElement from '../common/ListElement';
 
 const ThemeSelector: React.FC = () => {
     const { themes, globalThemeKey, setGlobalTheme } = useThemeStore();
 
-    return (
-        <>
+    const paletteIcon = <IoMdColorPalette size={24} className="size-full" />;
+    const themeSelector = (
+        <div className="flex w-full flex-col gap-4">
             {Object.entries(themes).map(([key, theme]) => (
                 <div
                     key={key}
@@ -31,8 +34,10 @@ const ThemeSelector: React.FC = () => {
                     />
                 </div>
             ))}
-        </>
+        </div>
     );
+
+    return <ListElement icon={paletteIcon} content={themeSelector} />;
 };
 
 export default ThemeSelector;

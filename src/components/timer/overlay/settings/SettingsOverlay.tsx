@@ -1,9 +1,11 @@
-import useOverlay from '../../../hooks/useOverlay';
-import { useTheme } from '../../../hooks/useTheme';
-import BackTopBar from '../../navigation/BackTopBar';
-import AlarmSelector from '../../selector/AlarmSelector';
-import ThemeSelector from '../../selector/ThemeSelector';
-import VolumeSelector from '../../selector/VolumeSelector';
+import useOverlay from '../../../../hooks/useOverlay';
+import { useTheme } from '../../../../hooks/useTheme';
+import BackTopBar from '../../../navigation/BackTopBar';
+import AlarmSelector from '../../../selector/AlarmSelector';
+import ThemeSelector from '../../../selector/ThemeSelector';
+import VolumeSelector from '../../../selector/VolumeSelector';
+import DonateField from './DonateField';
+import FeedbackField from './FeedbackField';
 
 const SettingsOverlay: React.FC = () => {
     const { originalTheme } = useTheme();
@@ -35,6 +37,14 @@ const SettingsOverlay: React.FC = () => {
                     <div className="mt-6 space-y-4">
                         <VolumeSelector />
                         <AlarmSelector />
+                    </div>
+                </div>
+
+                <div className="p-5">
+                    <h3 className="text-lg font-semibold">Others</h3>
+                    <div className="mt-6 space-y-8">
+                        <FeedbackField />
+                        <DonateField />
                     </div>
                 </div>
             </div>
