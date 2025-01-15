@@ -1,44 +1,56 @@
 # ⏰ Visual Timer
 
-**Visual Timer** is a user-friendly, customizable web-based timer application. It allows users to toggle between different units (minutes and seconds), customize the timer’s appearance using themes, and manually set the timer duration by interacting with the clock interface.
+**Visual Timer** is a user-friendly, customizable web-based timer application designed to help users efficiently manage their time. It features a **base timer**, a **timer list** for creating predefined timers(basic timers), and a **routine timer** to sequentially execute timers—making it perfect for techniques like the Pomodoro method. The app offers various customization options, including themes, sound settings, and flexible timer configurations.
 
 ## ✨ Key Features
 
-1. **Customizable Themes**
+### 1. **Base Timer**
 
-    - Choose from various **themes** to change the appearance of the timer.
-    - The theme applies instantly, updating the timer's **background** and **accent colors** in real-time.
+-   A default timer that serves as the foundation of the app.
+-   Users can manually set the duration and customize the appearance in real-time.
+-   Set the desired time by **dragging and clicking** on the clock interface.
 
-2. **Unit Toggle (Minutes/Seconds)**
+### 2. **Timer List**
 
-    - Switch between **minutes** and **seconds** to precisely manage the countdown.
-    - The timer units can be toggled while the timer is stopped, allowing flexibility in how time is measured.
+-   Create and save **Basic Timers** with predefined durations and colors for quick access.
+-   **Routine Timer** combines multiple Basic Timers into a sequence that executes in order.
+    -   Ideal for workflows like study sessions with breaks (e.g., 50-minute study + 10-minute break).
+    -   Includes **1-time execution** and **infinite repetition** options, allowing you to loop the routine as needed.
 
-3. **Interactive Time Setting**
+### 3. **Customizable Themes**
 
-    - **Drag and click** on the clock interface to set the desired time, with the visual interface reflecting changes in real-time.
-    - Supports **fine-tuning** of the timer duration by adding time in increments using dedicated buttons.
+-   Choose from three unique themes to personalize the app:
+    -   **Beige-Green**
+    -   **Gray-Purple**
+    -   **Black-Green**
+-   Themes instantly update the app’s appearance, including the timer’s background and accent colors.
 
-4. **Countdown Progress Visualization**
+### 4. **Sound Settings**
 
-    - The remaining time is displayed via a **progress circle** around the clock face, providing a clear visual indicator of the time left.
+-   Configure the alarm with the following options:
+    -   **Volume Control:** Adjust alarm volume to suit your preference.
+    -   **Sound Selection:** Choose from three available sounds:
+        -   Radar
+        -   Chime Time
+        -   Beep Beep
 
-5. **Sound Alerts**
+### 5. **Progressive Web App (PWA)**
 
-    - When the timer reaches zero, an **alarm sound** plays along with a popup alert to notify the user that the countdown has finished.
-
-6. **Persistent Settings**
-    - The application saves the last used **time** and **theme** to local storage, ensuring that users can pick up right where they left off in their next session.
+-   Designed for both **web** and **mobile** devices with responsive layouts.
+-   Installable as a web app, providing an **app-like experience** on mobile devices.
 
 ## 🛠️ Usage
 
 👉 [**Try it live here**](https://do0ori.github.io/visual-timer)
 
+[![pwa](https://github.com/user-attachments/assets/ade0c5e5-3c7c-465e-9a65-44e9c5a3542c)](https://do0ori.github.io/visual-timer)
+
 1. Use the **unit toggle button** to switch between minutes and seconds.
 2. **Drag** on the clock face or click to set the desired time.
-3. Choose a **theme** from the theme switch buttons to customize the look of the timer.
-4. Press the **Start** button to begin the countdown, or add time as needed.
-5. A **popup** and **alarm sound** will notify you when the timer finishes.
+3. Create **Basic Timers** or **Routine Timers** from the **Timer List**.
+4. Choose a **theme** and configure sound settings in the **Settings menu**.
+5. Press the **Start** button to begin the countdown.
+6. A **popup** and **alarm sound** notify you when the timer finishes.
 
 ## 💻 Technology Stack
 
