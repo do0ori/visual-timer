@@ -43,7 +43,7 @@
 
 👉 [**Try it live here**](https://do0ori.github.io/visual-timer)
 
-[![pwa](https://github.com/user-attachments/assets/ade0c5e5-3c7c-465e-9a65-44e9c5a3542c)](https://do0ori.github.io/visual-timer)
+[![pwa](https://github.com/user-attachments/assets/7753ae89-d65b-4b12-9f75-6e7cdb963e64)](https://do0ori.github.io/visual-timer)
 
 1. Use the **unit toggle button** to switch between minutes and seconds.
 2. **Drag** on the clock face or click to set the desired time.
