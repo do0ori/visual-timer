@@ -9,7 +9,8 @@ export interface BaseTimerData {
     pointColorIndex?: number;
 }
 
-export interface RoutineTimerItem extends BaseTimerData {
+export interface RoutineTimerItem extends Omit<BaseTimerData, 'pointColorIndex'> {
+    pointColorIndex: number;
     interval: number; // 다음 타이머와의 간격 (초 단위)
 }
 

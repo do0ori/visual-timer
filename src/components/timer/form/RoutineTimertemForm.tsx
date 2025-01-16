@@ -13,6 +13,7 @@ import {
 import { Theme } from '../../../config/theme/themes';
 import { useAutoScroll } from '../../../hooks/useAutoScroll';
 import { getTimerPointColor } from '../../../utils/themeUtils';
+import ColorPicker from '../../common/ColorPicker';
 import { BaseTimerIcon } from '../../icons';
 import TimeSelector from '../../selector/TimeSelector';
 import TimeDisplay from '../display/TimeDisplay';
@@ -108,23 +109,13 @@ const RoutineTimerItemForm = ({
                                 <DisclosurePanel className="flex flex-col gap-4 pl-11 pt-6">
                                     <label className="flex items-center gap-4">
                                         <MdOutlinePalette size={20} className="shrink-0" />
-                                        <div className="flex flex-wrap gap-2">
-                                            {currentTheme.color.pointOptions.map((color, colorIndex) => (
-                                                <button
-                                                    key={colorIndex}
-                                                    type="button"
-                                                    className={`size-10 rounded-full border-2 transition-all ${
-                                                        item.pointColorIndex === colorIndex
-                                                            ? 'scale-110 border-white'
-                                                            : 'border-transparent hover:scale-105'
-                                                    }`}
-                                                    style={{ backgroundColor: color }}
-                                                    onClick={() =>
-                                                        setValue(`items.${index}.pointColorIndex`, colorIndex)
-                                                    }
-                                                />
-                                            ))}
-                                        </div>
+                                        <ColorPicker
+                                            colors={currentTheme.color.pointOptions}
+                                            selectedIndex={item.pointColorIndex}
+                                            onSelect={(colorIndex) =>
+                                                setValue(`items.${index}.pointColorIndex`, colorIndex)
+                                            }
+                                        />
                                     </label>
 
                                     <div className="flex items-center gap-4">
