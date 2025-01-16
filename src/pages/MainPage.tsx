@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import BaseTimer from '../components/timer/BaseTimer';
-import RoutineTimer from '../components/timer/RoutineTimer';
+import BaseTimer from '../components/timers/base-timer/BaseTimer';
+import RoutineTimer from '../components/timers/routine-timer/RoutineTimer';
 import { TIMER_TYPE } from '../config/timer/type';
 import { useBaseTimerStore } from '../store/baseTimerStore';
 import { useRoutineTimerStore } from '../store/routineTimerStore';
