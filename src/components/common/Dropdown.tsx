@@ -1,8 +1,9 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@headlessui/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { Theme } from '../../config/theme/themes';
 import { useAutoScroll } from '../../hooks/useAutoScroll';
+import useScrollToSelected from '../../hooks/useScrollToSelected';
 
 type DropdownOption<T> = {
     label: string;
@@ -34,30 +35,11 @@ const Dropdown = <T,>({
     const panelRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    // Scroll to selected item inside the panel
-    const handleScrollToSelected = useCallback(() => {
-        if (!selectedItemRef.current || !panelRef.current) return;
-
-        const panel = panelRef.current;
-        const selectedItem = selectedItemRef.current;
-        const panelHeight = panel.clientHeight;
-        const itemHeight = selectedItem.clientHeight;
-        const scrollTo = selectedItem.offsetTop - panelHeight / 2 + itemHeight / 2;
-
-        panel.scrollTo({
-            top: Math.max(0, scrollTo),
-            behavior: 'smooth',
-        });
-    }, []);
-
     // Auto-scroll the entire Dropdown component into view
     const dropdownRef = useAutoScroll<HTMLDivElement>(isOpen);
 
-    useEffect(() => {
-        if (isOpen) {
-            setTimeout(handleScrollToSelected, 100);
-        }
-    }, [isOpen, handleScrollToSelected]);
+    // Auto-scroll to selected item inside the panel
+    useScrollToSelected(panelRef, selectedItemRef, isOpen);
 
     return (
         <div ref={dropdownRef} className="relative">
