@@ -1,14 +1,15 @@
+import { IoIosArrowBack, IoIosSave, IoMdAdd, IoMdClose } from 'react-icons/io';
 import { useTheme } from '../../hooks/useTheme';
 
 type TopBarProps = {
-    title: string;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
+    center?: React.ReactNode;
     onLeftClick?: () => void;
     onRightClick?: () => void;
 };
 
-const TopBar: React.FC<TopBarProps> = ({ title, leftIcon, rightIcon, onLeftClick, onRightClick }) => {
+const TopBarLayout: React.FC<TopBarProps> = ({ leftIcon, rightIcon, center, onLeftClick, onRightClick }) => {
     const { originalTheme } = useTheme();
 
     return (
@@ -20,7 +21,7 @@ const TopBar: React.FC<TopBarProps> = ({ title, leftIcon, rightIcon, onLeftClick
         >
             {leftIcon && <button onClick={onLeftClick}>{leftIcon}</button>}
 
-            <h1 className="ml-4 text-xl font-bold">{title}</h1>
+            <h1 className="ml-4 text-xl font-bold">{center}</h1>
 
             {rightIcon && (
                 <button onClick={onRightClick} className="ml-auto">
@@ -29,6 +30,25 @@ const TopBar: React.FC<TopBarProps> = ({ title, leftIcon, rightIcon, onLeftClick
             )}
         </div>
     );
+};
+
+const BackIcon = <IoIosArrowBack size={24} />;
+const AddIcon = <IoMdAdd size={24} />;
+const CloseIcon = <IoMdClose size={24} />;
+const SaveIcon = <IoIosSave size={24} />;
+
+const BackTopBar: React.FC<Omit<TopBarProps, 'leftIcon'>> = (props) => <TopBarLayout leftIcon={BackIcon} {...props} />;
+const BackAddTopBar: React.FC<Omit<TopBarProps, 'leftIcon' | 'rightIcon'>> = (props) => (
+    <TopBarLayout leftIcon={BackIcon} rightIcon={AddIcon} {...props} />
+);
+const CancelSaveTopBar: React.FC<Omit<TopBarProps, 'leftIcon' | 'rightIcon'>> = (props) => (
+    <TopBarLayout leftIcon={CloseIcon} rightIcon={SaveIcon} {...props} />
+);
+
+const TopBar = {
+    Back: BackTopBar,
+    BackAdd: BackAddTopBar,
+    CancelSave: CancelSaveTopBar,
 };
 
 export default TopBar;

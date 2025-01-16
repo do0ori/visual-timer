@@ -3,7 +3,7 @@ import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/
 import { useOverlay } from '../../../hooks/useOverlay';
 import { useThemeStore } from '../../../store/themeStore';
 import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
-import CancelSaveTopBar from '../../common/CancelSaveTopBar';
+import TopBar from '../../common/TopBar';
 import BaseTimerForm from './forms/BaseTimerForm';
 import RoutineTimerForm from './forms/RoutineTimerForm';
 
@@ -37,10 +37,10 @@ const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, m
             className="fixed inset-0 z-50 flex size-full"
             style={{ backgroundColor: themes[globalThemeKey].color.main }}
         >
-            <CancelSaveTopBar
-                title={`${mode === 'add' ? 'Add' : 'Edit'} ${TIMER_TYPE_CONFIG[timerType].label}`}
-                onClose={close}
-                onSave={handleSave}
+            <TopBar.CancelSave
+                onLeftClick={close}
+                center={`${mode === 'add' ? 'Add' : 'Edit'} ${TIMER_TYPE_CONFIG[timerType].label}`}
+                onRightClick={handleSave}
             />
 
             {timerType === TIMER_TYPE.BASE && (
