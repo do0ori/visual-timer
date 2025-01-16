@@ -1,11 +1,9 @@
 import { useOverlay } from '../../hooks/useOverlay';
 import { useTheme } from '../../hooks/useTheme';
 import BackTopBar from '../common/BackTopBar';
-import AlarmSelector from './fields/AlarmSelector';
-import DonateField from './fields/DonateField';
-import FeedbackField from './fields/FeedbackField';
-import ThemeSelector from './fields/ThemeSelector';
-import VolumeSelector from './fields/VolumeSelector';
+import AlarmSettings from './sections/AlarmSettings';
+import OthersSettings from './sections/OthersSettings';
+import ThemeSettings from './sections/ThemeSettings';
 
 const SettingsOverlay: React.FC = () => {
     const { originalTheme } = useTheme();
@@ -24,29 +22,10 @@ const SettingsOverlay: React.FC = () => {
         >
             <BackTopBar title="Settings" onClose={close} />
 
-            <div className="h-[95%] overflow-y-auto no-scrollbar">
-                <div className="p-5 pt-20">
-                    <h3 className="text-lg font-semibold">Theme</h3>
-                    <div className="mt-6 space-y-4">
-                        <ThemeSelector />
-                    </div>
-                </div>
-
-                <div className="p-5">
-                    <h3 className="text-lg font-semibold">Alarm</h3>
-                    <div className="mt-6 space-y-4">
-                        <VolumeSelector />
-                        <AlarmSelector />
-                    </div>
-                </div>
-
-                <div className="p-5">
-                    <h3 className="text-lg font-semibold">Others</h3>
-                    <div className="mt-6 space-y-8">
-                        <FeedbackField />
-                        <DonateField />
-                    </div>
-                </div>
+            <div className="h-[95%] space-y-10 overflow-y-auto p-5 pt-20 no-scrollbar">
+                <ThemeSettings />
+                <AlarmSettings />
+                <OthersSettings />
             </div>
         </div>
     );
