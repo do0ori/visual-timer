@@ -9,7 +9,7 @@ type TopBarProps = {
     onRightClick?: () => void;
 };
 
-const TopBarLayout: React.FC<TopBarProps> = ({ leftIcon, rightIcon, center, onLeftClick, onRightClick }) => {
+const BaseTopBar: React.FC<TopBarProps> = ({ leftIcon, rightIcon, center, onLeftClick, onRightClick }) => {
     const { originalTheme } = useTheme();
 
     return (
@@ -37,12 +37,12 @@ const AddIcon = <IoMdAdd size={24} />;
 const CloseIcon = <IoMdClose size={24} />;
 const SaveIcon = <IoIosSave size={24} />;
 
-const BackTopBar: React.FC<Omit<TopBarProps, 'leftIcon'>> = (props) => <TopBarLayout leftIcon={BackIcon} {...props} />;
+const BackTopBar: React.FC<Omit<TopBarProps, 'leftIcon'>> = (props) => <BaseTopBar leftIcon={BackIcon} {...props} />;
 const BackAddTopBar: React.FC<Omit<TopBarProps, 'leftIcon' | 'rightIcon'>> = (props) => (
-    <TopBarLayout leftIcon={BackIcon} rightIcon={AddIcon} {...props} />
+    <BaseTopBar leftIcon={BackIcon} rightIcon={AddIcon} {...props} />
 );
 const CancelSaveTopBar: React.FC<Omit<TopBarProps, 'leftIcon' | 'rightIcon'>> = (props) => (
-    <TopBarLayout leftIcon={CloseIcon} rightIcon={SaveIcon} {...props} />
+    <BaseTopBar leftIcon={CloseIcon} rightIcon={SaveIcon} {...props} />
 );
 
 const TopBar = {
