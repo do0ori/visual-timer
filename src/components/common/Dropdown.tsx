@@ -2,8 +2,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@head
 import { useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { Theme } from '../../config/theme/themes';
-import { useAutoScroll } from '../../hooks/useAutoScroll';
-import useScrollToSelected from '../../hooks/useScrollToSelected';
+import { useAutoScroll } from '../../hooks/scroll/useAutoScroll';
+import { useScrollToSelected } from '../../hooks/scroll/useScrollToSelected';
 
 type DropdownOption<T> = {
     label: string;

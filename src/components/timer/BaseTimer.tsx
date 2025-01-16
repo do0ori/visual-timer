@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { useTimerBase } from '../../hooks/timer/useTimer';
 import { useAudio } from '../../hooks/useAudio';
 import { useTheme } from '../../hooks/useTheme';
-import { useTimerBase } from '../../hooks/useTimerBase';
 import { useSelectedTimerStore } from '../../store/selectedTimerStore';
 import { BaseTimerData } from '../../store/types/timer';
 import { handleDragEvent, handleFinish } from '../../utils/timerHandler';

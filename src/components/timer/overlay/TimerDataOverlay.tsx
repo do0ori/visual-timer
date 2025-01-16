@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/type';
-import useOverlay from '../../../hooks/useOverlay';
+import { useOverlay } from '../../../hooks/useOverlay';
 import { useThemeStore } from '../../../store/themeStore';
 import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
 import CancelSaveTopBar from '../../navigation/CancelSaveTopBar';

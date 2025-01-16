@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useBoolean, useCounter, useInterval } from 'usehooks-ts';
-import { timerUnits, Unit } from '../config/timer/units';
-import { convertMsToMmSs } from '../utils/timeUtils';
+import { timerUnits, Unit } from '../../config/timer/units';
+import { convertMsToMmSs } from '../../utils/timeUtils';
 
 type TimerOptions = {
     /** Unique id for the timer. */
@@ -247,3 +247,22 @@ export function useTimer({
         add,
     };
 }
+
+type UseTimerBaseProps = {
+    id: string;
+    initialTime: number;
+    isMinutes: boolean;
+    onFinish: (reset: () => void) => void;
+    autoStart?: boolean;
+};
+
+export const useTimerBase = ({ id, initialTime, isMinutes, onFinish, autoStart }: UseTimerBaseProps) => {
+    return useTimer({
+        id,
+        initialTime,
+        unit: isMinutes ? 'minutes' : 'seconds',
+        maxTime: 60,
+        onFinish,
+        autoStart,
+    });
+};

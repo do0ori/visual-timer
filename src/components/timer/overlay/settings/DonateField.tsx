@@ -1,7 +1,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { IoHeart } from 'react-icons/io5';
 import { MdExpandMore } from 'react-icons/md';
-import { useAutoScroll } from '../../../../hooks/useAutoScroll';
+import { useAutoScroll } from '../../../../hooks/scroll/useAutoScroll';
 import { useTheme } from '../../../../hooks/useTheme';
 import ListElement from '../../../common/ListElement';
 

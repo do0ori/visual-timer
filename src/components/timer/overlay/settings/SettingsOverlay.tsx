@@ -1,4 +1,4 @@
-import useOverlay from '../../../../hooks/useOverlay';
+import { useOverlay } from '../../../../hooks/useOverlay';
 import { useTheme } from '../../../../hooks/useTheme';
 import BackTopBar from '../../../navigation/BackTopBar';
 import AlarmSelector from '../../../selector/AlarmSelector';

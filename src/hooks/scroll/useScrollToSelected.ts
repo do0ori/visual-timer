@@ -13,7 +13,7 @@ type ScrollToSelectedOptions = {
  * @param trigger Trigger to activate scrolling
  * @param options Optional settings for scrolling behavior
  */
-const useScrollToSelected = (
+export const useScrollToSelected = (
     containerRef: React.RefObject<HTMLElement>,
     selectedRef: React.RefObject<HTMLElement>,
     trigger: boolean,
@@ -43,5 +43,3 @@ const useScrollToSelected = (
         }
     }, [trigger, scrollToSelected]);
 };
-
-export default useScrollToSelected;

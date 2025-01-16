@@ -11,7 +11,7 @@ import {
     MdOutlineTimer,
 } from 'react-icons/md';
 import { Theme } from '../../../config/theme/themes';
-import { useAutoScroll } from '../../../hooks/useAutoScroll';
+import { useAutoScroll } from '../../../hooks/scroll/useAutoScroll';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import ColorPicker from '../../common/ColorPicker';
 import { BaseTimerIcon } from '../../icons';

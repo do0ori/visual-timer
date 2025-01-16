@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const useOverlay = (overlayKey: string, onClose?: () => void) => {
+export const useOverlay = (overlayKey: string, onClose?: () => void) => {
     const [isOpen, setIsOpen] = useState(window.location.hash.includes(overlayKey));
 
     const close = () => {
@@ -44,5 +44,3 @@ const useOverlay = (overlayKey: string, onClose?: () => void) => {
 
     return { isOpen, close };
 };
-
-export default useOverlay;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MdDeleteOutline, MdEdit } from 'react-icons/md';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
-import useOverlay from '../../../hooks/useOverlay';
+import { useOverlay } from '../../../hooks/useOverlay';
 import { useTheme } from '../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useRoutineTimerStore } from '../../../store/routineTimerStore';
