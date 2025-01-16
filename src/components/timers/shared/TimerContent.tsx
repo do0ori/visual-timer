@@ -1,6 +1,5 @@
 import { useAspectRatio } from '../../../hooks/useAspectRatio';
-import HorizontalLayout from '../../common/HorizontalLayout';
-import VerticalLayout from '../../common/VerticalLayout';
+import Layout from '../../common/Layout';
 
 export type TimerContentProps = {
     top: {
@@ -28,7 +27,7 @@ const TimerContent: React.FC<TimerContentProps> = ({ top, bottom, timerInfo, tim
     const aspectRatio = useAspectRatio();
 
     return aspectRatio > 1 ? (
-        <HorizontalLayout
+        <Layout.Horizontal
             className="h-screen w-screen"
             leftChildren={content.timer}
             rightChildren={
@@ -40,14 +39,14 @@ const TimerContent: React.FC<TimerContentProps> = ({ top, bottom, timerInfo, tim
             }
         />
     ) : (
-        <VerticalLayout className="h-screen w-screen">
+        <Layout.Vertical className="h-screen w-screen">
             <div className="flex size-full flex-col justify-between">
                 {content.top}
                 {content.timerInfo}
                 <div className="flex grow items-center justify-center">{content.timer}</div>
                 {content.bottom}
             </div>
-        </VerticalLayout>
+        </Layout.Vertical>
     );
 };
 
