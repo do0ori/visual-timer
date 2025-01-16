@@ -13,9 +13,9 @@ import {
 import { Theme } from '../../../../config/theme/themes';
 import { useAutoScroll } from '../../../../hooks/useAutoScroll';
 import { getTimerPointColor } from '../../../../utils/themeUtils';
-import ColorPicker from '../../../common/ColorPicker';
 import { BaseTimerIcon } from '../../../icons';
 import TimeDisplay from '../../shared/displays/TimeDisplay';
+import PointColorSelector from '../fields/PointColorSelector';
 import TimeSelector from '../fields/TimeSelector';
 import { RoutineTimerFormData } from './RoutineTimerForm';
 
@@ -109,7 +109,7 @@ const RoutineTimerItemForm = ({
                                 <DisclosurePanel className="flex flex-col gap-4 pl-11 pt-6">
                                     <label className="flex items-center gap-4">
                                         <MdOutlinePalette size={20} className="shrink-0" />
-                                        <ColorPicker
+                                        <PointColorSelector
                                             colors={currentTheme.color.pointOptions}
                                             selectedIndex={item.pointColorIndex}
                                             onSelect={(colorIndex) =>

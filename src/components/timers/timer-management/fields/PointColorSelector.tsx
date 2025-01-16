@@ -1,11 +1,11 @@
-type ColorPickerProps = {
+type PointColorSelectorProps = {
     colors: string[];
     selectedIndex: number;
     onSelect: (index: number) => void;
 };
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ colors, selectedIndex, onSelect }) => (
-    <div className="flex flex-wrap gap-2">
+const PointColorSelector: React.FC<PointColorSelectorProps> = ({ colors, selectedIndex, onSelect }) => (
+    <div className="flex flex-wrap gap-3">
         {colors.map((color, index) => (
             <button
                 key={index}
@@ -20,4 +20,4 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ colors, selectedIndex, onSele
     </div>
 );
 
-export default ColorPicker;
+export default PointColorSelector;

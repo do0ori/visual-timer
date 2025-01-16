@@ -6,6 +6,7 @@ import { useTheme } from '../../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../../store/baseTimerStore';
 import { BaseTimerData } from '../../../../store/types/timer';
 import TimeDisplay from '../../shared/displays/TimeDisplay';
+import PointColorSelector from '../fields/PointColorSelector';
 import TimerTypeSelector from '../fields/TimerTypeSelector';
 import TimeSelector from '../fields/TimeSelector';
 
@@ -78,21 +79,11 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
 
                     <label className="flex items-center gap-8">
                         <MdOutlinePalette size={30} className="shrink-0" />
-                        <div className="flex flex-wrap gap-3">
-                            {currentTheme.color.pointOptions.map((color, index) => (
-                                <button
-                                    key={index}
-                                    type="button"
-                                    className={`size-10 rounded-full border-2 transition-all ${
-                                        pointColorIndex === index
-                                            ? 'scale-110 border-white'
-                                            : 'border-transparent hover:scale-105'
-                                    }`}
-                                    style={{ backgroundColor: color }}
-                                    onClick={() => setValue('pointColorIndex', index)}
-                                />
-                            ))}
-                        </div>
+                        <PointColorSelector
+                            colors={currentTheme.color.pointOptions}
+                            selectedIndex={pointColorIndex || 0}
+                            onSelect={(index) => setValue('pointColorIndex', index)}
+                        />
                     </label>
 
                     <label className="flex items-center gap-8">
