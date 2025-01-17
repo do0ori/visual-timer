@@ -1,21 +1,16 @@
 import Swal from 'sweetalert2';
+import { AudioControllers } from '../hooks/useAudio';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 
 export const handleFinish = (
     timer: BaseTimerData | RoutineTimerItem,
-    audioRef: React.RefObject<HTMLAudioElement>,
+    audio: AudioControllers,
     pointColor: string,
     onSuccess: () => void
 ) => {
-    const audio = audioRef.current;
-    if (!audio) {
-        console.error('Audio not initialized');
-        return;
-    }
-
     const resetAudio = () => {
         audio.pause();
-        audio.currentTime = 0;
+        audio.reset();
     };
 
     const handleOnSuccess = () => {
@@ -36,12 +31,8 @@ export const handleFinish = (
         };
     };
 
-    if (audio.paused) {
-        audio
-            .play()
-            .then(() => console.log('Play audio'))
-            .catch((error) => console.error('Audio play error:', error));
-    }
+    resetAudio();
+    audio.play();
 
     if ('interval' in timer) {
         if (timer.interval <= 0) {

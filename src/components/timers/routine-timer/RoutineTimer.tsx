@@ -15,7 +15,7 @@ import TimerList from './TimerList';
 
 const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
     const { defaultTimer, selectDefaultTimer } = useSelectedTimerStore();
-    const audioRef = useAudio();
+    const audio = useAudio();
     const timerDisplayRef = useRef<SVGCircleElement>(null);
 
     const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
@@ -42,12 +42,12 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
 
     const onFinish = useCallback(
         (reset: () => void) => {
-            handleFinish(currentItem, audioRef, currentTheme.color.point, () => {
+            handleFinish(currentItem, audio, currentTheme.color.point, () => {
                 reset();
                 moveToNextItem();
             });
         },
-        [currentItem, audioRef, currentTheme, moveToNextItem]
+        [currentItem, audio, currentTheme, moveToNextItem]
     );
 
     const {

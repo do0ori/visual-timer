@@ -14,7 +14,7 @@ import TimerContent, { TimerContentProps } from '../shared/TimerContent';
 
 const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
     const { defaultTimer, selectDefaultTimer, updateDefaultTimer } = useSelectedTimerStore();
-    const audioRef = useAudio();
+    const audio = useAudio();
     const timerDisplayRef = useRef<SVGCircleElement>(null);
 
     const { time: storedTime, isMinutes: storedIsMinutes, pointColorIndex, title } = timer;
@@ -23,9 +23,9 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
 
     const onFinish = useCallback(
         (reset: () => void) => {
-            handleFinish(timer, audioRef, currentTheme.color.point, reset);
+            handleFinish(timer, audio, currentTheme.color.point, reset);
         },
-        [timer, audioRef, currentTheme]
+        [timer, audio, currentTheme]
     );
 
     const {
