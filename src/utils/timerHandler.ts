@@ -1,6 +1,20 @@
 import Swal from 'sweetalert2';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 
+type IntervalState = {
+    lastUpdateTime: number;
+    remainingTime: number;
+};
+
+type TimeoutId = NodeJS.Timeout | null;
+
+interface IntervalTimer {
+    id: TimeoutId;
+    state: IntervalState;
+}
+
+const intervalTimers: Record<string, IntervalTimer> = {};
+
 export const handleFinish = (
     timer: BaseTimerData | RoutineTimerItem,
     audioRef: React.RefObject<HTMLAudioElement>,
@@ -13,49 +27,106 @@ export const handleFinish = (
         return;
     }
 
-    // Play audio
-    audio.play().catch((error) => console.error('Audio play error:', error));
-
-    const isLandscape = window.innerWidth > window.innerHeight;
-    const leftSideWidth = isLandscape ? window.innerWidth / 2 : window.innerWidth;
-
-    // Configure notification
-    const swalConfig = {
-        title: `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`,
-        text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
-        confirmButtonColor: pointColor,
-        width: isLandscape ? `${leftSideWidth * 0.95}px` : '95%',
-        position: isLandscape ? ('center-start' as const) : ('center' as const),
+    const resetAudio = () => {
+        audio.pause();
+        audio.currentTime = 0;
     };
 
-    if ('interval' in timer) {
-        if (timer.interval > 0) {
-            // With interval > 0: auto-close after interval
+    const handleOnSuccess = () => {
+        resetAudio();
+        onSuccess();
+    };
+
+    const getNotificationConfig = () => {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const leftSideWidth = isLandscape ? window.innerWidth / 2 : window.innerWidth;
+
+        return {
+            title: `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`,
+            text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
+            confirmButtonColor: pointColor,
+            width: isLandscape ? `${leftSideWidth * 0.95}px` : '95%',
+            position: isLandscape ? ('center-start' as const) : ('center' as const),
+        };
+    };
+
+    const handleRoutineTimer = (timer: RoutineTimerItem) => {
+        if (timer.interval <= 0) {
+            handleOnSuccess();
+            return;
+        }
+
+        const getRemainingTime = () => {
+            if (intervalTimers[timer.id]) {
+                const { id, state } = intervalTimers[timer.id];
+                const elapsedTime = Date.now() - state.lastUpdateTime;
+                if (id) clearTimeout(id);
+                return Math.max(0, state.remainingTime - elapsedTime);
+            } else {
+                return timer.interval * 1000;
+            }
+        };
+
+        const setCurrentState = (id: TimeoutId, remainingTime: number) => {
+            console.log(`Remaining time: ${remainingTime}.`);
+            intervalTimers[timer.id] = {
+                id,
+                state: {
+                    lastUpdateTime: Date.now(),
+                    remainingTime,
+                },
+            };
+        };
+
+        if (document.visibilityState == 'hidden') {
+            const remainingTime = getRemainingTime();
+            setCurrentState(
+                setTimeout(() => {
+                    if (document.visibilityState !== 'visible') {
+                        handleOnSuccess();
+                        delete intervalTimers[timer.id];
+                        console.log('Interval finished in background.');
+                    }
+                }, remainingTime),
+                remainingTime
+            );
+        } else if (document.visibilityState === 'visible') {
+            const remainingTime = getRemainingTime();
+            setCurrentState(null, remainingTime);
+
             Swal.fire({
-                ...swalConfig,
-                timer: timer.interval * 1000,
+                ...getNotificationConfig(),
+                timer: remainingTime,
                 timerProgressBar: true,
                 showConfirmButton: false,
             }).then(() => {
-                audio.pause();
-                audio.currentTime = 0;
-                onSuccess();
+                handleOnSuccess();
+                delete intervalTimers[timer.id];
             });
-        } else {
-            // With interval = 0: direct success without notification
-            audio.pause();
-            audio.currentTime = 0;
-            onSuccess();
         }
+    };
+
+    const handleBasicTimer = () => {
+        if (document.visibilityState === 'visible') {
+            Swal.fire(getNotificationConfig()).then((result) => {
+                if (!result.isDenied) {
+                    handleOnSuccess();
+                }
+            });
+        }
+    };
+
+    if (audio.paused) {
+        audio
+            .play()
+            .then(() => console.log('Play audio'))
+            .catch((error) => console.error('Audio play error:', error));
+    }
+
+    if ('interval' in timer) {
+        handleRoutineTimer(timer);
     } else {
-        // Without interval: show notification with confirm button
-        Swal.fire(swalConfig).then((result) => {
-            if (!result.isDenied) {
-                audio.pause();
-                audio.currentTime = 0;
-                onSuccess();
-            }
-        });
+        handleBasicTimer();
     }
 };
 
