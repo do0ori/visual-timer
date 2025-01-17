@@ -1,20 +1,6 @@
 import Swal from 'sweetalert2';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 
-type IntervalState = {
-    lastUpdateTime: number;
-    remainingTime: number;
-};
-
-type TimeoutId = NodeJS.Timeout | null;
-
-interface IntervalTimer {
-    id: TimeoutId;
-    state: IntervalState;
-}
-
-const intervalTimers: Record<string, IntervalTimer> = {};
-
 export const handleFinish = (
     timer: BaseTimerData | RoutineTimerItem,
     audioRef: React.RefObject<HTMLAudioElement>,
@@ -50,72 +36,6 @@ export const handleFinish = (
         };
     };
 
-    const handleRoutineTimer = (timer: RoutineTimerItem) => {
-        if (timer.interval <= 0) {
-            handleOnSuccess();
-            return;
-        }
-
-        const getRemainingTime = () => {
-            if (intervalTimers[timer.id]) {
-                const { id, state } = intervalTimers[timer.id];
-                const elapsedTime = Date.now() - state.lastUpdateTime;
-                if (id) clearTimeout(id);
-                return Math.max(0, state.remainingTime - elapsedTime);
-            } else {
-                return timer.interval * 1000;
-            }
-        };
-
-        const setCurrentState = (id: TimeoutId, remainingTime: number) => {
-            console.log(`Remaining time: ${remainingTime}.`);
-            intervalTimers[timer.id] = {
-                id,
-                state: {
-                    lastUpdateTime: Date.now(),
-                    remainingTime,
-                },
-            };
-        };
-
-        if (document.visibilityState == 'hidden') {
-            const remainingTime = getRemainingTime();
-            setCurrentState(
-                setTimeout(() => {
-                    if (document.visibilityState !== 'visible') {
-                        handleOnSuccess();
-                        delete intervalTimers[timer.id];
-                        console.log('Interval finished in background.');
-                    }
-                }, remainingTime),
-                remainingTime
-            );
-        } else if (document.visibilityState === 'visible') {
-            const remainingTime = getRemainingTime();
-            setCurrentState(null, remainingTime);
-
-            Swal.fire({
-                ...getNotificationConfig(),
-                timer: remainingTime,
-                timerProgressBar: true,
-                showConfirmButton: false,
-            }).then(() => {
-                handleOnSuccess();
-                delete intervalTimers[timer.id];
-            });
-        }
-    };
-
-    const handleBasicTimer = () => {
-        if (document.visibilityState === 'visible') {
-            Swal.fire(getNotificationConfig()).then((result) => {
-                if (!result.isDenied) {
-                    handleOnSuccess();
-                }
-            });
-        }
-    };
-
     if (audio.paused) {
         audio
             .play()
@@ -124,9 +44,24 @@ export const handleFinish = (
     }
 
     if ('interval' in timer) {
-        handleRoutineTimer(timer);
+        if (timer.interval <= 0) {
+            handleOnSuccess();
+        } else {
+            Swal.fire({
+                ...getNotificationConfig(),
+                timer: timer.interval * 1000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+            }).then(() => {
+                handleOnSuccess();
+            });
+        }
     } else {
-        handleBasicTimer();
+        Swal.fire(getNotificationConfig()).then((result) => {
+            if (!result.isDenied) {
+                handleOnSuccess();
+            }
+        });
     }
 };
 
