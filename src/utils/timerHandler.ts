@@ -25,10 +25,7 @@ export const handleFinish = (
         text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
         confirmButtonColor: pointColor,
         width: isLandscape ? `${leftSideWidth * 0.95}px` : '95%',
-        position: 'center' as const,
-        customClass: {
-            container: isLandscape ? 'landscape-alert' : '',
-        },
+        position: isLandscape ? ('center-start' as const) : ('center' as const),
     };
 
     if ('interval' in timer) {
