@@ -182,27 +182,33 @@ export function useTimer({
                     stopCountdown();
 
                     // Send remaining time to service worker
-                    const remainingMs = count * intervalMs;
-                    navigator.serviceWorker.controller?.postMessage({
-                        command: 'start-timer',
-                        id,
-                        delay: remainingMs,
-                    });
+                    if (count > 0) {
+                        const remainingMs = count * intervalMs;
+                        navigator.serviceWorker.controller?.postMessage({
+                            command: 'start-timer',
+                            id,
+                            delay: remainingMs,
+                        });
+                    }
                 }
             } else if (document.visibilityState === 'visible') {
                 if (wasRunningRef.current) {
                     // Restore timer based on remaining time when the tab becomes active
                     const elapsedMs = Date.now() - lastUpdateTimeRef.current;
                     const elapsedCount = Math.floor(elapsedMs / intervalMs);
-                    const newCountStart = Math.max(0, count - elapsedCount);
+                    const newCountStart = count - elapsedCount;
 
-                    setCount(newCountStart);
+                    if (count > 0) {
+                        setCount(Math.max(0, newCountStart));
+                        navigator.serviceWorker.controller?.postMessage({
+                            command: 'clear-timer',
+                            id,
+                        });
+                    } else {
+                        setCount(newCountStart);
+                    }
+
                     startCountdown();
-
-                    navigator.serviceWorker.controller?.postMessage({
-                        command: 'clear-timer',
-                        id,
-                    });
                 }
             }
         };
