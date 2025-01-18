@@ -138,28 +138,28 @@ self.addEventListener('message', (event) => {
     }
 });
 
+const navigateToApp = async () => {
+    const clientList = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+    });
+
+    const hadClientOpen = clientList.some((client) => {
+        if (client.url.includes('/visual-timer') && 'focus' in client) {
+            return client.focus();
+        }
+        return false;
+    });
+
+    if (!hadClientOpen) {
+        if (self.clients.openWindow) {
+            await self.clients.openWindow('/visual-timer');
+        }
+    }
+};
+
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
 
-    event.waitUntil(
-        self.clients
-            .matchAll({
-                type: 'window',
-                includeUncontrolled: true,
-            })
-            .then(async (clientList) => {
-                const hadClientOpen = clientList.some((client) => {
-                    if (client.url.includes('/visual-timer') && 'focus' in client) {
-                        return client.focus();
-                    }
-                    return false;
-                });
-
-                if (!hadClientOpen) {
-                    if (self.clients.openWindow) {
-                        await self.clients.openWindow('/visual-timer');
-                    }
-                }
-            })
-    );
+    event.waitUntil(navigateToApp());
 });
