@@ -16,6 +16,10 @@ export const handleFinish = (
     const handleOnSuccess = () => {
         resetAudio();
         onSuccess();
+        navigator.serviceWorker.controller?.postMessage({
+            command: 'clear-timer',
+            timer,
+        });
     };
 
     const getNotificationConfig = () => {
