@@ -140,14 +140,26 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
+
     event.waitUntil(
-        self.clients.matchAll({ type: 'window' }).then((clientList) => {
-            const client = clientList.find((c) => c.visibilityState === 'visible');
-            if (client) {
-                client.focus();
-            } else {
-                self.clients.openWindow('/visual-timer');
-            }
-        })
+        self.clients
+            .matchAll({
+                type: 'window',
+                includeUncontrolled: true,
+            })
+            .then(async (clientList) => {
+                const hadClientOpen = clientList.some((client) => {
+                    if (client.url.includes('/visual-timer') && 'focus' in client) {
+                        return client.focus();
+                    }
+                    return false;
+                });
+
+                if (!hadClientOpen) {
+                    if (self.clients.openWindow) {
+                        await self.clients.openWindow('/visual-timer');
+                    }
+                }
+            })
     );
 });
