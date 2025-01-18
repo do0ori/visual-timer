@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useBoolean, useCounter, useInterval } from 'usehooks-ts';
 import { timerUnits, Unit } from '../config/timer/units';
+import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 import { convertMsToMmSs } from '../utils/timeUtils';
 
 type TimerOptions = {
-    /** Unique id for the timer. */
-    id: string;
+    /** Timer data. */
+    timer: BaseTimerData | RoutineTimerItem;
     /** Initial time for the timer. */
     initialTime: number;
     /** Unit of the timer, either "minutes" or "seconds". Defaults to "minutes". */
@@ -52,7 +53,7 @@ type TimerControllers = {
 };
 
 export function useTimer({
-    id,
+    timer,
     initialTime,
     unit = 'minutes',
     maxTime = undefined,
@@ -158,7 +159,7 @@ export function useTimer({
         const handleServiceWorkerMessage = (event: MessageEvent) => {
             const { command, id: messageId } = event.data;
 
-            if (command === 'finished' && messageId === id) {
+            if (command === 'finished' && messageId === timer.id) {
                 console.log('Timer finished in background.');
                 setCount(0);
                 startCountdown();
@@ -186,7 +187,7 @@ export function useTimer({
                         const remainingMs = count * intervalMs;
                         navigator.serviceWorker.controller?.postMessage({
                             command: 'start-timer',
-                            id,
+                            timer,
                             delay: remainingMs,
                         });
                     }
@@ -202,7 +203,7 @@ export function useTimer({
                         setCount(Math.max(0, newCountStart));
                         navigator.serviceWorker.controller?.postMessage({
                             command: 'clear-timer',
-                            id,
+                            timer,
                         });
                     } else {
                         setCount(newCountStart);
@@ -255,16 +256,16 @@ export function useTimer({
 }
 
 type UseTimerBaseProps = {
-    id: string;
+    timer: BaseTimerData | RoutineTimerItem;
     initialTime: number;
     isMinutes: boolean;
     onFinish: (reset: () => void) => void;
     autoStart?: boolean;
 };
 
-export const useTimerBase = ({ id, initialTime, isMinutes, onFinish, autoStart }: UseTimerBaseProps) => {
+export const useTimerBase = ({ timer, initialTime, isMinutes, onFinish, autoStart }: UseTimerBaseProps) => {
     return useTimer({
-        id,
+        timer,
         initialTime,
         unit: isMinutes ? 'minutes' : 'seconds',
         maxTime: 60,

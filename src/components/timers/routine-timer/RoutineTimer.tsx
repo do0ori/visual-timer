@@ -61,7 +61,7 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
         reset,
         add,
     } = useTimerBase({
-        id: currentItem.id,
+        timer: currentItem,
         initialTime: currentItem.time,
         isMinutes: currentItem.isMinutes,
         onFinish,

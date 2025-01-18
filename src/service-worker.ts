@@ -13,6 +13,7 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
+import { convertMsToMmSs } from './utils/timeUtils';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -78,43 +79,67 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-const timers: Record<string, NodeJS.Timeout> = {};
+const timers: Record<string, { timeoutId: NodeJS.Timeout; intervalId: NodeJS.Timer }> = {};
 
 self.addEventListener('message', (event) => {
     if (event.source) {
         const clientId = (event.source as Client).id;
-        const { command, id, delay } = event.data;
-
-        if (!id) {
-            console.error('Timer ID is missing in the message data.');
-            return;
-        }
+        const { command, timer, delay } = event.data;
 
         if (command === 'start-timer') {
-            console.log(`Starting timer with ID: ${id}, Delay: ${delay}ms`);
-            const timerId = setTimeout(() => {
+            console.log(`Starting timer with ID: ${timer.id}, Delay: ${delay}ms`);
+
+            let remainingTime = delay;
+
+            const timeoutId = setTimeout(async () => {
                 self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
                     const targetClient = clientList.find((client) => client.id === clientId);
 
                     if (targetClient) {
-                        targetClient.postMessage({ command: 'finished', id });
+                        targetClient.postMessage({ command: 'finished', id: timer.id });
                     } else {
                         console.warn('No matching client found for timer ID:', clientId);
                     }
                 });
             }, delay);
 
-            timers[id] = timerId;
+            const intervalId = setInterval(async () => {
+                remainingTime -= 1000;
+
+                await self.registration.showNotification(timer.title, {
+                    body: convertMsToMmSs(remainingTime),
+                    icon: '/logo500.png',
+                    tag: timer.id,
+                    silent: true,
+                });
+            }, 1000);
+
+            timers[timer.id] = { timeoutId, intervalId };
         } else if (command === 'clear-timer') {
-            console.log(`Clearing timer with ID: ${id}`);
-            if (timers[id]) {
-                clearTimeout(timers[id]);
-                delete timers[id];
+            console.log(`Clearing timer with ID: ${timer.id}`);
+            if (timers[timer.id]) {
+                clearTimeout(timers[timer.id].timeoutId);
+                clearInterval(timers[timer.id].intervalId);
+                delete timers[timer.id];
             } else {
-                console.warn(`No timer found with ID: ${id}`);
+                console.warn(`No timer found with ID: ${timer.id}`);
             }
         } else {
             console.warn(`Unknown command: ${command}`);
         }
     }
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        self.clients.matchAll({ type: 'window' }).then((clientList) => {
+            const client = clientList.find((c) => c.visibilityState === 'visible');
+            if (client) {
+                client.focus();
+            } else {
+                self.clients.openWindow('/');
+            }
+        })
+    );
 });

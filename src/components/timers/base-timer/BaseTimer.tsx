@@ -42,7 +42,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
         setTime,
         add,
     } = useTimerBase({
-        id: timer.id,
+        timer,
         initialTime: storedTime,
         isMinutes: storedIsMinutes,
         onFinish,
