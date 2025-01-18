@@ -129,8 +129,6 @@ self.addEventListener('message', (event) => {
                         }
                     });
                 });
-            } else {
-                console.warn(`No timer found with ID: ${timer.id}`);
             }
         } else {
             console.warn(`Unknown command: ${command}`);
