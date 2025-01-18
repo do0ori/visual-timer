@@ -108,7 +108,7 @@ self.addEventListener('message', (event) => {
 
                 await self.registration.showNotification(timer.title, {
                     body: convertMsToMmSs(remainingTime),
-                    icon: '/logo500.png',
+                    icon: '/visual-timer/logo500.png',
                     tag: timer.id,
                     silent: true,
                 });
