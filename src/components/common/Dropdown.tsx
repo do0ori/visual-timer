@@ -91,12 +91,12 @@ const Dropdown = <T,>({
                                         >
                                             <div className="flex items-center gap-4">
                                                 <div
-                                                    className={`size-2 rounded-full ${
+                                                    className={`size-2 shrink-0 rounded-full ${
                                                         option.value === selectedValue ? 'opacity-100' : 'opacity-0'
                                                     }`}
                                                     style={{ backgroundColor: currentTheme.color.point }}
                                                 />
-                                                {option.prefix && <span>{option.prefix}</span>}
+                                                {option.prefix && <span className="shrink-0">{option.prefix}</span>}
                                                 <span className="text-balance text-left">{option.label}</span>
                                             </div>
                                             {option.subLabel && (
