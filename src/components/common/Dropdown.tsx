@@ -85,7 +85,7 @@ const Dropdown = <T,>({
                                             key={`${option.value}`}
                                             ref={option.value === selectedValue ? selectedItemRef : null}
                                             onClick={() => onChange(option.value)}
-                                            className={`flex w-full items-center justify-between px-4 py-2 text-black transition-colors ${
+                                            className={`flex w-full items-center justify-between gap-4 px-4 py-2 text-black transition-colors ${
                                                 option.value === selectedValue ? 'bg-black/20' : 'hover:bg-black/10'
                                             }`}
                                         >
@@ -97,9 +97,11 @@ const Dropdown = <T,>({
                                                     style={{ backgroundColor: currentTheme.color.point }}
                                                 />
                                                 {option.prefix && <span>{option.prefix}</span>}
-                                                <span>{option.label}</span>
+                                                <span className="text-balance text-left">{option.label}</span>
                                             </div>
-                                            {option.subLabel && <span className="text-sm">{option.subLabel}</span>}
+                                            {option.subLabel && (
+                                                <span className="shrink-0 text-sm">{option.subLabel}</span>
+                                            )}
                                         </button>
                                     ))}
                                 </DisclosurePanel>
