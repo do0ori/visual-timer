@@ -121,6 +121,14 @@ self.addEventListener('message', (event) => {
                 clearTimeout(timers[timer.id].timeoutId);
                 clearInterval(timers[timer.id].intervalId);
                 delete timers[timer.id];
+
+                self.registration.getNotifications().then((notifications) => {
+                    notifications.forEach((notification) => {
+                        if (notification.tag === timer.id) {
+                            notification.close();
+                        }
+                    });
+                });
             } else {
                 console.warn(`No timer found with ID: ${timer.id}`);
             }
@@ -138,7 +146,7 @@ self.addEventListener('notificationclick', (event) => {
             if (client) {
                 client.focus();
             } else {
-                self.clients.openWindow('/');
+                self.clients.openWindow('/visual-timer');
             }
         })
     );

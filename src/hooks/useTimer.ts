@@ -201,15 +201,16 @@ export function useTimer({
 
                     if (count > 0) {
                         setCount(Math.max(0, newCountStart));
-                        navigator.serviceWorker.controller?.postMessage({
-                            command: 'clear-timer',
-                            timer,
-                        });
                     } else {
                         setCount(newCountStart);
                     }
 
                     startCountdown();
+
+                    navigator.serviceWorker.controller?.postMessage({
+                        command: 'clear-timer',
+                        timer,
+                    });
                 }
             }
         };
