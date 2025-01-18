@@ -106,7 +106,7 @@ self.addEventListener('message', (event) => {
             }
 
             const intervalId = setInterval(async () => {
-                remainingTime -= 1000;
+                remainingTime -= 500;
 
                 await self.registration.showNotification(timer.title, {
                     body: convertMsToMmSs(remainingTime),
@@ -114,7 +114,7 @@ self.addEventListener('message', (event) => {
                     tag: timer.id,
                     silent: true,
                 });
-            }, 1000);
+            }, 500);
 
             timers[timer.id] = { timeoutId, intervalId };
         } else if (command === 'clear-timer') {
