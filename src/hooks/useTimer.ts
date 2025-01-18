@@ -155,6 +155,18 @@ export function useTimer({
         [count, maxCountStart, currentUnit.multiple, setCount]
     );
 
+    // Handle the case where the timer is assigned in the background
+    useEffect(() => {
+        if (document.visibilityState === 'hidden' && isRunning) {
+            const remainingMs = count * intervalMs;
+            navigator.serviceWorker.controller?.postMessage({
+                command: 'start-timer',
+                timer,
+                delay: remainingMs,
+            });
+        }
+    }, [timer.id]);
+
     useEffect(() => {
         const handleServiceWorkerMessage = (event: MessageEvent) => {
             const { command, id: messageId } = event.data;
