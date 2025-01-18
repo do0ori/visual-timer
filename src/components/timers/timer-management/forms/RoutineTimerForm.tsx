@@ -62,7 +62,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
             const timerData: RoutineTimerData = {
                 ...data,
                 id: initialData?.id || crypto.randomUUID(),
-                title: data.title?.trim() || `Routine-${data.items.length}`,
+                title: data.title.trim() || `Routine-${data.items.length}`,
                 type: TIMER_TYPE.ROUTINE,
             };
 

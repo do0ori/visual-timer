@@ -41,14 +41,7 @@ const RoutineTimerItemForm = ({
     onDelete,
 }: RoutineTimerItemFormProps) => {
     const item = watch(`items.${index}`);
-    const itemTitle = watch(`items.${index}.title`);
     const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => {
-        if (!itemTitle?.trim()) {
-            setValue(`items.${index}.title`, `Timer ${index + 1}`);
-        }
-    }, [itemTitle, index, setValue]);
 
     currentTheme.color.point = getTimerPointColor(currentTheme, item.pointColorIndex);
 
@@ -80,6 +73,11 @@ const RoutineTimerItemForm = ({
                                         placeholder={`Timer ${index + 1}`}
                                         className="w-full rounded border px-2 py-1 text-black"
                                         onClick={(e) => e.stopPropagation()}
+                                        onKeyDown={(e) => e.stopPropagation()}
+                                        onBlur={(e) => {
+                                            const trimmedValue = e.target.value.trim();
+                                            setValue(`items.${index}.title`, trimmedValue);
+                                        }}
                                     />
                                 </div>
                                 <div className="flex items-center gap-4">
