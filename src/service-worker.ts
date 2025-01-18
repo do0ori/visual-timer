@@ -79,29 +79,31 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-const timers: Record<string, { timeoutId: NodeJS.Timeout; intervalId: NodeJS.Timer }> = {};
+const timers: Record<string, { timeoutId: NodeJS.Timeout | undefined; intervalId: NodeJS.Timer }> = {};
 
 self.addEventListener('message', (event) => {
     if (event.source) {
         const clientId = (event.source as Client).id;
-        const { command, timer, delay } = event.data;
+        const { command, timer, endTime } = event.data;
 
         if (command === 'start-timer') {
-            console.log(`Starting timer with ID: ${timer.id}, Delay: ${delay}ms`);
+            let remainingTime = endTime - Date.now();
+            console.log(`Starting timer with ID: ${timer.id}, Remainig Time: ${remainingTime}ms`);
 
-            let remainingTime = delay;
+            let timeoutId;
+            if (remainingTime > 0) {
+                timeoutId = setTimeout(async () => {
+                    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+                        const targetClient = clientList.find((client) => client.id === clientId);
 
-            const timeoutId = setTimeout(async () => {
-                self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-                    const targetClient = clientList.find((client) => client.id === clientId);
-
-                    if (targetClient) {
-                        targetClient.postMessage({ command: 'finished', id: timer.id });
-                    } else {
-                        console.warn('No matching client found for timer ID:', clientId);
-                    }
-                });
-            }, delay);
+                        if (targetClient) {
+                            targetClient.postMessage({ command: 'finished', id: timer.id });
+                        } else {
+                            console.warn('No matching client found for timer ID:', clientId);
+                        }
+                    });
+                }, remainingTime);
+            }
 
             const intervalId = setInterval(async () => {
                 remainingTime -= 1000;

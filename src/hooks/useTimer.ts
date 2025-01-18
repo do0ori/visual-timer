@@ -158,11 +158,11 @@ export function useTimer({
     // Handle the case where the timer is assigned in the background
     useEffect(() => {
         if (document.visibilityState === 'hidden' && isRunning) {
-            const remainingMs = count * intervalMs;
+            const endTime = Date.now() + count * intervalMs;
             navigator.serviceWorker.controller?.postMessage({
                 command: 'start-timer',
                 timer,
-                delay: remainingMs,
+                endTime,
             });
         }
     }, [timer.id]);
@@ -196,11 +196,11 @@ export function useTimer({
 
                     // Send remaining time to service worker
                     if (count > 0) {
-                        const remainingMs = count * intervalMs;
+                        const endTime = Date.now() + count * intervalMs;
                         navigator.serviceWorker.controller?.postMessage({
                             command: 'start-timer',
                             timer,
-                            delay: remainingMs,
+                            endTime,
                         });
                     }
                 }
