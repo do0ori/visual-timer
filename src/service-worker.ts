@@ -123,15 +123,17 @@ self.addEventListener('message', (event) => {
                 clearTimeout(timers[timer.id].timeoutId);
                 clearInterval(timers[timer.id].intervalId);
                 delete timers[timer.id];
-
-                self.registration.getNotifications().then((notifications) => {
-                    notifications.forEach((notification) => {
-                        if (notification.tag === timer.id) {
-                            notification.close();
-                        }
-                    });
-                });
             }
+
+            const clearAllRelatedNotifications = async () => {
+                while ((await self.registration.getNotifications({ tag: timer.id })).length > 0) {
+                    self.registration.getNotifications({ tag: timer.id }).then((notifications) => {
+                        notifications.forEach((notification) => notification.close());
+                    });
+                }
+            };
+
+            clearAllRelatedNotifications();
         } else {
             console.warn(`Unknown command: ${command}`);
         }
