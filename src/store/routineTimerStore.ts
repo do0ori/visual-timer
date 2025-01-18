@@ -19,6 +19,7 @@ export const useRoutineTimerStore = create<RoutineTimerState>()(
                     id: 'routine-example',
                     type: TIMER_TYPE.ROUTINE,
                     title: 'Pomodoro Timer',
+                    pointColorIndex: 7,
                     items: [
                         ...Array.from({ length: 4 }, (_, i) => [
                             {

@@ -18,6 +18,7 @@ export type RoutineTimerData = {
     id: string;
     type: typeof TIMER_TYPE.ROUTINE;
     title: string;
+    pointColorIndex: number;
     items: RoutineTimerItem[];
 };
 

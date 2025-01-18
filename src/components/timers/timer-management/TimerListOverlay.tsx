@@ -45,19 +45,14 @@ const TimerListOverlay: React.FC = () => {
         const commonProps = {
             size: 50,
             className: 'rounded-full',
+            stroke: getTimerPointColor(originalTheme, timer.pointColorIndex),
         };
 
         if (timer.type === TIMER_TYPE.BASE) {
-            return (
-                <Icon
-                    {...commonProps}
-                    stroke={getTimerPointColor(originalTheme, timer.pointColorIndex)}
-                    time={timer.time}
-                />
-            );
+            return <Icon {...commonProps} time={timer.time} />;
         }
 
-        return <Icon {...commonProps} opacity={0.8} />;
+        return <Icon {...commonProps} />;
     };
 
     const handleEditTimer = (e: React.MouseEvent, timer: TimerData) => {

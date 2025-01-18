@@ -1,13 +1,14 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { forwardRef, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { MdTextFields } from 'react-icons/md';
+import { MdOutlinePalette, MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useRoutineTimerStore } from '../../../../store/routineTimerStore';
 import { RoutineTimerData } from '../../../../store/types/timer';
 import TimerTypeSelector from '../fields/TimerTypeSelector';
 import RoutineTimerItemForm from './RoutineTimerItemForm';
+import PointColorSelector from '../fields/PointColorSelector';
 
 export type RoutineTimerFormData = Omit<RoutineTimerData, 'id' | 'type'>;
 
@@ -28,12 +29,13 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
         const { register, handleSubmit, watch, setValue, reset } = useForm<RoutineTimerFormData>({
             defaultValues: {
                 title: initialData?.title || '',
+                pointColorIndex: initialData?.pointColorIndex || 0,
                 items: initialData?.items || [],
             },
             mode: 'onChange',
         });
 
-        const { items } = watch();
+        const { pointColorIndex, items } = watch();
 
         useEffect(() => {
             if (initialData) {
@@ -104,6 +106,15 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                             type="text"
                             placeholder="New Routine Timer"
                             className="w-full rounded border px-2 py-1 text-black"
+                        />
+                    </label>
+
+                    <label className="flex items-center gap-8">
+                        <MdOutlinePalette size={30} className="shrink-0" />
+                        <PointColorSelector
+                            colors={currentTheme.color.pointOptions}
+                            selectedIndex={pointColorIndex || 0}
+                            onSelect={(index) => setValue('pointColorIndex', index)}
                         />
                     </label>
 
