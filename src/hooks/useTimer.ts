@@ -155,6 +155,17 @@ export function useTimer({
         [count, maxCountStart, currentUnit.multiple, setCount]
     );
 
+    const currentTime = useMemo(() => {
+        const remainingMs = count * intervalMs;
+        return convertMsToMmSs(remainingMs);
+    }, [count]);
+
+    const progress = Math.max(0, count / currentUnit.denominator);
+
+    if (autoStart && isInitialized) start();
+
+    useWakeLock(isRunning);
+
     // Handle the case where the timer is assigned in the background
     useEffect(() => {
         if (document.visibilityState === 'hidden' && isRunning) {
@@ -240,15 +251,6 @@ export function useTimer({
         setIsMinutes(unit === 'minutes');
         setCount(initialTime * currentUnit.multiple);
     }, [initialTime, unit, currentUnit.multiple, setCount]);
-
-    const currentTime = useMemo(() => {
-        const remainingMs = count * intervalMs;
-        return convertMsToMmSs(remainingMs);
-    }, [count]);
-
-    const progress = Math.max(0, count / currentUnit.denominator);
-
-    if (autoStart && isInitialized) start();
 
     return {
         totalTime: time,
