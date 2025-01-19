@@ -3,6 +3,7 @@ import { useBoolean, useCounter, useInterval } from 'usehooks-ts';
 import { timerUnits, Unit } from '../config/timer/units';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 import { convertMsToMmSs } from '../utils/timeUtils';
+import { useWakeLock } from './useWakeLock';
 
 type TimerOptions = {
     /** Timer data. */
@@ -183,7 +184,7 @@ export function useTimer({
             const { command, id: messageId } = event.data;
 
             if (command === 'finished' && messageId === timer.id) {
-                console.log('Timer finished in background.');
+                console.debug('Timer finished in background.');
                 setCount(0);
                 startCountdown();
             }

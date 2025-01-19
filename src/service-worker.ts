@@ -88,7 +88,7 @@ self.addEventListener('message', (event) => {
 
         if (command === 'start-timer') {
             let remainingTime = endTime - Date.now();
-            console.log(`Starting timer with ID: ${timer.id}, Remainig Time: ${remainingTime}ms`);
+            console.debug(`Starting timer with ID: ${timer.id}, Remainig Time: ${remainingTime}ms`);
 
             let timeoutId;
             if (remainingTime > 0) {
@@ -118,7 +118,7 @@ self.addEventListener('message', (event) => {
 
             timers[timer.id] = { timeoutId, intervalId };
         } else if (command === 'clear-timer') {
-            console.log(`Clearing timer with ID: ${timer.id}`);
+            console.debug(`Clearing timer with ID: ${timer.id}`);
             if (timers[timer.id]) {
                 clearTimeout(timers[timer.id].timeoutId);
                 clearInterval(timers[timer.id].intervalId);
