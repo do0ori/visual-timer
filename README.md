@@ -2,6 +2,27 @@
 
 **Visual Timer** is a user-friendly, customizable web-based timer application designed to help users efficiently manage their time. It features a **base timer**, a **timer list** for creating predefined timers(basic timers), and a **routine timer** to sequentially execute timers—making it perfect for techniques like the Pomodoro method. The app offers various customization options, including themes, sound settings, and flexible timer configurations.
 
+## 🛠️ Usage
+
+👉 [**Try it out**](https://do0ori.github.io/visual-timer) | Experience Visual Timer and take control of your time effectively!
+
+[![image](https://github.com/user-attachments/assets/a3b601ed-1108-4123-9a79-121320655cb7)](https://do0ori.github.io/visual-timer)
+
+1. **Set the Timer**:
+    - Use the **unit toggle button** to switch between **minutes** and **seconds**.
+    - **Drag** on the clock face or **click** to set your desired time quickly and easily.
+2. **Create Your Own Timers**:
+    - Save your frequently used timers as **Basic Timers** in the **Timer List**.
+    - Combine multiple Basic Timers into a **Routine Timer** for sequential execution, perfect for workflows or workout routines.
+3. **Start the Timer**:
+    - Press the **Play** button and watch the timer progress in real-time.
+    - The timer will continue running even if you switch tabs or minimize the app.
+4. **Stay Notified**:
+    - A **popup notification** and **alarm sound** will alert you when the timer finishes.
+    - Set your preferred alarm sound and volume in the **Settings menu**.
+5. **Switch Between Modes**:
+    - The app automatically optimizes its layout for both **portrait** and **landscape** modes.
+
 ## ✨ Key Features
 
 ### 1. **Base Timer (Default Timer)**
@@ -62,27 +83,6 @@
             ![](https://velog.velcdn.com/images/do0ori/post/ee7afc63-dcc0-4695-9685-3ad292326d04/image.jpg)
 
     </details>
-
-## 🛠️ Usage
-
-👉 [**Try it out**](https://do0ori.github.io/visual-timer) | Experience Visual Timer and take control of your time effectively!
-
-[![pwa](https://github.com/user-attachments/assets/7753ae89-d65b-4b12-9f75-6e7cdb963e64)](https://do0ori.github.io/visual-timer)
-
-1. **Set the Timer**:
-    - Use the **unit toggle button** to switch between **minutes** and **seconds**.
-    - **Drag** on the clock face or **click** to set your desired time quickly and easily.
-2. **Create Your Own Timers**:
-    - Save your frequently used timers as **Basic Timers** in the **Timer List**.
-    - Combine multiple Basic Timers into a **Routine Timer** for sequential execution, perfect for workflows or workout routines.
-3. **Start the Timer**:
-    - Press the **Play** button and watch the timer progress in real-time.
-    - The timer will continue running even if you switch tabs or minimize the app.
-4. **Stay Notified**:
-    - A **popup notification** and **alarm sound** will alert you when the timer finishes.
-    - Set your preferred alarm sound and volume in the **Settings menu**.
-5. **Switch Between Modes**:
-    - The app automatically optimizes its layout for both **portrait** and **landscape** modes.
 
 ## 💻 Technology Stack
 
