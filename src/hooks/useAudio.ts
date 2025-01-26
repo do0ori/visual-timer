@@ -19,15 +19,22 @@ export const useAudio = (): AudioControllers => {
 
     useEffect(() => {
         const initializeAudioContext = async () => {
-            const audioContext = new AudioContext();
-            audioContextRef.current = audioContext;
-
-            const gainNode = audioContext.createGain();
-            gainNode.gain.value = volume;
-            gainNode.connect(audioContext.destination);
-            gainNodeRef.current = gainNode;
-
             try {
+                // User interaction is required on iOS
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+                audioContextRef.current = audioContext;
+
+                // Need to check the context status and resume for iOS
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = volume;
+                gainNode.connect(audioContext.destination);
+                gainNodeRef.current = gainNode;
+
                 const response = await fetch(selectedAlarm);
                 const arrayBuffer = await response.arrayBuffer();
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
@@ -79,8 +86,13 @@ export const useAudio = (): AudioControllers => {
         return source;
     };
 
-    const play = () => {
+    const play = async () => {
         if (!audioContextRef.current || !audioBufferRef.current) return;
+
+        // Need to check the context status and resume for iOS
+        if (audioContextRef.current.state === 'suspended') {
+            await audioContextRef.current.resume();
+        }
 
         const source = createNewSource();
         if (!source) return;
