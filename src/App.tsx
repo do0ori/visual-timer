@@ -17,6 +17,16 @@ function App() {
         };
     }, [originalTheme, compColor]);
 
+    document.addEventListener(
+        'touchmove',
+        (e) => {
+            if (e.target === document.body) {
+                e.preventDefault();
+            }
+        },
+        { passive: false }
+    );
+
     return (
         <div className={`select-none`}>
             <Outlet />

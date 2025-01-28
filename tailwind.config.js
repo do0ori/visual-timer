@@ -8,6 +8,11 @@ export const plugins = [
         addBase({
             body: {
                 'overscroll-behavior': 'none', // 모바일 당겨서 새로고침 비활성화
+                position: 'fixed',
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden',
+                '-webkit-overflow-scrolling': 'touch',
             },
         });
 
