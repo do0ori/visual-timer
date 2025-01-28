@@ -39,6 +39,14 @@ export const useAudio = (): AudioControllers => {
                 const arrayBuffer = await response.arrayBuffer();
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 audioBufferRef.current = audioBuffer;
+
+                // Play the sound very short initially for iOS
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(gainNode);
+                source.start();
+                source.stop(audioContext.currentTime + 0.001);
+
                 console.log('Audio initialized');
             } catch (error) {
                 console.error('Audio loading error:', error);
