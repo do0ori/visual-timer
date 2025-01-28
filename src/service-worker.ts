@@ -79,7 +79,8 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-const timers: Record<string, { timeoutId: NodeJS.Timeout | undefined; intervalId: NodeJS.Timer }> = {};
+const timers: Record<string, { timeoutId: NodeJS.Timeout | undefined; intervalId: NodeJS.Timer | undefined }> = {};
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 self.addEventListener('message', (event) => {
     if (event.source) {
@@ -105,16 +106,19 @@ self.addEventListener('message', (event) => {
                 }, remainingTime);
             }
 
-            const intervalId = setInterval(async () => {
-                remainingTime -= 500;
+            let intervalId;
+            if (!isIOS) {
+                intervalId = setInterval(async () => {
+                    remainingTime -= 500;
 
-                await self.registration.showNotification(timer.title, {
-                    body: convertMsToMmSs(remainingTime),
-                    icon: '/visual-timer/logo500.png',
-                    tag: timer.id,
-                    silent: true,
-                });
-            }, 500);
+                    await self.registration.showNotification(timer.title, {
+                        body: convertMsToMmSs(remainingTime),
+                        icon: '/visual-timer/logo500.png',
+                        tag: timer.id,
+                        silent: true,
+                    });
+                }, 500);
+            }
 
             timers[timer.id] = { timeoutId, intervalId };
         } else if (command === 'clear-timer') {
