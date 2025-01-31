@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react';
 
 export function useAspectRatio() {
-    const [aspectRatio, setAspectRatio] = useState(window.innerWidth / window.innerHeight);
+    const getAspectRatio = () => {
+        return window.innerWidth / window.innerHeight;
+    };
+
+    const [aspectRatio, setAspectRatio] = useState(getAspectRatio());
 
     useEffect(() => {
         const handleResize = () => {
-            setAspectRatio(window.innerWidth / window.innerHeight);
+            // Give delay to get the correct value on iOS
+            setTimeout(() => {
+                setAspectRatio(getAspectRatio());
+            }, 10);
         };
+
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
     return aspectRatio;
