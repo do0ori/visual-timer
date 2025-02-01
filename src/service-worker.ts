@@ -33,20 +33,14 @@ registerRoute(
     // Return false to exempt requests from being fulfilled by index.html.
     ({ request, url }: { request: Request; url: URL }) => {
         // If this isn't a navigation, skip.
-        if (request.mode !== 'navigate') {
-            return false;
-        }
+        if (request.mode !== 'navigate') return false;
 
         // If this is a URL that starts with /_, skip.
-        if (url.pathname.startsWith('/_')) {
-            return false;
-        }
+        if (url.pathname.startsWith('/_')) return false;
 
         // If this looks like a URL for a resource, because it contains
         // a file extension, skip.
-        if (url.pathname.match(fileExtensionRegexp)) {
-            return false;
-        }
+        if (url.pathname.match(fileExtensionRegexp)) return false;
 
         // Return true to signal that we want to use the handler.
         return true;
@@ -94,20 +88,18 @@ self.addEventListener('message', (event) => {
             let timeoutId;
             if (remainingTime > 0) {
                 timeoutId = setTimeout(async () => {
-                    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-                        const targetClient = clientList.find((client) => client.id === clientId);
+                    const clientList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+                    const targetClient = clientList.find((client) => client.id === clientId);
 
-                        if (targetClient) {
-                            targetClient.postMessage({ command: 'finished', id: timer.id });
-                        } else {
-                            console.warn('No matching client found for timer ID:', clientId);
-                        }
-                    });
+                    if (targetClient) {
+                        targetClient.postMessage({ command: 'finished', id: timer.id });
+                    }
                 }, remainingTime);
             }
 
             let intervalId;
             if (!isIOS) {
+                // Enable periodic notification updates only for Android
                 intervalId = setInterval(async () => {
                     remainingTime -= 500;
 
@@ -131,9 +123,8 @@ self.addEventListener('message', (event) => {
 
             const clearAllRelatedNotifications = async () => {
                 while ((await self.registration.getNotifications({ tag: timer.id })).length > 0) {
-                    self.registration.getNotifications({ tag: timer.id }).then((notifications) => {
-                        notifications.forEach((notification) => notification.close());
-                    });
+                    const notifications = await self.registration.getNotifications({ tag: timer.id });
+                    notifications.forEach((notification) => notification.close());
                 }
             };
 
@@ -151,21 +142,16 @@ const navigateToApp = async () => {
     });
 
     const hadClientOpen = clientList.some((client) => {
-        if (client.url.includes('/visual-timer') && 'focus' in client) {
-            return client.focus();
-        }
+        if (client.url.includes('/visual-timer') && 'focus' in client) return client.focus();
         return false;
     });
 
-    if (!hadClientOpen) {
-        if (self.clients.openWindow) {
-            await self.clients.openWindow('/visual-timer');
-        }
+    if (!hadClientOpen && self.clients.openWindow) {
+        await self.clients.openWindow('/visual-timer');
     }
 };
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-
     event.waitUntil(navigateToApp());
 });
