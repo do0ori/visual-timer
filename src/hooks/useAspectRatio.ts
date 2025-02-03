@@ -1,24 +1,33 @@
 import { useEffect, useState } from 'react';
 
 export function useAspectRatio() {
-    const getAspectRatio = () => {
-        return window.innerWidth / window.innerHeight;
+    const getVisualViewport = () => {
+        return window.visualViewport
+            ? window.visualViewport.width / window.visualViewport.height
+            : window.innerWidth / window.innerHeight;
     };
 
-    const [aspectRatio, setAspectRatio] = useState(getAspectRatio());
+    const [aspectRatio, setAspectRatio] = useState(getVisualViewport());
 
     useEffect(() => {
-        const handleResize = () => {
-            // Give delay to get the correct value on iOS
-            setTimeout(() => {
-                setAspectRatio(getAspectRatio());
-            }, 10);
+        const handleViewportChange = () => {
+            requestAnimationFrame(() => {
+                setAspectRatio(getVisualViewport());
+            });
         };
 
-        window.addEventListener('resize', handleResize);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleViewportChange);
+        } else {
+            window.addEventListener('resize', handleViewportChange);
+        }
 
         return () => {
-            window.removeEventListener('resize', handleResize);
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', handleViewportChange);
+            } else {
+                window.removeEventListener('resize', handleViewportChange);
+            }
         };
     }, []);
 
