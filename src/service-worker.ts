@@ -98,7 +98,14 @@ self.addEventListener('message', (event) => {
             }
 
             let intervalId;
-            if (!isIOS) {
+            if (isIOS) {
+                self.registration.showNotification(timer.title, {
+                    body: 'Timer is currently running in the background',
+                    icon: '/visual-timer/logo500.png',
+                    tag: timer.id,
+                    silent: true,
+                });
+            } else {
                 // Enable periodic notification updates only for Android
                 intervalId = setInterval(async () => {
                     remainingTime -= 500;
