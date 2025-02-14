@@ -1,17 +1,18 @@
 {
   "files": {
     "main.css": "/visual-timer/static/css/main.58bbcb66.css",
-    "main.js": "/visual-timer/static/js/main.4deb37bd.js",
+    "main.js": "/visual-timer/static/js/main.a468d3e6.js",
+    "static/media/radar.m4a": "/visual-timer/static/media/radar.fb3f9ac384651115ad86.m4a",
     "static/media/radar.mp3": "/visual-timer/static/media/radar.e0347873381d6798c567.mp3",
-    "static/media/beep-beep.mp3": "/visual-timer/static/media/beep-beep.7d91df4c22b73dcff5ed.mp3",
-    "static/media/chime-time.mp3": "/visual-timer/static/media/chime-time.7fa9a2679f41f6af01e3.mp3",
+    "static/media/beep-beep.m4a": "/visual-timer/static/media/beep-beep.d59e51773c71313e3bf9.m4a",
+    "static/media/chime-time.m4a": "/visual-timer/static/media/chime-time.2ac01d10da6d76a9aa4c.m4a",
     "service-worker.js": "/visual-timer/service-worker.js",
     "index.html": "/visual-timer/index.html",
     "main.58bbcb66.css.map": "/visual-timer/static/css/main.58bbcb66.css.map",
-    "main.4deb37bd.js.map": "/visual-timer/static/js/main.4deb37bd.js.map"
+    "main.a468d3e6.js.map": "/visual-timer/static/js/main.a468d3e6.js.map"
   },
   "entrypoints": [
     "static/css/main.58bbcb66.css",
-    "static/js/main.4deb37bd.js"
+    "static/js/main.a468d3e6.js"
   ]
 }
