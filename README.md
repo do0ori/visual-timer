@@ -84,6 +84,18 @@
 
     </details>
 
+## 🌐 Browser Compatibility
+
+| Browser                                                                                                                              | Support |
+| ------------------------------------------------------------------------------------------------------------------------------------ | :-----: |
+| <img alt="Chrome logo" src="https://www.google.com/chrome/static/images/chrome-logo.svg" width="16"> Chrome                          |    ○    |
+| <img alt="Edge logo" src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Microsoft_Edge_logo_%282019%29.png" width="16"> Edge   |    ○    |
+| <img alt="Firefox logo" src="https://github.com/user-attachments/assets/a8d5ba30-7372-47ed-b6a9-3e3495330882" width="16"> Firefox    |    ○    |
+| <img alt="Android logo" src="https://upload.wikimedia.org/wikipedia/commons/3/31/Android_robot_head.svg" width="16"> WebView Android |    ○    |
+| <img alt="Safari logo" src="https://github.com/user-attachments/assets/e2fc20ce-c6eb-4f71-b137-df4357a56984" width="16"> iOS Safari  |    △    |
+
+※ [For more information](https://github.com/do0ori/visual-timer/issues/4)
+
 ## 💻 Technology Stack
 
 <p>
