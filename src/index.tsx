@@ -26,21 +26,27 @@ const router = createBrowserRouter(
 );
 
 // 앱 시작 시 알림 권한 설정 요청
-if ('Notification' in window && Notification.permission !== 'granted') {
-    Notification.requestPermission()
-        .then((permission) => {
-            if (permission === 'granted') {
-                console.debug('Notification permission granted.');
-            } else if (permission === 'denied') {
-                console.debug('Notification permission denied.');
-            } else {
-                console.debug('Notification permission ignored.');
-            }
-        })
-        .catch((error) => {
-            console.error('Notification permission error:', error);
-        });
-}
+document.addEventListener(
+    'click',
+    () => {
+        if ('Notification' in window && Notification.permission !== 'granted') {
+            Notification.requestPermission()
+                .then((permission) => {
+                    if (permission === 'granted') {
+                        console.debug('Notification permission granted.');
+                    } else if (permission === 'denied') {
+                        console.debug('Notification permission denied.');
+                    } else {
+                        console.debug('Notification permission ignored.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Notification permission error:', error);
+                });
+        }
+    },
+    { once: true }
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(<RouterProvider router={router} />);
