@@ -31,8 +31,10 @@ if ('Notification' in window && Notification.permission !== 'granted') {
         .then((permission) => {
             if (permission === 'granted') {
                 console.debug('Notification permission granted.');
-            } else {
+            } else if (permission === 'denied') {
                 console.debug('Notification permission denied.');
+            } else {
+                console.debug('Notification permission ignored.');
             }
         })
         .catch((error) => {
