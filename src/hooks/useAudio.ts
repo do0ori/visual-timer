@@ -63,7 +63,7 @@ export const useAudio = (): AudioControllers => {
             if (gainNodeRef.current) {
                 gainNodeRef.current.disconnect();
             }
-            if (audioContextRef.current) {
+            if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
                 audioContextRef.current.close();
             }
 
