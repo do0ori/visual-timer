@@ -4,6 +4,11 @@ export const useWakeLock = (enabled = true) => {
     const wakeLockRef = useRef<WakeLockSentinel | null>(null);
 
     const requestWakeLock = async () => {
+        if (document.visibilityState !== 'visible') {
+            console.debug('Document is not visible; skipping wake lock request.');
+            return;
+        }
+
         if (!wakeLockRef.current) {
             try {
                 if ('wakeLock' in navigator) {
@@ -35,7 +40,7 @@ export const useWakeLock = (enabled = true) => {
         const manageWakeLock = async () => {
             console.debug('manageWakeLock');
             if (enabled) {
-                if (wakeLockRef.current === null) {
+                if (document.visibilityState === 'visible' && wakeLockRef.current === null) {
                     await requestWakeLock();
                 }
             } else {
@@ -46,11 +51,19 @@ export const useWakeLock = (enabled = true) => {
         const handleVisibilityChange = async () => {
             console.debug('handleVisibilityChange');
             if (document.visibilityState === 'visible' && enabled) {
-                await manageWakeLock(); // Restore Wake Lock if needed
+                await manageWakeLock();
+            } else if (document.visibilityState !== 'visible') {
+                await releaseWakeLock();
             }
         };
 
-        manageWakeLock(); // Initial setup
+        // Initial setup
+        if (document.visibilityState === 'visible') {
+            manageWakeLock();
+        } else {
+            console.debug('Document is hidden on mount. Not requesting wake lock.');
+        }
+
         document.addEventListener('visibilitychange', handleVisibilityChange);
 
         return () => {
