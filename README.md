@@ -1,5 +1,8 @@
 # ⏰ Visual Timer
 
+[![ko1](https://img.shields.io/badge/Nomad%20Coders%20커뮤니티-Visual%20Timer%20소개-4A7658)](https://nomadcoders.co/community/thread/10687)
+[![ko2](https://img.shields.io/badge/Velog%20포스트-Visual%20Timer%20--%20쉽고%20간단하게%20시각적으로%20시간%20관리하기-9079C9)](https://velog.io/@do0ori/Visual-Timer-쉽고-간단하게-시각적으로-시간-관리하기)
+
 **Visual Timer** is a user-friendly, customizable web-based timer application designed to help users efficiently manage their time. It features a **base timer**, a **timer list** for creating predefined timers(basic timers), and a **routine timer** to sequentially execute timers—making it perfect for techniques like the Pomodoro method. The app offers various customization options, including themes, sound settings, and flexible timer configurations.
 
 ## 🛠️ Usage
