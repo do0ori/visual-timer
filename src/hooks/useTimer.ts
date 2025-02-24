@@ -81,6 +81,9 @@ export function useTimer({
     const countStart = time * currentUnit.multiple;
     const intervalMs = currentUnit.interval;
 
+    // State to prevent duplicated onFinish execution
+    const finishTriggeredRef = useRef(false);
+
     // State to handle tab visibility change event
     const lastUpdateTimeRef = useRef<number>(Date.now());
     const wasRunningRef = useRef<boolean>(false);
@@ -97,6 +100,7 @@ export function useTimer({
     // Resets the countdown to the initial value and stops it
     const resetCountdown = useCallback(() => {
         stopCountdown();
+        finishTriggeredRef.current = false;
         wasRunningRef.current = false;
         setCount(countStart);
         setIsInitialized(true);
@@ -104,7 +108,8 @@ export function useTimer({
 
     // The callback for the countdown logic
     const countdownCallback = useCallback(() => {
-        if (count === 0 && onFinish) {
+        if (count === 0 && onFinish && !finishTriggeredRef.current) {
+            finishTriggeredRef.current = true;
             onFinish(resetCountdown);
         }
 
