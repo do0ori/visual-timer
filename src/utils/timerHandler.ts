@@ -2,6 +2,19 @@ import Swal from 'sweetalert2';
 import { AudioControllers } from '../hooks/useAudio';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 
+const getNotificationConfig = (timer: BaseTimerData | RoutineTimerItem, pointColor: string) => {
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const leftSideWidth = isLandscape ? window.innerWidth / 2 : window.innerWidth;
+
+    return {
+        title: `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`,
+        text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
+        confirmButtonColor: pointColor,
+        width: isLandscape ? `${leftSideWidth * 0.95}px` : '95%',
+        position: isLandscape ? ('center-start' as const) : ('center' as const),
+    };
+};
+
 export const handleFinish = (
     timer: BaseTimerData | RoutineTimerItem,
     audio: AudioControllers,
@@ -22,19 +35,6 @@ export const handleFinish = (
         });
     };
 
-    const getNotificationConfig = () => {
-        const isLandscape = window.innerWidth > window.innerHeight;
-        const leftSideWidth = isLandscape ? window.innerWidth / 2 : window.innerWidth;
-
-        return {
-            title: `📢 ${timer.title ? `"${timer.title}"` : 'Timer'} Finished!`,
-            text: `Your ${timer.time} ${timer.isMinutes ? 'min' : 'sec'} timer has completed. ⏱️`,
-            confirmButtonColor: pointColor,
-            width: isLandscape ? `${leftSideWidth * 0.95}px` : '95%',
-            position: isLandscape ? ('center-start' as const) : ('center' as const),
-        };
-    };
-
     resetAudio();
     audio.play();
 
@@ -43,7 +43,7 @@ export const handleFinish = (
             handleOnSuccess();
         } else {
             Swal.fire({
-                ...getNotificationConfig(),
+                ...getNotificationConfig(timer, pointColor),
                 timer: timer.interval * 1000,
                 timerProgressBar: true,
                 showConfirmButton: false,
@@ -52,7 +52,7 @@ export const handleFinish = (
             });
         }
     } else {
-        Swal.fire(getNotificationConfig()).then((result) => {
+        Swal.fire(getNotificationConfig(timer, pointColor)).then((result) => {
             if (!result.isDenied) {
                 handleOnSuccess();
             }
