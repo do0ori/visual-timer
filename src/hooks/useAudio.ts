@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useSettingsStore } from '../store/settingsStore';
 
 export type AudioControllers = {
@@ -7,128 +7,128 @@ export type AudioControllers = {
     reset: () => void;
 };
 
+// Singletone
+class AudioSystem {
+    private static instance: AudioSystem;
+    readonly context: AudioContext;
+    readonly gainNode: GainNode;
+    audioBuffer: AudioBuffer | null = null;
+
+    private constructor() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        this.context = new AudioCtx();
+        this.gainNode = this.context.createGain();
+        this.gainNode.connect(this.context.destination);
+    }
+
+    static getInstance() {
+        if (!AudioSystem.instance) {
+            AudioSystem.instance = new AudioSystem();
+        }
+        return AudioSystem.instance;
+    }
+
+    async safeResume() {
+        if (this.context.state === 'suspended') {
+            await this.context.resume();
+        }
+    }
+}
+
+const audioSystem = AudioSystem.getInstance();
+
+const setupVisibilityHandler = () => {
+    const handler = () => {
+        if (!document.hidden) {
+            audioSystem.safeResume().catch(console.error);
+        }
+    };
+    document.addEventListener('visibilitychange', handler);
+    return () => document.removeEventListener('visibilitychange', handler);
+};
+
 export const useAudio = (): AudioControllers => {
     const { volume, selectedAlarm } = useSettingsStore();
-    const audioContextRef = useRef<AudioContext | null>(null);
     const sourceRef = useRef<AudioBufferSourceNode | null>(null);
-    const gainNodeRef = useRef<GainNode | null>(null);
-    const audioBufferRef = useRef<AudioBuffer | null>(null);
     const startTimeRef = useRef<number | null>(null);
     const pauseTimeRef = useRef<number>(0);
-    const isPlayingRef = useRef<boolean>(false);
+    const isPlayingRef = useRef(false);
 
     useEffect(() => {
-        const initializeAudioContext = async () => {
+        const cleanupVisibility = setupVisibilityHandler();
+
+        const loadAudioBuffer = async () => {
             try {
-                // User interaction is required on iOS
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-                audioContextRef.current = audioContext;
-
-                // Need to check the context status and resume for iOS
-                if (audioContext.state === 'suspended') {
-                    await audioContext.resume();
-                }
-
-                const gainNode = audioContext.createGain();
-                gainNode.gain.value = volume;
-                gainNode.connect(audioContext.destination);
-                gainNodeRef.current = gainNode;
-
                 const response = await fetch(selectedAlarm);
                 const arrayBuffer = await response.arrayBuffer();
-                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                audioBufferRef.current = audioBuffer;
-
-                // Play the sound very short initially for iOS
-                const source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-                source.connect(gainNode);
-                source.start();
-                source.stop(audioContext.currentTime + 0.001);
-
-                console.log('Audio initialized');
+                audioSystem.audioBuffer = await audioSystem.context.decodeAudioData(arrayBuffer);
             } catch (error) {
-                console.error('Audio loading error:', error);
+                console.error('Audio load failed:', error);
             }
         };
 
-        window.addEventListener('click', initializeAudioContext, { once: true });
-        window.addEventListener('touchstart', initializeAudioContext, { once: true });
+        const handleFirstInteraction = () => {
+            // Play the sound very short initially for iOS
+            const dummySource = audioSystem.context.createBufferSource();
+            dummySource.start(0);
+            dummySource.stop(0.001);
+
+            loadAudioBuffer();
+            window.removeEventListener('click', handleFirstInteraction);
+            window.removeEventListener('touchstart', handleFirstInteraction);
+        };
+
+        window.addEventListener('click', handleFirstInteraction, { once: true });
+        window.addEventListener('touchstart', handleFirstInteraction, { once: true });
 
         return () => {
-            if (sourceRef.current) {
-                sourceRef.current.disconnect();
-            }
-            if (gainNodeRef.current) {
-                gainNodeRef.current.disconnect();
-            }
-            if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-                audioContextRef.current.close();
-            }
-
-            // Cleanup listeners
-            window.removeEventListener('click', initializeAudioContext);
-            window.removeEventListener('touchstart', initializeAudioContext);
+            cleanupVisibility();
+            sourceRef.current?.stop();
+            window.removeEventListener('click', handleFirstInteraction);
+            window.removeEventListener('touchstart', handleFirstInteraction);
         };
     }, [selectedAlarm]);
 
     useEffect(() => {
-        if (gainNodeRef.current) {
-            gainNodeRef.current.gain.value = volume;
-        }
+        audioSystem.gainNode.gain.value = volume;
     }, [volume]);
 
-    const createNewSource = () => {
-        if (!audioContextRef.current || !audioBufferRef.current || !gainNodeRef.current) return null;
+    const createSource = useCallback(() => {
+        if (!audioSystem.audioBuffer) return null;
 
-        if (sourceRef.current) {
-            sourceRef.current.disconnect();
-        }
-
-        const source = audioContextRef.current.createBufferSource();
-        source.buffer = audioBufferRef.current;
+        sourceRef.current?.stop();
+        const source = audioSystem.context.createBufferSource();
+        source.buffer = audioSystem.audioBuffer;
+        source.connect(audioSystem.gainNode);
         source.loop = true;
-        source.connect(gainNodeRef.current);
         sourceRef.current = source;
         return source;
-    };
+    }, []);
 
-    const play = async () => {
-        if (!audioContextRef.current || !audioBufferRef.current) return;
-
-        // Need to check the context status and resume for iOS
-        if (audioContextRef.current.state === 'suspended') {
-            await audioContextRef.current.resume();
-        }
-
-        const source = createNewSource();
+    const play = useCallback(async () => {
+        await audioSystem.safeResume();
+        const source = createSource();
         if (!source) return;
 
-        if (pauseTimeRef.current > 0) {
-            source.start(0, pauseTimeRef.current);
-        } else {
-            source.start();
-        }
-
-        startTimeRef.current = audioContextRef.current.currentTime - pauseTimeRef.current;
+        source.start(0, pauseTimeRef.current);
+        startTimeRef.current = audioSystem.context.currentTime - pauseTimeRef.current;
         isPlayingRef.current = true;
-    };
+    }, [createSource]);
 
-    const pause = () => {
-        if (!audioContextRef.current || !sourceRef.current || !isPlayingRef.current) return;
+    const pause = useCallback(() => {
+        if (!sourceRef.current || !isPlayingRef.current) return;
 
-        const elapsed = audioContextRef.current.currentTime - (startTimeRef.current || 0);
-        pauseTimeRef.current = elapsed % (audioBufferRef.current?.duration || 0);
-
+        const elapsed = audioSystem.context.currentTime - (startTimeRef.current || 0);
+        pauseTimeRef.current = elapsed % (audioSystem.audioBuffer?.duration || 0);
         sourceRef.current.stop();
         isPlayingRef.current = false;
-    };
+    }, []);
 
-    const reset = () => {
+    const reset = useCallback(() => {
         pauseTimeRef.current = 0;
         startTimeRef.current = null;
-    };
+    }, []);
 
     return { play, pause, reset };
 };
