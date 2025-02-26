@@ -20,6 +20,7 @@ type DropdownProps<T> = {
     customHeader?: React.ReactNode;
     placeholder?: string;
     buttonBorderColor?: string;
+    onToggle?: (isOpen: boolean) => void; // ★ 추가: 드롭다운 열림/닫힘 상태 전달
 };
 
 const Dropdown = <T,>({
@@ -30,6 +31,7 @@ const Dropdown = <T,>({
     customHeader,
     placeholder = 'Select an option',
     buttonBorderColor,
+    onToggle,
 }: DropdownProps<T>) => {
     const selectedItemRef = useRef<HTMLButtonElement>(null);
     const panelRef = useRef<HTMLDivElement>(null);
@@ -47,6 +49,7 @@ const Dropdown = <T,>({
                 {({ open }) => {
                     useEffect(() => {
                         setIsOpen(open);
+                        if (onToggle) onToggle(open);
                     }, [open]);
 
                     return (
