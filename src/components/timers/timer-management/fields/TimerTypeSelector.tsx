@@ -18,6 +18,7 @@ const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onT
         >
             {Object.entries(TIMER_TYPE_CONFIG).map(([type, config]) => (
                 <button
+                    type="button"
                     key={type}
                     onClick={() => onTypeSelect(type as TimerType)}
                     className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 ${
