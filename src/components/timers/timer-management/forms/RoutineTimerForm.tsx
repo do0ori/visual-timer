@@ -1,14 +1,16 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { forwardRef, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { IoMdAdd } from 'react-icons/io';
 import { MdOutlinePalette, MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useRoutineTimerStore } from '../../../../store/routineTimerStore';
 import { RoutineTimerData } from '../../../../store/types/timer';
+import Button from '../../../common/Button';
+import PointColorSelector from '../fields/PointColorSelector';
 import TimerTypeSelector from '../fields/TimerTypeSelector';
 import RoutineTimerItemForm from './RoutineTimerItemForm';
-import PointColorSelector from '../fields/PointColorSelector';
 
 export type RoutineTimerFormData = Omit<RoutineTimerData, 'id' | 'type'>;
 
@@ -23,7 +25,7 @@ type RoutineTimerFormProps = {
 const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
     ({ initialData, mode, timerType, setTimerType, close }, ref) => {
         const [errorMessage, setErrorMessage] = useState<string>('');
-        const { currentTheme } = useTheme();
+        const { originalTheme, currentTheme } = useTheme();
 
         const { addTimer, updateTimer } = useRoutineTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<RoutineTimerFormData>({
@@ -155,8 +157,9 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
 
                     {errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
-                    <button
+                    <Button
                         type="button"
+                        currentTheme={originalTheme}
                         onClick={() => {
                             const items = watch('items');
                             setValue('items', [
@@ -172,11 +175,11 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                                 },
                             ]);
                         }}
-                        className="mt-2 rounded px-4 py-2 text-white shadow-md"
-                        style={{ backgroundColor: currentTheme.color.point }}
+                        aria-label="Add Timer Item"
+                        className="h-10 w-full rounded-2xl"
                     >
-                        Add Timer
-                    </button>
+                        <IoMdAdd size={30} />
+                    </Button>
                 </div>
             </form>
         );
