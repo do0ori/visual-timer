@@ -49,7 +49,7 @@ const setupVisibilityHandler = () => {
 };
 
 export const useAudio = (): AudioControllers => {
-    const { volume, selectedAlarm } = useSettingsStore();
+    const { volume, mute, selectedAlarm } = useSettingsStore();
     const currentSrcRef = useRef<string | null>(null); // For comparison of src value
 
     const sourceRef = useRef<AudioBufferSourceNode | null>(null);
@@ -58,8 +58,8 @@ export const useAudio = (): AudioControllers => {
     const isPlayingRef = useRef(false);
 
     useEffect(() => {
-        audioSystem.gainNode.gain.value = volume;
-    }, [volume]);
+        audioSystem.gainNode.gain.value = mute ? 0 : volume;
+    }, [volume, mute]);
 
     useEffect(() => {
         const handleFirstInteraction = () => {

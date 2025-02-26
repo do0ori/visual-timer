@@ -5,24 +5,24 @@ import ListItem from '../../common/ListItem';
 
 const VolumeSelector: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
-    const { volume, setVolume } = useSettingsStore();
+    const { volume, mute, setVolume, setMute } = useSettingsStore();
 
     const pointColor = themes[globalThemeKey].color.point;
 
-    const handleToggleVolume = () => {
-        if (volume === 0) {
-            setVolume(1);
+    const handleMuteToggle = () => {
+        if (mute) {
+            setMute(false);
+            if (volume === 0) setVolume(0.1);
         } else {
-            setVolume(0);
+            setMute(true);
         }
     };
 
-    const volumeIcon =
-        volume === 0 ? (
-            <IoVolumeMute size={24} className="size-full" onClick={handleToggleVolume} style={{ cursor: 'pointer' }} />
-        ) : (
-            <IoVolumeHigh size={24} className="size-full" onClick={handleToggleVolume} style={{ cursor: 'pointer' }} />
-        );
+    const volumeIcon = mute ? (
+        <IoVolumeMute size={24} className="size-full" onClick={handleMuteToggle} style={{ cursor: 'pointer' }} />
+    ) : (
+        <IoVolumeHigh size={24} className="size-full" onClick={handleMuteToggle} style={{ cursor: 'pointer' }} />
+    );
 
     const volumeSlider = (
         <div className="flex w-full flex-col gap-2">
@@ -36,12 +36,20 @@ const VolumeSelector: React.FC = () => {
                     min={0}
                     max={1}
                     step={0.1}
-                    value={volume}
-                    onChange={(e) => setVolume(Number(e.target.value))}
+                    value={mute ? 0 : volume}
+                    onChange={(e) => {
+                        const newVolume = Number(e.target.value);
+                        setVolume(newVolume);
+                        if (newVolume === 0 && !mute) {
+                            setMute(true);
+                        } else if (newVolume !== 0 && mute) {
+                            setMute(false);
+                        }
+                    }}
                     className="w-full"
                     style={{ accentColor: pointColor }}
                 />
-                <p>{Math.round(volume * 100)}%</p>
+                <p>{mute ? 0 : Math.round(volume * 100)}%</p>
             </div>
         </div>
     );
