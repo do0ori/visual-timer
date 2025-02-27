@@ -14,7 +14,7 @@ const SettingsOverlay: React.FC = () => {
 
     return (
         <div
-            className="absolute inset-0 z-40 size-full shadow-lg"
+            className="absolute inset-0 z-40 flex size-full flex-col shadow-lg"
             style={{
                 backgroundColor: originalTheme.color.main,
                 outline: `2px solid ${originalTheme.color.sub}33`,
@@ -22,10 +22,12 @@ const SettingsOverlay: React.FC = () => {
         >
             <TopBar.Back onLeftClick={close} center="Settings" />
 
-            <div className="h-[95%] space-y-10 overflow-y-auto p-5 pt-20 no-scrollbar">
-                <ThemeSettings />
-                <AlarmSettings />
-                <OthersSettings />
+            <div className="p-5">
+                <div className="max-h-[calc(100vh-96px)] space-y-10 overflow-y-auto no-scrollbar">
+                    <ThemeSettings />
+                    <AlarmSettings />
+                    <OthersSettings />
+                </div>
             </div>
         </div>
     );

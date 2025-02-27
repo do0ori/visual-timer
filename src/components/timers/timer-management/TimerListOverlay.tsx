@@ -76,7 +76,7 @@ const TimerListOverlay: React.FC = () => {
     return (
         <>
             <div
-                className="absolute inset-0 z-40 size-full shadow-lg"
+                className="absolute inset-0 z-40 flex size-full flex-col shadow-lg"
                 style={{
                     backgroundColor: originalTheme.color.main,
                     outline: `2px solid ${originalTheme.color.sub}33`,
@@ -84,8 +84,8 @@ const TimerListOverlay: React.FC = () => {
             >
                 <TopBar.Back onLeftClick={close} center="Timer List" />
 
-                <div className="h-[calc(100vh-80px)] w-full p-5 pt-20">
-                    <ul className="max-h-[calc(100vh-164px)] space-y-5 overflow-y-auto no-scrollbar">
+                <div className="flex grow flex-col justify-between gap-5 p-5">
+                    <ul className="max-h-[calc(100vh-156px)] space-y-5 overflow-y-auto no-scrollbar">
                         {timers.map((timer: TimerData) => (
                             <li
                                 key={timer.id}
@@ -125,9 +125,7 @@ const TimerListOverlay: React.FC = () => {
                             </li>
                         ))}
                     </ul>
-                </div>
 
-                <div className="w-full p-5">
                     <Button
                         currentTheme={originalTheme}
                         onClick={() => openOverlay()}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/type';
 import { useOverlay } from '../../../hooks/useOverlay';
-import { useThemeStore } from '../../../store/themeStore';
+import { useTheme } from '../../../hooks/useTheme';
 import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
 import TopBar from '../../common/TopBar';
 import BaseTimerForm from './forms/BaseTimerForm';
@@ -14,7 +14,7 @@ type TimerItemOverlayProps = {
 };
 
 const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, mode, onClose }) => {
-    const { themes, globalThemeKey } = useThemeStore();
+    const { originalTheme } = useTheme();
     const formRef = useRef<HTMLFormElement>(null);
     const [timerType, setTimerType] = useState<TimerType>(initialTimerData?.type || TIMER_TYPE.BASE);
 
@@ -34,13 +34,12 @@ const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, m
 
     return (
         <div
-            className="fixed inset-0 z-50 flex size-full"
-            style={{ backgroundColor: themes[globalThemeKey].color.main }}
+            className="fixed inset-0 z-50 flex size-full flex-col"
+            style={{ backgroundColor: originalTheme.color.main }}
         >
-            <TopBar.CancelSave
+            <TopBar.Cancel
                 onLeftClick={close}
                 center={`${mode === 'add' ? 'Add' : 'Edit'} ${TIMER_TYPE_CONFIG[timerType].label}`}
-                onRightClick={handleSave}
             />
 
             {timerType === TIMER_TYPE.BASE && (
@@ -51,6 +50,7 @@ const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, m
                     timerType={timerType}
                     setTimerType={setTimerType}
                     close={close}
+                    save={handleSave}
                 />
             )}
 
@@ -62,6 +62,7 @@ const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, m
                     timerType={timerType}
                     setTimerType={setTimerType}
                     close={close}
+                    save={handleSave}
                 />
             )}
         </div>

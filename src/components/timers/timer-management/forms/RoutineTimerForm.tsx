@@ -1,7 +1,7 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { forwardRef, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IoMdAdd } from 'react-icons/io';
+import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 import { MdOutlinePalette, MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
@@ -20,10 +20,11 @@ type RoutineTimerFormProps = {
     timerType: TimerType;
     setTimerType: React.Dispatch<React.SetStateAction<TimerType>>;
     close: () => void;
+    save: () => void;
 };
 
 const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
-    ({ initialData, mode, timerType, setTimerType, close }, ref) => {
+    ({ initialData, mode, timerType, setTimerType, close, save }, ref) => {
         const [errorMessage, setErrorMessage] = useState<string>('');
         const { originalTheme, currentTheme } = useTheme();
 
@@ -97,8 +98,13 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
         };
 
         return (
-            <form ref={ref} id="routine-timer-form" onSubmit={handleSubmit(onSubmit)} className="w-full p-5 pt-20">
-                <div className="flex h-full max-h-[calc(100vh-6.25rem)] flex-col space-y-7 overflow-y-auto no-scrollbar">
+            <form
+                ref={ref}
+                id="routine-timer-form"
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex grow flex-col justify-between gap-5 p-5"
+            >
+                <div className="flex max-h-[calc(100vh-156px)] flex-col space-y-7 overflow-y-auto no-scrollbar">
                     {mode === 'add' && <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />}
 
                     <label className="flex items-center gap-8">
@@ -158,7 +164,6 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                     {errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
                     <Button
-                        type="button"
                         currentTheme={originalTheme}
                         onClick={() => {
                             const items = watch('items');
@@ -181,6 +186,15 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                         <IoMdAdd size={30} />
                     </Button>
                 </div>
+
+                <Button
+                    currentTheme={originalTheme}
+                    onClick={save}
+                    aria-label="Save"
+                    className="h-10 w-full rounded-2xl"
+                >
+                    <IoMdCheckmark size={30} />
+                </Button>
             </form>
         );
     }

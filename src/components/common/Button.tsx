@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
             type={type}
             onClick={onClick}
             aria-label={ariaLabel}
-            className={`flex size-16 items-center justify-center rounded-full active:brightness-90 ${
+            className={`flex size-16 shrink-0 items-center justify-center rounded-full active:brightness-90 ${
                 visible ? 'visible' : 'invisible'
             } ${currentTheme ? 'text-white' : ''} ${className || ''}`}
             style={currentTheme ? { backgroundColor: currentTheme.color.point } : undefined}

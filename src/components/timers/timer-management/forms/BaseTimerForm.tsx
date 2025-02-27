@@ -1,10 +1,12 @@
 import { forwardRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../../store/baseTimerStore';
 import { BaseTimerData } from '../../../../store/types/timer';
+import Button from '../../../common/Button';
 import TimeDisplay from '../../shared/displays/TimeDisplay';
 import PointColorSelector from '../fields/PointColorSelector';
 import TimerTypeSelector from '../fields/TimerTypeSelector';
@@ -18,10 +20,12 @@ type BaseTimerFormProps = {
     timerType: TimerType;
     setTimerType: React.Dispatch<React.SetStateAction<TimerType>>;
     close: () => void;
+    save: () => void;
 };
 
 const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
-    ({ initialData, mode, timerType, setTimerType, close }, ref) => {
+    ({ initialData, mode, timerType, setTimerType, close, save }, ref) => {
+        const { originalTheme } = useTheme();
         const { addTimer, updateTimer } = useBaseTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<BaseTimerFormData>({
             defaultValues: {
@@ -63,10 +67,14 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
         };
 
         return (
-            <form ref={ref} id="timer-form" onSubmit={handleSubmit(onSubmit)} className="w-full p-5 pt-20">
-                <div className="flex h-full max-h-[calc(100vh-6.25rem)] flex-col space-y-7 overflow-y-auto no-scrollbar">
+            <form
+                ref={ref}
+                id="timer-form"
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex grow flex-col justify-between gap-5 p-5"
+            >
+                <div className="flex max-h-[calc(100vh-156px)] flex-col gap-7 overflow-y-auto no-scrollbar">
                     {mode === 'add' && <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />}
-
                     <label className="flex items-center gap-8">
                         <MdTextFields size={30} className="shrink-0" />
                         <input
@@ -76,7 +84,6 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                             className="w-full rounded border px-2 py-1 text-black"
                         />
                     </label>
-
                     <label className="flex items-center gap-8">
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
@@ -85,7 +92,6 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
                     </label>
-
                     <label className="flex items-center gap-8">
                         <MdOutlineTimer size={30} className="shrink-0" />
                         <div className="flex gap-5">
@@ -117,7 +123,6 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                             </label>
                         </div>
                     </label>
-
                     <label className="flex grow items-center justify-center">
                         <TimeSelector
                             time={time}
@@ -126,6 +131,15 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                         />
                     </label>
                 </div>
+
+                <Button
+                    currentTheme={originalTheme}
+                    onClick={save}
+                    aria-label="Save"
+                    className="h-10 w-full rounded-2xl"
+                >
+                    <IoMdCheckmark size={30} />
+                </Button>
             </form>
         );
     }

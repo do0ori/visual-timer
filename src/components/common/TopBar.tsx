@@ -1,4 +1,4 @@
-import { IoIosArrowBack, IoIosSave, IoMdAdd, IoMdClose } from 'react-icons/io';
+import { IoIosArrowBack, IoMdClose } from 'react-icons/io';
 import { useTheme } from '../../hooks/useTheme';
 
 type TopBarProps = {
@@ -14,7 +14,7 @@ const BaseTopBar: React.FC<TopBarProps> = ({ leftIcon, rightIcon, center, onLeft
 
     return (
         <div
-            className="absolute left-0 top-0 z-50 flex h-14 w-full items-center px-4 text-white shadow-md"
+            className="flex h-14 w-full shrink-0 items-center px-4 text-white shadow-md"
             style={{
                 backgroundColor: originalTheme.color.point,
             }}
@@ -33,22 +33,14 @@ const BaseTopBar: React.FC<TopBarProps> = ({ leftIcon, rightIcon, center, onLeft
 };
 
 const BackIcon = <IoIosArrowBack size={24} />;
-const AddIcon = <IoMdAdd size={24} />;
 const CloseIcon = <IoMdClose size={24} />;
-const SaveIcon = <IoIosSave size={24} />;
 
-const BackTopBar: React.FC<Omit<TopBarProps, 'leftIcon'>> = (props) => <BaseTopBar leftIcon={BackIcon} {...props} />;
-const BackAddTopBar: React.FC<Omit<TopBarProps, 'leftIcon' | 'rightIcon'>> = (props) => (
-    <BaseTopBar leftIcon={BackIcon} rightIcon={AddIcon} {...props} />
-);
-const CancelSaveTopBar: React.FC<Omit<TopBarProps, 'leftIcon' | 'rightIcon'>> = (props) => (
-    <BaseTopBar leftIcon={CloseIcon} rightIcon={SaveIcon} {...props} />
-);
+const Back: React.FC<Omit<TopBarProps, 'leftIcon'>> = (props) => <BaseTopBar leftIcon={BackIcon} {...props} />;
+const Cancel: React.FC<Omit<TopBarProps, 'leftIcon'>> = (props) => <BaseTopBar leftIcon={CloseIcon} {...props} />;
 
 const TopBar = {
-    Back: BackTopBar,
-    BackAdd: BackAddTopBar,
-    CancelSave: CancelSaveTopBar,
+    Back,
+    Cancel,
 };
 
 export default TopBar;
