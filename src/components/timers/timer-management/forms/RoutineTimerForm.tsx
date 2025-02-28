@@ -164,7 +164,6 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                     {errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
                     <Button
-                        currentTheme={originalTheme}
                         onClick={() => {
                             const items = watch('items');
                             setValue('items', [
@@ -181,7 +180,8 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                             ]);
                         }}
                         aria-label="Add Timer Item"
-                        className="h-10 w-full rounded-2xl"
+                        className="h-10 w-full rounded-2xl border-2"
+                        style={{ borderColor: originalTheme.color.point }}
                     >
                         <IoMdAdd size={30} />
                     </Button>

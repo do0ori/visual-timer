@@ -8,6 +8,7 @@ type ButtonProps = {
     onClick?: () => void;
     className?: string;
     type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
+    style?: React.CSSProperties;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -18,6 +19,7 @@ const Button: React.FC<ButtonProps> = ({
     onClick,
     className,
     type = 'button',
+    style,
 }) => {
     return (
         <button
@@ -27,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
             className={`flex size-16 shrink-0 items-center justify-center rounded-full active:brightness-90 ${
                 visible ? 'visible' : 'invisible'
             } ${currentTheme ? 'text-white' : ''} ${className || ''}`}
-            style={currentTheme ? { backgroundColor: currentTheme.color.point } : undefined}
+            style={currentTheme ? { backgroundColor: currentTheme.color.point, ...style } : style}
         >
             {children}
         </button>
