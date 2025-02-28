@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2';
+import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { AudioControllers } from '../hooks/useAudio';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 
@@ -35,24 +35,28 @@ export const handleFinish = (
         });
     };
 
+    if ('interval' in timer && timer.interval <= 0) {
+        handleOnSuccess();
+        return;
+    }
+
     resetAudio();
     audio.play();
 
+    const swalConfig: SweetAlertOptions = {
+        ...getNotificationConfig(timer, pointColor),
+    };
+
     if ('interval' in timer) {
-        if (timer.interval <= 0) {
+        swalConfig.timer = timer.interval * 1000;
+        swalConfig.timerProgressBar = true;
+        swalConfig.showConfirmButton = false;
+
+        Swal.fire(swalConfig).then(() => {
             handleOnSuccess();
-        } else {
-            Swal.fire({
-                ...getNotificationConfig(timer, pointColor),
-                timer: timer.interval * 1000,
-                timerProgressBar: true,
-                showConfirmButton: false,
-            }).then(() => {
-                handleOnSuccess();
-            });
-        }
+        });
     } else {
-        Swal.fire(getNotificationConfig(timer, pointColor)).then((result) => {
+        Swal.fire(swalConfig).then((result) => {
             if (!result.isDenied) {
                 handleOnSuccess();
             }
