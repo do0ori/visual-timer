@@ -16,7 +16,7 @@ const TimerList: React.FC<TimerListProps> = ({ items, currentItemIndex, currentT
         label: item.title || `Timer ${index + 1}`,
         value: index,
         prefix: `#${index + 1}`,
-        subLabel: `${item.time} ${item.isMinutes ? 'min' : 'sec'} + ${item.interval} sec`,
+        subLabel: `${item.time} ${item.isMinutes ? 'min' : 'sec'} + ${item.interval ? `${item.interval} sec Alarm` : 'No Alarm'}`,
     }));
 
     const customHeader = (
