@@ -26,13 +26,13 @@ type RoutineTimerFormProps = {
 const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
     ({ initialData, mode, timerType, setTimerType, close, save }, ref) => {
         const [errorMessage, setErrorMessage] = useState<string>('');
-        const { originalTheme, currentTheme } = useTheme();
+        const { originalTheme, currentTheme, defaultPointColorIndex } = useTheme();
 
         const { addTimer, updateTimer } = useRoutineTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<RoutineTimerFormData>({
             defaultValues: {
                 title: initialData?.title || '',
-                pointColorIndex: initialData?.pointColorIndex || 0,
+                pointColorIndex: initialData?.pointColorIndex || defaultPointColorIndex,
                 items: initialData?.items || [],
             },
             mode: 'onChange',
@@ -121,7 +121,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
                             colors={currentTheme.color.pointOptions}
-                            selectedIndex={pointColorIndex || 0}
+                            selectedIndex={pointColorIndex || defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
                     </label>
@@ -132,7 +132,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                                 <div
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
-                                    className="flex flex-col gap-4"
+                                    className="flex flex-col gap-7"
                                 >
                                     {items.map((item, index) => (
                                         <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -173,7 +173,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                                     title: '',
                                     time: 5,
                                     isMinutes: false,
-                                    pointColorIndex: 0,
+                                    pointColorIndex: defaultPointColorIndex,
                                     interval: 0,
                                     type: TIMER_TYPE.BASE,
                                 },

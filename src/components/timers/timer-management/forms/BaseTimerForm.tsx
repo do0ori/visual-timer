@@ -25,12 +25,12 @@ type BaseTimerFormProps = {
 
 const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
     ({ initialData, mode, timerType, setTimerType, close, save }, ref) => {
-        const { originalTheme } = useTheme();
+        const { originalTheme, defaultPointColorIndex } = useTheme();
         const { addTimer, updateTimer } = useBaseTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<BaseTimerFormData>({
             defaultValues: {
                 title: initialData?.title || '',
-                pointColorIndex: initialData?.pointColorIndex || 0,
+                pointColorIndex: initialData?.pointColorIndex || defaultPointColorIndex,
                 isMinutes: initialData?.isMinutes || false,
                 time: initialData?.time || 5,
             },
@@ -88,7 +88,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
                             colors={currentTheme.color.pointOptions}
-                            selectedIndex={pointColorIndex || 0}
+                            selectedIndex={pointColorIndex || defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
                     </label>

@@ -14,5 +14,9 @@ export const useTheme = (pointColorIndex?: number, title?: string) => {
         currentTheme.text = title;
     }
 
-    return { originalTheme, currentTheme };
+    const defaultPointColorIndex = originalTheme.color.pointOptions.findIndex(
+        (color) => color === currentTheme.color.point
+    );
+
+    return { originalTheme, currentTheme, defaultPointColorIndex };
 };
