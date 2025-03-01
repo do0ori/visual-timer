@@ -32,7 +32,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
         const { register, handleSubmit, watch, setValue, reset } = useForm<RoutineTimerFormData>({
             defaultValues: {
                 title: initialData?.title || '',
-                pointColorIndex: initialData?.pointColorIndex || defaultPointColorIndex,
+                pointColorIndex: initialData?.pointColorIndex ?? defaultPointColorIndex,
                 items: initialData?.items || [],
             },
             mode: 'onChange',
@@ -44,6 +44,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
             if (initialData) {
                 reset({
                     title: initialData.title,
+                    pointColorIndex: initialData.pointColorIndex ?? defaultPointColorIndex,
                     items: initialData.items,
                 });
             }
@@ -121,7 +122,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
                             colors={currentTheme.color.pointOptions}
-                            selectedIndex={pointColorIndex || defaultPointColorIndex}
+                            selectedIndex={pointColorIndex ?? defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
                     </label>

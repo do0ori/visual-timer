@@ -30,7 +30,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
         const { register, handleSubmit, watch, setValue, reset } = useForm<BaseTimerFormData>({
             defaultValues: {
                 title: initialData?.title || '',
-                pointColorIndex: initialData?.pointColorIndex || defaultPointColorIndex,
+                pointColorIndex: initialData?.pointColorIndex ?? defaultPointColorIndex,
                 isMinutes: initialData?.isMinutes || false,
                 time: initialData?.time || 5,
             },
@@ -75,6 +75,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
             >
                 <div className="flex max-h-[calc(100vh-156px)] flex-col gap-7 overflow-y-auto no-scrollbar">
                     {mode === 'add' && <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />}
+
                     <label className="flex items-center gap-8">
                         <MdTextFields size={30} className="shrink-0" />
                         <input
@@ -84,14 +85,16 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                             className="w-full rounded border px-2 py-1 text-black"
                         />
                     </label>
+
                     <label className="flex items-center gap-8">
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
                             colors={currentTheme.color.pointOptions}
-                            selectedIndex={pointColorIndex || defaultPointColorIndex}
+                            selectedIndex={pointColorIndex ?? defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
                     </label>
+
                     <label className="flex items-center gap-8">
                         <MdOutlineTimer size={30} className="shrink-0" />
                         <div className="flex gap-5">
@@ -123,6 +126,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                             </label>
                         </div>
                     </label>
+
                     <label className="flex grow items-center justify-center">
                         <TimeSelector
                             time={time}
