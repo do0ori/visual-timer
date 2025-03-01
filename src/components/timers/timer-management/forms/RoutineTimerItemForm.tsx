@@ -85,6 +85,10 @@ const RoutineTimerItemForm = ({
                                         )}
                                     </div>
                                     <div className="flex items-center gap-4">
+                                        <MdExpandMore
+                                            size={24}
+                                            className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+                                        />
                                         <MdDeleteOutline
                                             size={24}
                                             onClick={(e) => {
@@ -92,10 +96,6 @@ const RoutineTimerItemForm = ({
                                                 onDelete();
                                             }}
                                             className="shrink-0 rounded"
-                                        />
-                                        <MdExpandMore
-                                            size={24}
-                                            className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
                                         />
                                     </div>
                                 </DisclosureButton>
