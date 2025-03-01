@@ -7,32 +7,32 @@ const ThemeSelector: React.FC = () => {
 
     const paletteIcon = <IoMdColorPalette size={24} className="size-full" />;
     const themeSelector = (
-        <div className="flex w-full flex-col gap-4">
+        <div className="flex flex-wrap gap-3 pr-2">
             {Object.entries(themes).map(([key, theme]) => (
-                <div
+                <button
                     key={key}
-                    className="flex items-center justify-between space-x-4"
+                    type="button"
                     onClick={() => setGlobalTheme(key)}
+                    className={`relative flex size-12 items-center justify-center rounded-full transition-all ${
+                        key === globalThemeKey ? 'scale-110' : 'hover:scale-105'
+                    }`}
+                    title={key}
                 >
-                    <div className="flex items-center space-x-4">
-                        <button
-                            className="size-12 rounded-full border-2 border-white shadow-[4px_4px_10px_rgba(0,0,0,0.2)]"
+                    {key === globalThemeKey && (
+                        <div
+                            className="absolute inset-0 rounded-full"
                             style={{
-                                background: `linear-gradient(135deg, ${theme.color.main} 50%, ${theme.color.point} 50%)`,
+                                boxShadow: `0 0 0 3px ${theme.color.point}`,
                             }}
-                        ></button>
-                        <span className="cursor-pointer text-lg">{key}</span>
-                    </div>
-                    <input
-                        type="checkbox"
-                        checked={key === globalThemeKey}
-                        onChange={() => setGlobalTheme(key)}
-                        className="form-checkbox size-5"
+                        />
+                    )}
+                    <div
+                        className="size-10 rounded-full"
                         style={{
-                            accentColor: theme.color.point,
+                            background: `linear-gradient(135deg, ${theme.color.main} 0%, ${theme.color.main} 45%, ${theme.color.sub} 45%, ${theme.color.sub} 55%, ${theme.color.point} 55%, ${theme.color.point} 100%)`,
                         }}
                     />
-                </div>
+                </button>
             ))}
         </div>
     );
