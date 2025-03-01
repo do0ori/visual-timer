@@ -55,6 +55,17 @@ export const useThemeStore = create<ThemeState>()(
         }),
         {
             name: 'theme-store',
+            version: 1, // a migration will be triggered if the version in the storage mismatches this one
+            migrate: (persistedState, version) => {
+                const state = persistedState as ThemeState;
+                if (version === 0) {
+                    return {
+                        ...state,
+                        themes: { ...themes },
+                    };
+                }
+                return state;
+            },
         }
     )
 );

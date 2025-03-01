@@ -38,4 +38,23 @@ export const themes: Record<string, Theme> = {
         },
         text: 'For my better\ntomorrow.',
     },
+    'sky-blue': {
+        color: {
+            main: '#C8D9EB',
+            point: '#76A3DE',
+            sub: '#FFF0B9',
+            pointOptions: ['#4A668B', '#597aa6', '#7A96BB', '#789AC6', '#779FD2', '#76A3DE', '#87AFE2', '#A9C6EA'],
+        },
+
+        text: 'Dive deep into dreams,\nlet your spirit soar.',
+    },
+    'lovely-pink': {
+        color: {
+            main: '#FFD6D6',
+            point: '#F48FB1',
+            sub: '#FDF4AC',
+            pointOptions: ['#B76B85', '#C8899E', '#D78BA5', '#E58DAB', '#F48FB1', '#F59DBB', '#F7ABC4', '#F8B9CE'],
+        },
+        text: 'Every sunset brings\na promise of a new dawn.',
+    },
 };
