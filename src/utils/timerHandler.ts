@@ -1,5 +1,6 @@
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { AudioControllers } from '../hooks/useAudio';
+import { useSettingsStore } from '../store/settingsStore';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 
 const getNotificationConfig = (timer: BaseTimerData | RoutineTimerItem, pointColor: string) => {
@@ -65,6 +66,8 @@ export const handleFinish = (
 };
 
 export const handleDragEvent = (e: React.MouseEvent | React.TouchEvent, setTime: (time: number) => void) => {
+    const { isClockwise } = useSettingsStore.getState();
+
     const rect = e.currentTarget.getBoundingClientRect();
 
     // Get the coordinates of the mouse or touch event
@@ -89,7 +92,9 @@ export const handleDragEvent = (e: React.MouseEvent | React.TouchEvent, setTime:
 
     // Round the angle to the nearest 6 degrees
     const roundedDegrees = Math.round(degrees / 6) * 6;
-    const newTime = roundedDegrees / 6;
+
+    // Calculate newTime based on direction
+    const newTime = isClockwise ? roundedDegrees / 6 : (360 - roundedDegrees) / 6;
 
     setTime(newTime);
 };

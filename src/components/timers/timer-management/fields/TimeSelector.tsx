@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Theme } from '../../../../config/theme/themes';
+import { useSettingsStore } from '../../../../store/settingsStore';
 import { handleDragEvent } from '../../../../utils/timerHandler';
 
 type TimeSelectorProps = {
@@ -9,6 +10,7 @@ type TimeSelectorProps = {
 };
 
 const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime }) => {
+    const { isClockwise } = useSettingsStore();
     const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const baseRadius = 45;
@@ -73,7 +75,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                 )}
                 {/* 5-Minute Interval Clock Numbers */}
                 {numbers.map(({ value, angle }) => {
-                    const radians = (angle * Math.PI) / 180;
+                    const radians = ((isClockwise ? angle : -angle) * Math.PI) / 180;
                     const textRadius = baseRadius - 6;
                     const x = textRadius * Math.sin(radians);
                     const y = -textRadius * Math.cos(radians);
@@ -105,11 +107,14 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({ time, currentTheme, setTime
                     strokeWidth="30%"
                     strokeDasharray={`${progress * fullProgress} ${fullProgress}`}
                     strokeDashoffset="0"
-                    transform="rotate(-90)"
+                    transform={`rotate(-90) ${!isClockwise ? 'scale(1, -1)' : ''}`}
                     className="pointer-events-none"
                 />
                 {/* Center Knob Shape */}
-                <g transform={`rotate(${360 * progress})`} className="pointer-events-none">
+                <g
+                    transform={`rotate(${isClockwise ? 360 * progress : -360 * progress})`}
+                    className="pointer-events-none"
+                >
                     <circle cx={0} cy={0} r={6} fill={currentTheme.color.sub} />
                     <rect
                         width={1.5}
