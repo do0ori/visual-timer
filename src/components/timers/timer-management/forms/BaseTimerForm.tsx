@@ -76,7 +76,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                 <div className="flex max-h-[calc(100vh-156px)] flex-col gap-7 overflow-y-auto no-scrollbar">
                     {mode === 'add' && <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />}
 
-                    <label className="flex items-center gap-8">
+                    <div className="flex items-center gap-8">
                         <MdTextFields size={30} className="shrink-0" />
                         <input
                             {...register('title')}
@@ -84,25 +84,25 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                             placeholder="New Basic Timer"
                             className="w-full rounded border px-2 py-1 text-black"
                         />
-                    </label>
+                    </div>
 
-                    <label className="flex items-center gap-8">
+                    <div className="flex items-center gap-8">
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
                             colors={currentTheme.color.pointOptions}
                             selectedIndex={pointColorIndex ?? defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
-                    </label>
+                    </div>
 
-                    <label className="flex items-center gap-8">
+                    <div className="flex items-center gap-8">
                         <MdOutlineTimer size={30} className="shrink-0" />
                         <div className="flex gap-5">
                             <TimeDisplay
                                 className="pointer-events-none w-10 text-center text-xl"
                                 currentTime={time.toString()}
                             />
-                            <label className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
                                 <input
                                     type="radio"
                                     name="timeUnit"
@@ -112,8 +112,8 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                                     style={{ accentColor: currentTheme.color.point }}
                                 />
                                 <span>Min</span>
-                            </label>
-                            <label className="flex items-center gap-2">
+                            </div>
+                            <div className="flex items-center gap-2">
                                 <input
                                     type="radio"
                                     name="timeUnit"
@@ -123,17 +123,17 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                                     style={{ accentColor: currentTheme.color.point }}
                                 />
                                 <span>Sec</span>
-                            </label>
+                            </div>
                         </div>
-                    </label>
+                    </div>
 
-                    <label className="flex grow items-center justify-center">
+                    <div className="flex grow items-center justify-center">
                         <TimeSelector
                             time={time}
                             currentTheme={currentTheme}
                             setTime={(newTime) => setValue('time', newTime)}
                         />
-                    </label>
+                    </div>
                 </div>
 
                 <Button

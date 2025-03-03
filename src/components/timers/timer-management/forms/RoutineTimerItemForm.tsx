@@ -108,7 +108,7 @@ const RoutineTimerItemForm = ({
                                     leaveTo="transform scale-95 opacity-0"
                                 >
                                     <DisclosurePanel className="flex flex-col gap-4 pl-11 pt-6">
-                                        <label className="flex items-center gap-4">
+                                        <div className="flex items-center gap-4">
                                             <MdOutlinePalette size={20} className="shrink-0" />
                                             <PointColorSelector
                                                 colors={currentTheme.color.pointOptions}
@@ -117,7 +117,7 @@ const RoutineTimerItemForm = ({
                                                     setValue(`items.${index}.pointColorIndex`, colorIndex)
                                                 }
                                             />
-                                        </label>
+                                        </div>
                                         <div className="flex items-center gap-4">
                                             <MdOutlineTimer size={20} className="shrink-0" />
                                             <div className="flex flex-col gap-2">
@@ -126,7 +126,7 @@ const RoutineTimerItemForm = ({
                                                         className="pointer-events-none w-10 text-center text-xl"
                                                         currentTime={item.time.toString()}
                                                     />
-                                                    <label className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-2">
                                                         <input
                                                             type="radio"
                                                             name={`timeUnit-${index}`}
@@ -136,8 +136,8 @@ const RoutineTimerItemForm = ({
                                                             style={{ accentColor: currentTheme.color.point }}
                                                         />
                                                         <span>Min</span>
-                                                    </label>
-                                                    <label className="flex items-center gap-2">
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
                                                         <input
                                                             type="radio"
                                                             name={`timeUnit-${index}`}
@@ -147,7 +147,7 @@ const RoutineTimerItemForm = ({
                                                             style={{ accentColor: currentTheme.color.point }}
                                                         />
                                                         <span>Sec</span>
-                                                    </label>
+                                                    </div>
                                                 </div>
                                                 <TimeSelector
                                                     time={item.time}
@@ -156,7 +156,7 @@ const RoutineTimerItemForm = ({
                                                 />
                                             </div>
                                         </div>
-                                        <label className="flex items-center gap-4">
+                                        <div className="flex items-center gap-4">
                                             <MdOutlineHourglassEmpty size={20} className="shrink-0" />
                                             <span>Alarm for</span>
                                             <input
@@ -167,7 +167,7 @@ const RoutineTimerItemForm = ({
                                                 onClick={(e) => e.stopPropagation()}
                                             />
                                             <span>seconds</span>
-                                        </label>
+                                        </div>
                                     </DisclosurePanel>
                                 </Transition>
                             </>

@@ -108,7 +108,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                 <div className="flex max-h-[calc(100vh-156px)] flex-col space-y-7 overflow-y-auto no-scrollbar">
                     {mode === 'add' && <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />}
 
-                    <label className="flex items-center gap-8">
+                    <div className="flex items-center gap-8">
                         <MdTextFields size={30} className="shrink-0" />
                         <input
                             {...register('title')}
@@ -116,16 +116,16 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                             placeholder="New Routine Timer"
                             className="w-full rounded border px-2 py-1 text-black"
                         />
-                    </label>
+                    </div>
 
-                    <label className="flex items-center gap-8">
+                    <div className="flex items-center gap-8">
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
                             colors={currentTheme.color.pointOptions}
                             selectedIndex={pointColorIndex ?? defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
-                    </label>
+                    </div>
 
                     <DragDropContext onDragEnd={handleDragEnd}>
                         <Droppable droppableId="timer-items">
