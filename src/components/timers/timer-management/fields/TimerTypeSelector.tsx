@@ -1,5 +1,6 @@
 import { NUM_TIMER_TYPES, TIMER_TYPE_CONFIG, TimerType } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
+import Tooltip from '../../../common/Tooltip';
 
 type TimerTypeSelectorProps = {
     selectedType: TimerType;
@@ -29,7 +30,10 @@ const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onT
                     }}
                 >
                     <config.icon size={24} />
-                    <span>{config.label}</span>
+                    <div className="flex items-center gap-1">
+                        <span>{config.label}</span>
+                        <Tooltip title={`What is the ${config.label.toLowerCase()}?`} desc={config.desc} />
+                    </div>
                 </button>
             ))}
         </div>

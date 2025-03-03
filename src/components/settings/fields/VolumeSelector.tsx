@@ -2,6 +2,7 @@ import { IoVolumeHigh, IoVolumeMute } from 'react-icons/io5';
 import { useSettingsStore } from '../../../store/settingsStore';
 import { useThemeStore } from '../../../store/themeStore';
 import ListItem from '../../common/ListItem';
+import Tooltip from '../../common/Tooltip';
 
 const VolumeSelector: React.FC = () => {
     const { themes, globalThemeKey } = useThemeStore();
@@ -27,7 +28,13 @@ const VolumeSelector: React.FC = () => {
     const volumeSlider = (
         <div className="flex w-full flex-col gap-2">
             <label htmlFor="volume" className="text-lg">
-                Volume
+                <div className="flex items-center gap-1">
+                    <span>Volume</span>
+                    <Tooltip
+                        title="Any problem?"
+                        desc="If there is no sound, check the silent setting of the device."
+                    />
+                </div>
             </label>
             <div className="flex gap-5">
                 <input
