@@ -18,11 +18,10 @@ const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onT
             }}
         >
             {Object.entries(TIMER_TYPE_CONFIG).map(([type, config]) => (
-                <button
-                    type="button"
+                <div
                     key={type}
                     onClick={() => onTypeSelect(type as TimerType)}
-                    className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 ${
+                    className={`flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 p-4 ${
                         selectedType === type ? '' : 'border-transparent hover:scale-105'
                     }`}
                     style={{
@@ -34,7 +33,7 @@ const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onT
                         <span>{config.label}</span>
                         <Tooltip title={`What is the ${config.label.toLowerCase()}?`} desc={config.desc} />
                     </div>
-                </button>
+                </div>
             ))}
         </div>
     );
