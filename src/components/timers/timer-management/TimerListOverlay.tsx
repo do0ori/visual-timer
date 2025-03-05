@@ -3,10 +3,10 @@ import { IoMdAdd } from 'react-icons/io';
 import { MdDeleteOutline, MdEdit } from 'react-icons/md';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
 import { useOverlay } from '../../../hooks/useOverlay';
-import { useTheme } from '../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useRoutineTimerStore } from '../../../store/routineTimerStore';
 import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
+import { useThemeStore } from '../../../store/themeStore';
 import { TimerData } from '../../../store/types/timer';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import Button from '../../common/Button';
@@ -14,7 +14,7 @@ import TopBar from '../../common/TopBar';
 import TimerItemOverlay from './TimerItemOverlay';
 
 const TimerListOverlay: React.FC = () => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
 
     const selectTimer = useSelectedTimerStore((state) => state.selectTimer);
     const { timers: baseTimers, removeTimer: removeBaseTimer } = useBaseTimerStore();
@@ -47,7 +47,7 @@ const TimerListOverlay: React.FC = () => {
         const commonProps = {
             size: 50,
             className: 'rounded-full',
-            stroke: getTimerPointColor(originalTheme, timer.pointColorIndex),
+            stroke: getTimerPointColor(selectedTheme, timer.pointColorIndex),
         };
 
         if (timer.type === TIMER_TYPE.BASE) {
@@ -78,8 +78,8 @@ const TimerListOverlay: React.FC = () => {
             <div
                 className="absolute inset-0 z-40 flex size-full flex-col shadow-lg"
                 style={{
-                    backgroundColor: originalTheme.color.main,
-                    outline: `2px solid ${originalTheme.color.sub}33`,
+                    backgroundColor: selectedTheme.color.main,
+                    outline: `2px solid ${selectedTheme.color.sub}33`,
                 }}
             >
                 <TopBar.Back onLeftClick={close} center="Timer List" />
@@ -127,7 +127,7 @@ const TimerListOverlay: React.FC = () => {
                     </ul>
 
                     <Button
-                        currentTheme={originalTheme}
+                        currentTheme={selectedTheme}
                         onClick={() => openOverlay()}
                         aria-label="Add Timer"
                         className="h-10 w-full rounded-2xl"

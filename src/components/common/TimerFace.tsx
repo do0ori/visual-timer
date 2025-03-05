@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from 'react';
-import { Theme } from '../../config/theme/themes';
 import { useSettingsStore } from '../../store/settingsStore';
+import { Theme } from '../../store/types/theme';
 
 export type TimerFaceProps = {
     progress: number;

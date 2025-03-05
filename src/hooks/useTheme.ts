@@ -3,20 +3,19 @@ import { deepCopy } from '../utils/deepCopy';
 import { getTimerPointColor } from '../utils/themeUtils';
 
 export const useTheme = (pointColorIndex?: number, title?: string) => {
-    const { themes, globalThemeKey } = useThemeStore();
-    const originalTheme = themes[globalThemeKey];
-    const currentTheme = deepCopy(originalTheme);
+    const { selectedTheme } = useThemeStore();
+    const selectedThemeCopy = deepCopy(selectedTheme);
 
     if (pointColorIndex !== undefined) {
-        currentTheme.color.point = getTimerPointColor(currentTheme, pointColorIndex);
+        selectedThemeCopy.color.point = getTimerPointColor(selectedThemeCopy, pointColorIndex);
     }
     if (title) {
-        currentTheme.text = title;
+        selectedThemeCopy.text = title;
     }
 
-    const defaultPointColorIndex = originalTheme.color.pointOptions.findIndex(
-        (color) => color === currentTheme.color.point
+    const defaultPointColorIndex = selectedTheme.color.pointOptions.findIndex(
+        (color) => color === selectedThemeCopy.color.point
     );
 
-    return { originalTheme, currentTheme, defaultPointColorIndex };
+    return { selectedThemeCopy, defaultPointColorIndex };
 };

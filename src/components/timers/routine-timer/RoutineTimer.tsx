@@ -29,7 +29,7 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
     const { title, items } = timer;
     const currentItem = items[currentItemIndex];
 
-    const { currentTheme } = useTheme(currentItem.pointColorIndex, currentItem.title);
+    const { selectedThemeCopy } = useTheme(currentItem.pointColorIndex, currentItem.title);
 
     const moveToNextItem = useCallback(() => {
         const nextIndex = (currentItemIndex + 1) % items.length;
@@ -42,12 +42,12 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
 
     const onFinish = useCallback(
         (reset: () => void) => {
-            handleFinish(currentItem, audio, currentTheme.color.point, () => {
+            handleFinish(currentItem, audio, selectedThemeCopy.color.point, () => {
                 reset();
                 moveToNextItem();
             });
         },
-        [currentItem, audio, currentTheme, moveToNextItem]
+        [currentItem, audio, selectedThemeCopy, moveToNextItem]
     );
 
     const {
@@ -82,14 +82,14 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
     const content: TimerContentProps = {
         top: {
             leftChildren: <HomeButton isVisible={timer.id !== defaultTimer.id} onClick={selectDefaultTimer} />,
-            rightChildren: <RepeatSwitch onClick={toggleRepeat} repeat={repeat} currentTheme={currentTheme} />,
+            rightChildren: <RepeatSwitch onClick={toggleRepeat} repeat={repeat} currentTheme={selectedThemeCopy} />,
         },
         bottom: (
             <ControlButtons
                 isMinutes={isMinutes}
                 isRunning={isItemRunning}
                 isInitialized={isInitialized}
-                currentTheme={currentTheme}
+                currentTheme={selectedThemeCopy}
                 start={start}
                 stop={stop}
                 reset={resetRoutine}
@@ -105,12 +105,12 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
                         currentItemIndex={currentItemIndex}
                         onChange={handleItemChange}
                         currentTime={currentTime}
-                        currentTheme={currentTheme}
+                        currentTheme={selectedThemeCopy}
                     />
                 </div>
             </>
         ),
-        timer: <TimerDisplay ref={timerDisplayRef} progress={progress} currentTheme={currentTheme} />,
+        timer: <TimerDisplay ref={timerDisplayRef} progress={progress} currentTheme={selectedThemeCopy} />,
     };
 
     return <TimerContent {...content} />;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Theme } from '../../../../config/theme/themes';
+import { Theme } from '../../../../store/types/theme';
 import { getAdjustedColor } from '../../../../utils/colorUtils';
 
 type TimerTextDisplayProps = {

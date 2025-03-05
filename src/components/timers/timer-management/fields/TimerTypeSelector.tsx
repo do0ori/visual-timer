@@ -1,5 +1,5 @@
 import { NUM_TIMER_TYPES, TIMER_TYPE_CONFIG, TimerType } from '../../../../config/timer/type';
-import { useTheme } from '../../../../hooks/useTheme';
+import { useThemeStore } from '../../../../store/themeStore';
 import Tooltip from '../../../common/Tooltip';
 
 type TimerTypeSelectorProps = {
@@ -8,7 +8,7 @@ type TimerTypeSelectorProps = {
 };
 
 const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onTypeSelect }) => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
 
     return (
         <div
@@ -25,7 +25,7 @@ const TimerTypeSelector: React.FC<TimerTypeSelectorProps> = ({ selectedType, onT
                         selectedType === type ? '' : 'border-transparent hover:scale-105'
                     }`}
                     style={{
-                        borderColor: selectedType === type ? originalTheme.color.point : undefined,
+                        borderColor: selectedType === type ? selectedTheme.color.point : undefined,
                     }}
                 >
                     <config.icon size={24} />

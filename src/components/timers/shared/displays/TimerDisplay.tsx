@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { Theme } from '../../../../config/theme/themes';
+import { Theme } from '../../../../store/types/theme';
 import TimerFace from '../../../common/TimerFace';
 import TimerTextDisplay from './TimerTextDisplay';
 

@@ -1,11 +1,11 @@
 import { TbRotateDot } from 'react-icons/tb';
-import { useTheme } from '../../../hooks/useTheme';
 import { useSettingsStore } from '../../../store/settingsStore';
+import { useThemeStore } from '../../../store/themeStore';
 import Dropdown from '../../common/Dropdown';
 import ListItem from '../../common/ListItem';
 
 const DirectionSelector: React.FC = () => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
     const { isClockwise, setIsClockwise } = useSettingsStore();
 
     const directionIcon = isClockwise ? (
@@ -24,8 +24,8 @@ const DirectionSelector: React.FC = () => {
                 ]}
                 selectedValue={isClockwise}
                 onChange={setIsClockwise}
-                currentTheme={originalTheme}
-                buttonBorderColor={originalTheme.color.point}
+                currentTheme={selectedTheme}
+                buttonBorderColor={selectedTheme.color.point}
             />
         </div>
     );

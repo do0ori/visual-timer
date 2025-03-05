@@ -1,4 +1,4 @@
-import { Theme } from '../../config/theme/themes';
+import { Theme } from '../../store/types/theme';
 
 type ButtonProps = {
     'aria-label': string;

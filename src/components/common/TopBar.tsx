@@ -1,5 +1,5 @@
 import { IoIosArrowBack, IoMdClose } from 'react-icons/io';
-import { useTheme } from '../../hooks/useTheme';
+import { useThemeStore } from '../../store/themeStore';
 
 type TopBarProps = {
     leftIcon?: React.ReactNode;
@@ -10,13 +10,13 @@ type TopBarProps = {
 };
 
 const BaseTopBar: React.FC<TopBarProps> = ({ leftIcon, rightIcon, center, onLeftClick, onRightClick }) => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
 
     return (
         <div
             className="flex h-14 w-full shrink-0 items-center px-4 text-white shadow-md"
             style={{
-                backgroundColor: originalTheme.color.point,
+                backgroundColor: selectedTheme.color.point,
             }}
         >
             {leftIcon && <button onClick={onLeftClick}>{leftIcon}</button>}

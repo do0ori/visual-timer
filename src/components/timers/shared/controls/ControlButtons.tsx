@@ -1,5 +1,5 @@
 import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'react-icons/io5';
-import { Theme } from '../../../../config/theme/themes';
+import { Theme } from '../../../../store/types/theme';
 import Button from '../../../common/Button';
 import SettingsOverlay from '../../../settings/SettingsOverlay';
 import TimerListOverlay from '../../timer-management/TimerListOverlay';

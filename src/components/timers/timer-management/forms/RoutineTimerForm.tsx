@@ -6,6 +6,7 @@ import { MdOutlinePalette, MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useRoutineTimerStore } from '../../../../store/routineTimerStore';
+import { useThemeStore } from '../../../../store/themeStore';
 import { RoutineTimerData } from '../../../../store/types/timer';
 import Button from '../../../common/Button';
 import PointColorSelector from '../fields/PointColorSelector';
@@ -26,7 +27,8 @@ type RoutineTimerFormProps = {
 const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
     ({ initialData, mode, timerType, setTimerType, close, save }, ref) => {
         const [errorMessage, setErrorMessage] = useState<string>('');
-        const { originalTheme, currentTheme, defaultPointColorIndex } = useTheme();
+        const { selectedThemeCopy, defaultPointColorIndex } = useTheme();
+        const { selectedTheme } = useThemeStore();
 
         const { addTimer, updateTimer } = useRoutineTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<RoutineTimerFormData>({
@@ -121,7 +123,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                     <div className="flex items-center gap-8">
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
-                            colors={currentTheme.color.pointOptions}
+                            colors={selectedThemeCopy.color.pointOptions}
                             selectedIndex={pointColorIndex ?? defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
@@ -142,7 +144,7 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                                                     <RoutineTimerItemForm
                                                         index={index}
                                                         mode={mode}
-                                                        currentTheme={currentTheme}
+                                                        currentTheme={selectedThemeCopy}
                                                         dragHandleProps={provided.dragHandleProps ?? undefined}
                                                         register={register}
                                                         setValue={setValue}
@@ -182,14 +184,14 @@ const RoutineTimerForm = forwardRef<HTMLFormElement, RoutineTimerFormProps>(
                         }}
                         aria-label="Add Timer Item"
                         className="h-10 w-full rounded-2xl border-2"
-                        style={{ borderColor: originalTheme.color.point }}
+                        style={{ borderColor: selectedTheme.color.point }}
                     >
                         <IoMdAdd size={30} />
                     </Button>
                 </div>
 
                 <Button
-                    currentTheme={originalTheme}
+                    currentTheme={selectedTheme}
                     onClick={save}
                     aria-label="Save"
                     className="h-10 w-full rounded-2xl"

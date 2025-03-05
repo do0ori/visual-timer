@@ -1,19 +1,28 @@
 import React from 'react';
 import { IoHelpCircle } from 'react-icons/io5';
-import Swal from 'sweetalert2';
-import { useTheme } from '../../hooks/useTheme';
+import Swal, { SweetAlertOptions } from 'sweetalert2';
+import { useThemeStore } from '../../store/themeStore';
 
-const TooltipModal: React.FC<{ title?: string; desc: string; className?: string }> = ({ title, desc, className }) => {
-    const { originalTheme } = useTheme();
+type TooltipModalProps = {
+    title?: string;
+    desc: SweetAlertOptions['html'];
+    className?: string;
+};
+
+const TooltipModal: React.FC<TooltipModalProps> = ({ title, desc, className }) => {
+    const { selectedTheme } = useThemeStore();
     const showModal = () => {
         Swal.fire({
             title,
-            text: desc,
+            html: desc,
             icon: 'info',
-            iconColor: originalTheme.color.point,
+            iconColor: selectedTheme.color.point,
             width: '95%',
-            confirmButtonColor: originalTheme.color.point,
+            confirmButtonColor: selectedTheme.color.point,
             confirmButtonText: 'Got it!',
+            customClass: {
+                popup: 'rounded-2xl p-6',
+            },
         });
     };
 

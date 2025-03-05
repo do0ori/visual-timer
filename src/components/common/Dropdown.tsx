@@ -1,9 +1,9 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@headlessui/react';
 import { useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
-import { Theme } from '../../config/theme/themes';
 import { useAutoScroll } from '../../hooks/useAutoScroll';
 import { useScrollToSelected } from '../../hooks/useScrollToSelected';
+import { Theme } from '../../store/types/theme';
 
 type DropdownOption<T> = {
     label: string;
@@ -20,7 +20,7 @@ type DropdownProps<T> = {
     customHeader?: React.ReactNode;
     placeholder?: string;
     buttonBorderColor?: string;
-    onToggle?: (isOpen: boolean) => void; // ★ 추가: 드롭다운 열림/닫힘 상태 전달
+    onToggle?: (isOpen: boolean) => void;
 };
 
 const Dropdown = <T,>({

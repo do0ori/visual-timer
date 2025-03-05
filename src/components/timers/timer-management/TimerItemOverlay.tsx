@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/type';
 import { useOverlay } from '../../../hooks/useOverlay';
-import { useTheme } from '../../../hooks/useTheme';
+import { useThemeStore } from '../../../store/themeStore';
 import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
 import TopBar from '../../common/TopBar';
 import BaseTimerForm from './forms/BaseTimerForm';
@@ -14,7 +14,7 @@ type TimerItemOverlayProps = {
 };
 
 const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, mode, onClose }) => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
     const formRef = useRef<HTMLFormElement>(null);
     const [timerType, setTimerType] = useState<TimerType>(initialTimerData?.type || TIMER_TYPE.BASE);
 
@@ -35,7 +35,7 @@ const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, m
     return (
         <div
             className="fixed inset-0 z-50 flex size-full flex-col"
-            style={{ backgroundColor: originalTheme.color.main }}
+            style={{ backgroundColor: selectedTheme.color.main }}
         >
             <TopBar.Cancel
                 onLeftClick={close}

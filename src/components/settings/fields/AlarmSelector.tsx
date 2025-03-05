@@ -1,13 +1,13 @@
 import { BiSolidBellRing } from 'react-icons/bi';
 import { alarmOptions } from '../../../config/audio/alarms';
 import { useAudio } from '../../../hooks/useAudio';
-import { useTheme } from '../../../hooks/useTheme';
 import { useSettingsStore } from '../../../store/settingsStore';
+import { useThemeStore } from '../../../store/themeStore';
 import Dropdown from '../../common/Dropdown';
 import ListItem from '../../common/ListItem';
 
 const AlarmSelector: React.FC = () => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
     const { selectedAlarm, setSelectedAlarm } = useSettingsStore();
     const audio = useAudio();
 
@@ -34,8 +34,8 @@ const AlarmSelector: React.FC = () => {
                 options={alarmOptions}
                 selectedValue={selectedAlarm}
                 onChange={handleAlarmChange}
-                currentTheme={originalTheme}
-                buttonBorderColor={originalTheme.color.point}
+                currentTheme={selectedTheme}
+                buttonBorderColor={selectedTheme.color.point}
                 onToggle={handleDropdownToggle}
             />
         </div>

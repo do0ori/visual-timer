@@ -2,11 +2,11 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { IoHeart } from 'react-icons/io5';
 import { MdExpandMore } from 'react-icons/md';
 import { useAutoScroll } from '../../../hooks/useAutoScroll';
-import { useTheme } from '../../../hooks/useTheme';
+import { useThemeStore } from '../../../store/themeStore';
 import ListItem from '../../common/ListItem';
 
 const DonateField: React.FC = () => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
     const heartIcon = <IoHeart size={24} className="size-full" />;
 
     const donateContent = (
@@ -35,7 +35,7 @@ const DonateField: React.FC = () => {
                                 rel="noopener noreferrer"
                                 className="rounded-lg border px-4 py-2 text-center transition hover:bg-black/5"
                                 style={{
-                                    borderColor: originalTheme.color.point,
+                                    borderColor: selectedTheme.color.point,
                                 }}
                             >
                                 Buy Me a Coffee

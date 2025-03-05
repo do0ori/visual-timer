@@ -1,4 +1,4 @@
-import { Theme } from '../../../../config/theme/themes';
+import { Theme } from '../../../../store/types/theme';
 import { handleDragEvent } from '../../../../utils/timerHandler';
 import TimerFace from '../../../common/TimerFace';
 

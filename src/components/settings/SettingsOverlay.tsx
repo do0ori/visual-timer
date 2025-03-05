@@ -1,12 +1,12 @@
 import { useOverlay } from '../../hooks/useOverlay';
-import { useTheme } from '../../hooks/useTheme';
+import { useThemeStore } from '../../store/themeStore';
 import TopBar from '../common/TopBar';
 import AlarmSettings from './sections/AlarmSettings';
 import OthersSettings from './sections/OthersSettings';
 import ThemeSettings from './sections/ThemeSettings';
 
 const SettingsOverlay: React.FC = () => {
-    const { originalTheme } = useTheme();
+    const { selectedTheme } = useThemeStore();
 
     const { isOpen, close } = useOverlay('settings');
 
@@ -16,8 +16,8 @@ const SettingsOverlay: React.FC = () => {
         <div
             className="absolute inset-0 z-40 flex size-full flex-col shadow-lg"
             style={{
-                backgroundColor: originalTheme.color.main,
-                outline: `2px solid ${originalTheme.color.sub}33`,
+                backgroundColor: selectedTheme.color.main,
+                outline: `2px solid ${selectedTheme.color.sub}33`,
             }}
         >
             <TopBar.Back onLeftClick={close} center="Settings" />

@@ -1,5 +1,5 @@
 import { LuRepeat, LuRepeat1 } from 'react-icons/lu';
-import { Theme } from '../../../../config/theme/themes';
+import { Theme } from '../../../../store/types/theme';
 import Switch from '../../../common/Switch';
 
 type RepeatSwitchProps = {

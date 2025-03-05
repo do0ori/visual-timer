@@ -5,10 +5,10 @@ import ListItem from '../../common/ListItem';
 import Tooltip from '../../common/Tooltip';
 
 const VolumeSelector: React.FC = () => {
-    const { themes, globalThemeKey } = useThemeStore();
+    const { selectedTheme } = useThemeStore();
     const { volume, mute, setVolume, setMute } = useSettingsStore();
 
-    const pointColor = themes[globalThemeKey].color.point;
+    const pointColor = selectedTheme.color.point;
 
     const handleMuteToggle = () => {
         if (mute) {

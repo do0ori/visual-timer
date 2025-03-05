@@ -5,6 +5,7 @@ import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
 import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../../store/baseTimerStore';
+import { useThemeStore } from '../../../../store/themeStore';
 import { BaseTimerData } from '../../../../store/types/timer';
 import Button from '../../../common/Button';
 import TimeDisplay from '../../shared/displays/TimeDisplay';
@@ -25,7 +26,8 @@ type BaseTimerFormProps = {
 
 const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
     ({ initialData, mode, timerType, setTimerType, close, save }, ref) => {
-        const { originalTheme, defaultPointColorIndex } = useTheme();
+        const { selectedTheme } = useThemeStore();
+        const { defaultPointColorIndex } = useTheme();
         const { addTimer, updateTimer } = useBaseTimerStore();
         const { register, handleSubmit, watch, setValue, reset } = useForm<BaseTimerFormData>({
             defaultValues: {
@@ -36,7 +38,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
             },
         });
         const { pointColorIndex, time, isMinutes } = watch();
-        const { currentTheme } = useTheme(pointColorIndex);
+        const { selectedThemeCopy } = useTheme(pointColorIndex);
 
         useEffect(() => {
             if (initialData) {
@@ -89,7 +91,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                     <div className="flex items-center gap-8">
                         <MdOutlinePalette size={30} className="shrink-0" />
                         <PointColorSelector
-                            colors={currentTheme.color.pointOptions}
+                            colors={selectedThemeCopy.color.pointOptions}
                             selectedIndex={pointColorIndex ?? defaultPointColorIndex}
                             onSelect={(index) => setValue('pointColorIndex', index)}
                         />
@@ -109,7 +111,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                                     onChange={() => setValue('isMinutes', true)}
                                     checked={isMinutes}
                                     className="form-radio"
-                                    style={{ accentColor: currentTheme.color.point }}
+                                    style={{ accentColor: selectedThemeCopy.color.point }}
                                 />
                                 <span>Min</span>
                             </div>
@@ -120,7 +122,7 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                                     onChange={() => setValue('isMinutes', false)}
                                     checked={!isMinutes}
                                     className="form-radio"
-                                    style={{ accentColor: currentTheme.color.point }}
+                                    style={{ accentColor: selectedThemeCopy.color.point }}
                                 />
                                 <span>Sec</span>
                             </div>
@@ -130,14 +132,14 @@ const BaseTimerForm = forwardRef<HTMLFormElement, BaseTimerFormProps>(
                     <div className="flex grow items-center justify-center">
                         <TimeSelector
                             time={time}
-                            currentTheme={currentTheme}
+                            currentTheme={selectedThemeCopy}
                             setTime={(newTime) => setValue('time', newTime)}
                         />
                     </div>
                 </div>
 
                 <Button
-                    currentTheme={originalTheme}
+                    currentTheme={selectedTheme}
                     onClick={save}
                     aria-label="Save"
                     className="h-10 w-full rounded-2xl"

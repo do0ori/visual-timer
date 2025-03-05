@@ -1,17 +1,9 @@
-export type ThemeColor = {
-    main: string;
-    point: string;
-    sub: string;
-    pointOptions: string[];
-};
+import { Theme } from '../../store/types/theme';
 
-export type Theme = {
-    color: ThemeColor;
-    text: string;
-};
-
-export const themes: Record<string, Theme> = {
-    'beige-green': {
+export const themes: Theme[] = [
+    {
+        id: 'default-beige-green',
+        title: 'Beige Green',
         color: {
             main: '#F4E3C1',
             point: '#4A7658',
@@ -20,7 +12,9 @@ export const themes: Record<string, Theme> = {
         },
         text: 'Great things\ntake time.',
     },
-    'gray-purple': {
+    {
+        id: 'default-gray-purple',
+        title: 'Gray Purple',
         color: {
             main: '#DCE0E3',
             point: '#9079C9',
@@ -29,7 +23,9 @@ export const themes: Record<string, Theme> = {
         },
         text: 'Becoming a better\nversion of me.',
     },
-    'black-green': {
+    {
+        id: 'default-black-green',
+        title: 'Black Green',
         color: {
             main: '#202123',
             point: '#4C6A60',
@@ -38,7 +34,9 @@ export const themes: Record<string, Theme> = {
         },
         text: 'For my better\ntomorrow.',
     },
-    'sky-blue': {
+    {
+        id: 'default-sky-blue',
+        title: 'Sky Blue',
         color: {
             main: '#C8D9EB',
             point: '#76A3DE',
@@ -48,7 +46,9 @@ export const themes: Record<string, Theme> = {
 
         text: 'Dive deep into dreams,\nlet your spirit soar.',
     },
-    'lovely-pink': {
+    {
+        id: 'default-lovely-pink',
+        title: 'Lovely Pink',
         color: {
             main: '#FFD6D6',
             point: '#F48FB1',
@@ -57,4 +57,4 @@ export const themes: Record<string, Theme> = {
         },
         text: 'Every sunset brings\na promise of a new dawn.',
     },
-};
+];

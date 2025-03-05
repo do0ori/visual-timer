@@ -1,67 +1,90 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Theme, themes } from '../config/theme/themes';
+import { themes } from '../config/theme/themes';
 import { getTextColor } from '../utils/colorUtils';
+import { Theme } from './types/theme';
 
 type ThemeState = {
-    globalThemeKey: string;
-    themes: Record<string, Theme>;
+    selectedTheme: Theme;
+    themes: Theme[];
     compColor: 'white' | 'black';
-    setGlobalTheme: (themeKey: string) => void;
-    addCustomTheme: (themeKey: string, theme: Theme) => void;
-    removeCustomTheme: (themeKey: string) => void;
+    setTheme: (id: string) => void;
+    addTheme: (theme: Theme) => void;
+    updateTheme: (id: string, updatedProps: Partial<Theme>) => void;
+    removeTheme: (id: string) => void;
 };
 
 export const useThemeStore = create<ThemeState>()(
     persist(
         (set, get) => ({
-            globalThemeKey: 'beige-green',
-            themes: { ...themes },
-            compColor: getTextColor(themes['beige-green'].color.main),
+            selectedTheme: themes[0],
+            themes: [...themes],
+            compColor: getTextColor(themes[0].color.main),
 
-            setGlobalTheme: (themeKey) => {
+            setTheme: (id) => {
                 const { themes } = get();
-                if (themes[themeKey]) {
+                const theme = themes.find((t) => t.id === id);
+                if (theme) {
                     set({
-                        globalThemeKey: themeKey,
-                        compColor: getTextColor(themes[themeKey].color.main),
+                        selectedTheme: theme,
+                        compColor: getTextColor(theme.color.main),
                     });
                 } else {
-                    console.warn(`Theme with key "${themeKey}" does not exist.`);
+                    console.warn(`Theme with id "${id}" does not exist.`);
                 }
             },
 
-            addCustomTheme: (themeKey, theme) => {
+            addTheme: (theme) => {
                 set((state) => ({
-                    themes: { ...state.themes, [themeKey]: theme },
+                    themes: [...state.themes, theme],
                 }));
             },
 
-            removeCustomTheme: (themeKey: string) => {
-                const { themes, globalThemeKey } = get();
+            updateTheme: (id, updatedProps) =>
+                set((state) => {
+                    const updatedThemes = state.themes.map((t) => (t.id === id ? { ...t, ...updatedProps } : t));
 
-                if (themeKey.startsWith('default-')) {
-                    console.warn(`Cannot remove default theme: "${themeKey}".`);
-                    return;
-                }
+                    return {
+                        themes: updatedThemes,
+                        ...(state.selectedTheme.id === id && {
+                            selectedTheme: { ...state.selectedTheme, ...updatedProps },
+                            compColor: updatedProps.color?.main
+                                ? getTextColor(updatedProps.color.main)
+                                : state.compColor,
+                        }),
+                    };
+                }),
 
-                const { [themeKey]: _, ...remainingThemes } = themes;
-
-                set(() => ({
-                    themes: remainingThemes,
-                    globalThemeKey: globalThemeKey === themeKey ? 'beige-green' : globalThemeKey,
-                }));
-            },
+            removeTheme: (id) =>
+                set((state) => {
+                    if (id.startsWith('default-')) {
+                        console.warn(`Cannot remove default theme: "${id}".`);
+                        return {};
+                    }
+                    const updatedThemes = state.themes.filter((t) => t.id !== id);
+                    const newSelectedTheme = state.selectedTheme.id === id ? updatedThemes[0] : state.selectedTheme;
+                    return {
+                        themes: updatedThemes,
+                        selectedTheme: newSelectedTheme,
+                    };
+                }),
         }),
         {
             name: 'theme-store',
-            version: 1, // a migration will be triggered if the version in the storage mismatches this one
+            version: 2, // a migration will be triggered if the version in the storage mismatches this one
             migrate: (persistedState, version) => {
                 const state = persistedState as ThemeState;
                 if (version === 0) {
                     return {
                         ...state,
                         themes: { ...themes },
+                    };
+                } else if (version === 1) {
+                    if ('globalThemeKey' in state) delete state.globalThemeKey;
+                    return {
+                        ...state,
+                        selectedTheme: themes[0],
+                        themes: [...themes],
                     };
                 }
                 return state;

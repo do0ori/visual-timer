@@ -19,13 +19,13 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
 
     const { time: storedTime, isMinutes: storedIsMinutes, pointColorIndex, title } = timer;
 
-    const { currentTheme } = useTheme(pointColorIndex, title);
+    const { selectedThemeCopy } = useTheme(pointColorIndex, title);
 
     const onFinish = useCallback(
         (reset: () => void) => {
-            handleFinish(timer, audio, currentTheme.color.point, reset);
+            handleFinish(timer, audio, selectedThemeCopy.color.point, reset);
         },
-        [timer, audio, currentTheme]
+        [timer, audio, selectedThemeCopy]
     );
 
     const {
@@ -74,7 +74,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
                     onClick={toggleUnit}
                     isMinutes={isMinutes}
                     isRunning={timer.id === defaultTimer.id ? isRunning : true}
-                    currentTheme={currentTheme}
+                    currentTheme={selectedThemeCopy}
                 />
             ),
         },
@@ -83,7 +83,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
                 isMinutes={isMinutes}
                 isRunning={isRunning}
                 isInitialized={isInitialized}
-                currentTheme={currentTheme}
+                currentTheme={selectedThemeCopy}
                 start={start}
                 stop={stop}
                 reset={reset}
@@ -95,7 +95,7 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
             <TimerDisplay
                 ref={timerDisplayRef}
                 progress={progress}
-                currentTheme={currentTheme}
+                currentTheme={selectedThemeCopy}
                 handleDragEvent={handleDragOrClick}
             />
         ),

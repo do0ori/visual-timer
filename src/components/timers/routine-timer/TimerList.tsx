@@ -1,4 +1,4 @@
-import { Theme } from '../../../config/theme/themes';
+import { Theme } from '../../../store/types/theme';
 import { RoutineTimerItem } from '../../../store/types/timer';
 import Dropdown from '../../common/Dropdown';
 import TimeDisplay from '../shared/displays/TimeDisplay';
