@@ -100,7 +100,7 @@ const ThemeSelector: React.FC = () => {
                 <span>Theme</span>
                 <Tooltip
                     title="Custom Theme Actions"
-                    desc="Long-press (or right-click) a custom theme icon to edit or delete it."
+                    desc={`Long-press (or right-click) a <strong style='color:${selectedTheme.color.point};'>custom theme</strong> icon to <strong style='color:${selectedTheme.color.point};'>edit</strong> or <strong style='color:${selectedTheme.color.point};'>delete</strong> it.`}
                 />
             </div>
             <div className="flex flex-wrap gap-3 px-2">

@@ -32,7 +32,7 @@ const VolumeSelector: React.FC = () => {
                     <span>Volume</span>
                     <Tooltip
                         title="Any problem?"
-                        desc="If there is no sound, check the silent setting of the device."
+                        desc={`If there is no sound, check the <strong style='color:${selectedTheme.color.point};'>silent setting</strong> of the device.`}
                     />
                 </div>
             </label>
