@@ -1,27 +1,16 @@
-import { forwardRef } from 'react';
 import { Theme } from '../../../../store/types/theme';
 import TimerFace from '../../../common/TimerFace';
-import TimerTextDisplay from './TimerTextDisplay';
 
 type TimerDisplayProps = {
     progress: number;
     currentTheme: Theme;
     handleDragEvent?: (e: React.MouseEvent | React.TouchEvent) => void;
+    text?: string;
 };
 
-const TimerDisplay = forwardRef<SVGCircleElement, TimerDisplayProps>(
-    ({ progress, currentTheme, handleDragEvent }, ref) => {
-        return (
-            <TimerFace ref={ref} progress={progress} currentTheme={currentTheme} handleDragEvent={handleDragEvent}>
-                <TimerTextDisplay
-                    timerDisplayRef={ref as React.RefObject<SVGCircleElement>}
-                    currentTheme={currentTheme}
-                    className="font-bold"
-                />
-            </TimerFace>
-        );
-    }
-);
+const TimerDisplay: React.FC<TimerDisplayProps> = ({ progress, currentTheme, handleDragEvent, text }) => {
+    return <TimerFace progress={progress} currentTheme={currentTheme} handleDragEvent={handleDragEvent} text={text} />;
+};
 
 TimerDisplay.displayName = 'TimerDisplay';
 

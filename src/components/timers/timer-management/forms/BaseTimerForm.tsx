@@ -35,7 +35,7 @@ const BaseTimerForm: React.FC<BaseTimerFormProps> = ({ initialData, mode, timerT
             time: initialData?.time || 5,
         },
     });
-    const { pointColorIndex, time, isMinutes } = watch();
+    const { title, pointColorIndex, time, isMinutes } = watch();
     const { selectedThemeCopy } = useTheme(pointColorIndex);
 
     const onSubmit = (data: BaseTimerFormData) => {
@@ -115,6 +115,7 @@ const BaseTimerForm: React.FC<BaseTimerFormProps> = ({ initialData, mode, timerT
                         time={time}
                         currentTheme={selectedThemeCopy}
                         setTime={(newTime) => setValue('time', newTime)}
+                        text={title}
                     />
                 </div>
             </div>

@@ -153,6 +153,7 @@ const RoutineTimerItemForm = ({
                                                     time={item.time}
                                                     currentTheme={currentTheme}
                                                     setTime={(newTime) => setValue(`items.${index}.time`, newTime)}
+                                                    text={item.title}
                                                 />
                                             </div>
                                         </div>

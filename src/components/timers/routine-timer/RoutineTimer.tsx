@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useBoolean } from 'usehooks-ts';
 import { useAudio } from '../../../hooks/useAudio';
 import { useTheme } from '../../../hooks/useTheme';
@@ -16,7 +16,6 @@ import TimerList from './TimerList';
 const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
     const { defaultTimer, selectDefaultTimer } = useSelectedTimerStore();
     const audio = useAudio();
-    const timerDisplayRef = useRef<SVGCircleElement>(null);
 
     const [currentItemIndex, setCurrentItemIndex] = useState<number>(0);
     const { value: repeat, toggle: toggleRepeat } = useBoolean(false);
@@ -110,7 +109,7 @@ const RoutineTimer: React.FC<{ timer: RoutineTimerData }> = ({ timer }) => {
                 </div>
             </>
         ),
-        timer: <TimerDisplay ref={timerDisplayRef} progress={progress} currentTheme={selectedThemeCopy} />,
+        timer: <TimerDisplay progress={progress} currentTheme={selectedThemeCopy} text={selectedThemeCopy.text} />,
     };
 
     return <TimerContent {...content} />;

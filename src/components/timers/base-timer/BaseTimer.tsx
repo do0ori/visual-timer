@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAudio } from '../../../hooks/useAudio';
 import { useTheme } from '../../../hooks/useTheme';
 import { useTimerBase } from '../../../hooks/useTimer';
@@ -15,7 +15,6 @@ import TimerContent, { TimerContentProps } from '../shared/TimerContent';
 const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
     const { defaultTimer, selectDefaultTimer, updateDefaultTimer } = useSelectedTimerStore();
     const audio = useAudio();
-    const timerDisplayRef = useRef<SVGCircleElement>(null);
 
     const { time: storedTime, isMinutes: storedIsMinutes, pointColorIndex, title } = timer;
 
@@ -93,10 +92,10 @@ const BaseTimer: React.FC<{ timer: BaseTimerData }> = ({ timer }) => {
         timerInfo: <TimeDisplay currentTime={currentTime} className="my-3" />,
         timer: (
             <TimerDisplay
-                ref={timerDisplayRef}
                 progress={progress}
                 currentTheme={selectedThemeCopy}
                 handleDragEvent={handleDragOrClick}
+                text={selectedThemeCopy.text}
             />
         ),
     };

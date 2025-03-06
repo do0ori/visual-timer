@@ -31,7 +31,7 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
                 sub: initialData?.color.sub || selectedTheme.color.sub,
                 pointOptions: initialData?.color.pointOptions || selectedTheme.color.pointOptions,
             },
-            text: initialData?.text || 'See how glowing you are.',
+            text: initialData?.text || 'See how glowing\nyou are.',
         },
     });
 
@@ -85,7 +85,12 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
 
                 <div className="flex items-center gap-8">
                     <MdFormatQuote size={30} className="shrink-0" />
-                    <input {...register('text')} type="text" className="w-full rounded border px-2 py-1 text-black" />
+                    <textarea
+                        {...register('text')}
+                        rows={2}
+                        className="w-full resize-none rounded border px-2 py-1 text-black"
+                        placeholder="Enter text you want to display"
+                    />
                 </div>
 
                 <div className="flex items-center gap-8">
@@ -144,7 +149,7 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
                     className="flex grow items-center justify-center rounded"
                     style={{ backgroundColor: previewTheme.color.main }}
                 >
-                    <TimeSelector time={time} currentTheme={previewTheme} setTime={setTime} />
+                    <TimeSelector time={time} currentTheme={previewTheme} setTime={setTime} text={previewTheme.text} />
                 </div>
             </div>
 
