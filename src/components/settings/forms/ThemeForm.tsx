@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { BiPieChart } from 'react-icons/bi';
+import { GiRoundKnob } from 'react-icons/gi';
 import { IoMdCheckmark } from 'react-icons/io';
-import { MdFormatColorFill, MdInvertColors, MdOutlinePalette, MdTextFields } from 'react-icons/md';
-import { useTheme } from '../../../hooks/useTheme';
+import { MdBrush, MdFormatColorFill, MdFormatQuote, MdOutlinePalette, MdTextFields } from 'react-icons/md';
 import { useThemeStore } from '../../../store/themeStore';
 import { Theme } from '../../../store/types/theme';
 import Button from '../../common/Button';
+import TimeSelector from '../../timers/timer-management/fields/TimeSelector';
 
 type ThemeFormData = Omit<Theme, 'id'>;
 
@@ -15,21 +18,42 @@ type ThemeFormProps = {
 };
 
 const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
-    const { selectedThemeCopy } = useTheme();
-    const { addTheme, updateTheme } = useThemeStore();
+    const { selectedTheme, addTheme, updateTheme } = useThemeStore();
+    const [time, setTime] = useState<number>(10);
+    const [previewPointColor, setPreviewPointColor] = useState<string | null>(null);
 
-    const { register, handleSubmit } = useForm<ThemeFormData>({
+    const { register, handleSubmit, watch } = useForm<ThemeFormData>({
         defaultValues: {
             title: initialData?.title || '',
             color: {
-                main: initialData?.color.main || selectedThemeCopy.color.main,
-                point: initialData?.color.point || selectedThemeCopy.color.point,
-                sub: initialData?.color.sub || selectedThemeCopy.color.sub,
-                pointOptions: initialData?.color.pointOptions || selectedThemeCopy.color.pointOptions,
+                main: initialData?.color.main || selectedTheme.color.main,
+                point: initialData?.color.point || selectedTheme.color.point,
+                sub: initialData?.color.sub || selectedTheme.color.sub,
+                pointOptions: initialData?.color.pointOptions || selectedTheme.color.pointOptions,
             },
             text: initialData?.text || 'See how glowing you are.',
         },
     });
+
+    const formValues = watch();
+
+    const handlePointOption = (e: React.MouseEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setPreviewPointColor(e.currentTarget.value);
+    };
+
+    const handlePointColor = (e: React.MouseEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
+        setPreviewPointColor(e.currentTarget.value);
+    };
+
+    const previewTheme = {
+        ...selectedTheme,
+        ...formValues,
+        color: {
+            ...formValues.color,
+            point: previewPointColor || formValues.color.point,
+        },
+        id: 'preview',
+    };
 
     const onSubmit = (data: ThemeFormData) => {
         const themeData: Theme = {
@@ -48,81 +72,83 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex grow flex-col justify-between gap-5 p-5">
-            <div className="max-h-[calc(100vh-96px)] space-y-6 overflow-y-auto no-scrollbar">
-                <div className="flex items-center gap-4">
-                    <MdTextFields size={24} className="shrink-0" />
+            <div className="flex max-h-[calc(100vh-156px)] flex-col gap-7 overflow-y-auto no-scrollbar">
+                <div className="flex items-center gap-8">
+                    <MdTextFields size={30} className="shrink-0" />
                     <input
                         {...register('title')}
                         type="text"
-                        placeholder="Theme Name"
+                        placeholder="New Theme"
                         className="w-full rounded border px-2 py-1 text-black"
                     />
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <MdFormatColorFill size={24} className="shrink-0" />
-                    <div className="flex items-center gap-2">
-                        <span>Main:</span>
-                        <input {...register('color.main')} type="color" defaultValue={'#000000'} className="h-8 w-20" />
-                    </div>
+                <div className="flex items-center gap-8">
+                    <MdFormatQuote size={30} className="shrink-0" />
+                    <input {...register('text')} type="text" className="w-full rounded border px-2 py-1 text-black" />
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <MdOutlinePalette size={24} className="shrink-0" />
-                    <div className="flex items-center gap-2">
-                        <span>Point:</span>
-                        <input
-                            {...register('color.point')}
-                            type="color"
-                            defaultValue={'#000000'}
-                            className="h-8 w-20"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <MdInvertColors size={24} className="shrink-0" />
-                    <div className="flex items-center gap-2">
-                        <span>Sub:</span>
-                        <input {...register('color.sub')} type="color" defaultValue={'#000000'} className="h-8 w-20" />
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <MdTextFields size={24} className="shrink-0" />
-                    <div className="flex items-center gap-2">
-                        <span>Text:</span>
-                        <input {...register('text')} type="text" className="h-8 w-20" />
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <MdOutlinePalette size={24} className="shrink-0" />
-                    <div className="flex flex-col gap-2">
-                        <span>Point Options:</span>
-                        <div className="flex flex-wrap gap-2">
-                            {Array.from({ length: selectedThemeCopy.color.pointOptions.length }, (_, i) => i).map(
-                                (index) => (
-                                    <input
-                                        key={index}
-                                        {...register(`color.pointOptions.${index}`)}
-                                        type="color"
-                                        defaultValue={'#000000'}
-                                        className="h-8 w-20"
-                                    />
-                                )
-                            )}
+                <div className="flex items-center gap-8">
+                    <MdBrush size={30} className="shrink-0" />
+                    <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex flex-col items-center gap-4">
+                            <MdFormatColorFill size={30} className="shrink-0" />
+                            <input
+                                {...register('color.main')}
+                                type="color"
+                                defaultValue={'#000000'}
+                                className="size-10 color-picker"
+                            />
+                        </div>
+                        <div className="flex flex-col items-center gap-4">
+                            <BiPieChart size={30} className="shrink-0" />
+                            <input
+                                {...register('color.point')}
+                                type="color"
+                                defaultValue={'#000000'}
+                                className="size-10 color-picker"
+                                onClick={handlePointColor}
+                                onChange={handlePointColor}
+                            />
+                        </div>
+                        <div className="flex flex-col items-center gap-4">
+                            <GiRoundKnob size={30} className="shrink-0" />
+                            <input
+                                {...register('color.sub')}
+                                type="color"
+                                defaultValue={'#000000'}
+                                className="size-10 color-picker"
+                            />
                         </div>
                     </div>
                 </div>
+
+                <div className="flex items-center gap-8">
+                    <MdOutlinePalette size={30} className="shrink-0" />
+                    <div className="flex flex-wrap gap-4">
+                        {Array.from({ length: selectedTheme.color.pointOptions.length }, (_, i) => i).map((index) => (
+                            <input
+                                key={index}
+                                {...register(`color.pointOptions.${index}`)}
+                                type="color"
+                                defaultValue={'#000000'}
+                                className="size-10 color-picker"
+                                onClick={handlePointOption}
+                                onChange={handlePointOption}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                <div
+                    className="flex grow items-center justify-center rounded"
+                    style={{ backgroundColor: previewTheme.color.main }}
+                >
+                    <TimeSelector time={time} currentTheme={previewTheme} setTime={setTime} />
+                </div>
             </div>
 
-            <Button
-                currentTheme={selectedThemeCopy}
-                type="submit"
-                aria-label="Save"
-                className="h-10 w-full rounded-2xl"
-            >
+            <Button currentTheme={selectedTheme} type="submit" aria-label="Save" className="h-10 w-full rounded-2xl">
                 <IoMdCheckmark size={30} />
             </Button>
         </form>

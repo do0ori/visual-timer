@@ -23,7 +23,7 @@ const PointColorSelector: React.FC<PointColorSelectorProps> = ({ colors, selecte
                         }}
                     />
                 )}
-                <div className="size-10 rounded-full" style={{ backgroundColor: color }} />
+                <div className="size-10 rounded-full border border-gray-400" style={{ backgroundColor: color }} />
             </button>
         ))}
     </div>

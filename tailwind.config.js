@@ -25,8 +25,24 @@ export const plugins = [
                 'scrollbar-width': 'none', // Firefox
             },
             '.color-picker': {
+                '-webkit-appearance': 'none',
+                '-moz-appearance': 'none',
+                appearance: 'none',
+                'background-color': 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                // Circular shape
                 '&::-webkit-color-swatch': {
-                    border: 'none', // 안쪽 테두리 제거
+                    'border-radius': '30px',
+                    border: '1px solid #9ca3af',
+                },
+                '&::-moz-color-swatch': {
+                    'border-radius': '30px',
+                    border: '1px solid #9ca3af',
+                },
+                // Remove padding to make perfect circle
+                '&::-webkit-color-swatch-wrapper': {
+                    padding: 0,
                 },
             },
         });

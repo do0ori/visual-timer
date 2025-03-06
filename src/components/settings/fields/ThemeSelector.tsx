@@ -76,10 +76,9 @@ const ThemeSelector: React.FC = () => {
                 />
             )}
             <div
-                className="size-10 rounded-full border"
+                className="size-10 rounded-full border border-gray-400"
                 style={{
                     background: `linear-gradient(135deg, ${theme.color.main} 0%, ${theme.color.main} 45%, ${theme.color.sub} 45%, ${theme.color.sub} 55%, ${theme.color.point} 55%, ${theme.color.point} 100%)`,
-                    borderColor: theme.color.point,
                 }}
             />
         </button>

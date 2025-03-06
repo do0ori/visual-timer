@@ -63,9 +63,13 @@ export const useThemeStore = create<ThemeState>()(
                     }
                     const updatedThemes = state.themes.filter((t) => t.id !== id);
                     const newSelectedTheme = state.selectedTheme.id === id ? updatedThemes[0] : state.selectedTheme;
+
                     return {
                         themes: updatedThemes,
                         selectedTheme: newSelectedTheme,
+                        ...(state.selectedTheme.id === id && {
+                            compColor: getTextColor(newSelectedTheme.color.main),
+                        }),
                     };
                 }),
         }),
