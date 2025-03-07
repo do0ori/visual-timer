@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Path, useForm } from 'react-hook-form';
 import { BiPieChart } from 'react-icons/bi';
 import { GiRoundKnob } from 'react-icons/gi';
 import { IoMdCheckmark } from 'react-icons/io';
@@ -7,6 +7,7 @@ import { MdBrush, MdFormatColorFill, MdFormatQuote, MdOutlinePalette, MdTextFiel
 import { useThemeStore } from '../../../store/themeStore';
 import { Theme } from '../../../store/types/theme';
 import Button from '../../common/Button';
+import ColorPickerButton from '../../common/ColorPickerButton';
 import TimeSelector from '../../timers/timer-management/fields/TimeSelector';
 
 type ThemeFormData = Omit<Theme, 'id'>;
@@ -22,7 +23,7 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
     const [time, setTime] = useState<number>(10);
     const [previewPointColor, setPreviewPointColor] = useState<string | null>(null);
 
-    const { register, handleSubmit, watch } = useForm<ThemeFormData>({
+    const { register, handleSubmit, watch, setValue } = useForm<ThemeFormData>({
         defaultValues: {
             title: initialData?.title || '',
             color: {
@@ -37,16 +38,23 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
 
     const formValues = watch();
 
-    const handlePointOption = (e: React.MouseEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setPreviewPointColor(e.currentTarget.value);
-    };
+    const handleColorChange = (
+        field: Path<ThemeFormData> | `color.pointOptions.${number}`,
+        color: string,
+        isPoint = false
+    ) => {
+        setValue(field, color, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true,
+        });
 
-    const handlePointColor = (e: React.MouseEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setPreviewPointColor(e.currentTarget.value);
+        if (isPoint) {
+            setPreviewPointColor(color);
+        }
     };
 
     const previewTheme = {
-        ...selectedTheme,
         ...formValues,
         color: {
             ...formValues.color,
@@ -98,31 +106,24 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
                     <div className="flex flex-wrap items-center gap-4">
                         <div className="flex flex-col items-center gap-4">
                             <MdFormatColorFill size={30} className="shrink-0" />
-                            <input
-                                {...register('color.main')}
-                                type="color"
-                                defaultValue={'#000000'}
-                                className="size-10 color-picker"
+                            <ColorPickerButton
+                                color={formValues.color.main}
+                                onChange={(color) => handleColorChange('color.main', color)}
                             />
                         </div>
                         <div className="flex flex-col items-center gap-4">
                             <BiPieChart size={30} className="shrink-0" />
-                            <input
-                                {...register('color.point')}
-                                type="color"
-                                defaultValue={'#000000'}
-                                className="size-10 color-picker"
-                                onClick={handlePointColor}
-                                onChange={handlePointColor}
+                            <ColorPickerButton
+                                color={formValues.color.point}
+                                onChange={(color) => handleColorChange('color.point', color, true)}
+                                onClick={() => setPreviewPointColor(formValues.color.point)}
                             />
                         </div>
                         <div className="flex flex-col items-center gap-4">
                             <GiRoundKnob size={30} className="shrink-0" />
-                            <input
-                                {...register('color.sub')}
-                                type="color"
-                                defaultValue={'#000000'}
-                                className="size-10 color-picker"
+                            <ColorPickerButton
+                                color={formValues.color.sub}
+                                onChange={(color) => handleColorChange('color.sub', color)}
                             />
                         </div>
                     </div>
@@ -132,14 +133,11 @@ const ThemeForm: React.FC<ThemeFormProps> = ({ initialData, mode, close }) => {
                     <MdOutlinePalette size={30} className="shrink-0" />
                     <div className="flex flex-wrap gap-4">
                         {Array.from({ length: selectedTheme.color.pointOptions.length }, (_, i) => i).map((index) => (
-                            <input
+                            <ColorPickerButton
                                 key={index}
-                                {...register(`color.pointOptions.${index}`)}
-                                type="color"
-                                defaultValue={'#000000'}
-                                className="size-10 color-picker"
-                                onClick={handlePointOption}
-                                onChange={handlePointOption}
+                                color={formValues.color.pointOptions[index]}
+                                onChange={(color) => handleColorChange(`color.pointOptions.${index}`, color, true)}
+                                onClick={() => setPreviewPointColor(formValues.color.pointOptions[index])}
                             />
                         ))}
                     </div>
