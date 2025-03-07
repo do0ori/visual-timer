@@ -94,26 +94,43 @@ const ThemeSelector: React.FC = () => {
         setTargetTheme(null);
     };
 
+    const renderThemeGroup = (themes: Theme[], isCustom: boolean) => (
+        <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-1">
+                <span className="text-lg">{isCustom ? 'Custom Themes' : 'Default Themes'}</span>
+                {isCustom && (
+                    <Tooltip
+                        title="Custom Theme Actions"
+                        desc={`Long-press (or right-click) a <strong style='color:${selectedTheme.color.point};'>custom theme</strong> icon to <strong style='color:${selectedTheme.color.point};'>edit</strong> or <strong style='color:${selectedTheme.color.point};'>delete</strong> it.`}
+                    />
+                )}
+            </div>
+            <div className="flex flex-wrap gap-3">
+                {themes.map((theme) => renderThemeButton(theme))}
+                {isCustom && (
+                    <button
+                        type="button"
+                        className="flex size-12 items-center justify-center rounded-full border-2 border-dashed border-gray-400 transition-all hover:scale-105"
+                        onClick={() => openOverlay()}
+                        title="Add Custom Theme"
+                    >
+                        <IoMdAdd size={20} className="text-gray-400" />
+                    </button>
+                )}
+            </div>
+        </div>
+    );
+
     const themeSelectorContent = (
         <div className="flex w-full flex-col gap-4">
-            <div className="flex items-center gap-1 text-lg">
-                <span>Theme</span>
-                <Tooltip
-                    title="Custom Theme Actions"
-                    desc={`Long-press (or right-click) a <strong style='color:${selectedTheme.color.point};'>custom theme</strong> icon to <strong style='color:${selectedTheme.color.point};'>edit</strong> or <strong style='color:${selectedTheme.color.point};'>delete</strong> it.`}
-                />
-            </div>
-            <div className="flex flex-wrap gap-3 px-2">
-                {themes.map((theme) => renderThemeButton(theme))}
-                <button
-                    type="button"
-                    className="flex size-12 items-center justify-center rounded-full border-2 border-dashed border-gray-400 transition-all hover:scale-105"
-                    onClick={() => openOverlay()}
-                    title="Add Custom Theme"
-                >
-                    <IoMdAdd size={20} className="text-gray-400" />
-                </button>
-            </div>
+            {renderThemeGroup(
+                themes.filter((theme) => !isCustomTheme(theme.id)),
+                false
+            )}
+            {renderThemeGroup(
+                themes.filter((theme) => isCustomTheme(theme.id)),
+                true
+            )}
             <ThemeOverlay initialTheme={targetTheme} onClose={closeOverlay} mode={mode} />
         </div>
     );

@@ -4,6 +4,7 @@ import TopBar from '../common/TopBar';
 import AlarmSettings from './sections/AlarmSettings';
 import OthersSettings from './sections/OthersSettings';
 import ThemeSettings from './sections/ThemeSettings';
+import TimerSettings from './sections/TimerSettings';
 
 const SettingsOverlay: React.FC = () => {
     const { selectedTheme } = useThemeStore();
@@ -25,6 +26,7 @@ const SettingsOverlay: React.FC = () => {
             <div className="p-5">
                 <div className="max-h-[calc(100vh-96px)] space-y-10 overflow-y-auto no-scrollbar">
                     <ThemeSettings />
+                    <TimerSettings />
                     <AlarmSettings />
                     <OthersSettings />
                 </div>
