@@ -78,12 +78,7 @@ export const useThemeStore = create<ThemeState>()(
             version: 2, // a migration will be triggered if the version in the storage mismatches this one
             migrate: (persistedState, version) => {
                 const state = persistedState as ThemeState;
-                if (version === 0) {
-                    return {
-                        ...state,
-                        themes: { ...themes },
-                    };
-                } else if (version === 1) {
+                if (version < 2) {
                     if ('globalThemeKey' in state) delete state.globalThemeKey;
                     return {
                         ...state,
