@@ -1,13 +1,13 @@
 import { Theme } from '../../store/types/theme';
 
-interface ThemeButtonProps {
+type ThemeButtonProps = {
     theme: Theme;
     isSelected: boolean;
     onClick: () => void;
     onContext?: (e: React.MouseEvent) => void;
     onTouchStart?: () => void;
     onTouchEnd?: () => void;
-}
+};
 
 const ThemeButton: React.FC<ThemeButtonProps> = ({
     theme,
