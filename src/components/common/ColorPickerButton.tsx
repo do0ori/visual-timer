@@ -1,4 +1,4 @@
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
+import { Popover, PopoverButton, PopoverPanel, Portal } from '@headlessui/react';
 import { Fragment, useCallback, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 
@@ -38,26 +38,28 @@ const ColorPickerButton: React.FC<ColorPickerButtonProps> = ({ color, onChange, 
                         onClick={onClick}
                     />
                     {open && (
-                        <PopoverPanel static className="fixed right-4 top-4 z-50">
-                            <div className="flex flex-col gap-3 rounded-lg border border-gray-400 bg-white p-5 shadow-lg">
-                                <HexColorPicker color={color} onChange={handleColorChange} />
-                                <div className="flex flex-col items-center gap-2">
-                                    <span className="text-sm font-medium">HEX</span>
-                                    <div className="flex items-center gap-1">
-                                        <span className="text-sm text-gray-500">#</span>
-                                        <input
-                                            type="text"
-                                            value={hexInput}
-                                            onChange={handleHexChange}
-                                            className="w-24 rounded border px-2 py-1 text-center text-sm uppercase"
-                                            maxLength={6}
-                                            placeholder="000000"
-                                            spellCheck={false}
-                                        />
+                        <Portal>
+                            <PopoverPanel static className="fixed right-4 top-4 z-[9999]">
+                                <div className="flex flex-col gap-3 rounded-lg border border-gray-400 bg-white p-5 shadow-lg">
+                                    <HexColorPicker color={color} onChange={handleColorChange} />
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="text-sm font-medium">HEX</span>
+                                        <div className="flex items-center gap-1">
+                                            <span className="text-sm text-gray-500">#</span>
+                                            <input
+                                                type="text"
+                                                value={hexInput}
+                                                onChange={handleHexChange}
+                                                className="w-24 rounded border px-2 py-1 text-center text-sm uppercase"
+                                                maxLength={6}
+                                                placeholder="000000"
+                                                spellCheck={false}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </PopoverPanel>
+                            </PopoverPanel>
+                        </Portal>
                     )}
                 </Fragment>
             )}
