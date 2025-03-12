@@ -13,7 +13,7 @@ const DefaultThemeSelector: React.FC = () => {
     const defaultThemeSelectorContent = (
         <div className="flex w-full flex-col gap-4">
             <span className="text-lg">Default Themes</span>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 pr-2">
                 {defaultThemes.map((theme) => (
                     <ThemeButton
                         key={theme.id}

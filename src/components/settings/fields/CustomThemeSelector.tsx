@@ -57,7 +57,7 @@ const CustomThemeSelector: React.FC = () => {
                     desc={`Long-press (or right-click) a <strong style='color:${selectedTheme.color.point};'>custom theme</strong> icon to <strong style='color:${selectedTheme.color.point};'>edit</strong> or <strong style='color:${selectedTheme.color.point};'>delete</strong> it.`}
                 />
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 pr-2">
                 {customThemes.map((theme) => (
                     <ThemeButton
                         key={theme.id}
