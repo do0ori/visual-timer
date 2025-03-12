@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import Radar from '../assets/radar.mp3';
 
 type SettingsState = {
     volume: number; // Notification sound volume (0 to 1)
@@ -18,7 +17,7 @@ export const useSettingsStore = create<SettingsState>()(
         (set) => ({
             volume: 1, // Default volume (max)
             mute: false,
-            selectedAlarm: Radar, // Default alarm sound
+            selectedAlarm: '/visual-timer/audios/radar.mp3', // Default alarm sound
             isClockwise: true, //Default direction
             setVolume: (volume) => set({ volume }),
             setMute: (mute) => set({ mute }),
@@ -27,12 +26,13 @@ export const useSettingsStore = create<SettingsState>()(
         }),
         {
             name: 'settings-store',
-            version: 1, // a migration will be triggered if the version in the storage mismatches this one
+            version: 2, // a migration will be triggered if the version in the storage mismatches this one
             migrate: (persistedState, version) => {
                 const state = persistedState as SettingsState;
-                if (version === 0) {
+                if (version < 2) {
                     return {
                         ...state,
+                        selectedAlarm: '/visual-timer/audios/radar.mp3',
                         isClockwise: true,
                     };
                 }
