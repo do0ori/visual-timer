@@ -44,6 +44,9 @@ jobs:
 
             - name: Build the project
               run: npm run build
+              env:
+                  CI: false
+                  REACT_APP_SENTRY_DSN: ${{ secrets.REACT_APP_SENTRY_DSN }}
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v4

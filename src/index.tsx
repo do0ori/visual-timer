@@ -1,16 +1,48 @@
+import * as Sentry from '@sentry/react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import './index.css';
+import ErrorPage from './pages/ErrorPage';
 import MainPage from './pages/MainPage';
+import NotFoundPage from './pages/NotFoundPage';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+
+const parseLocalStorage = () => {
+    return Object.keys(localStorage).reduce(
+        (acc, key) => {
+            try {
+                acc[key] = JSON.parse(localStorage.getItem(key) || '');
+            } catch (e) {
+                acc[key] = localStorage.getItem(key);
+            }
+            return acc;
+        },
+        {} as Record<string, unknown>
+    );
+};
+
+Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+    beforeSend(event) {
+        event.extra = {
+            ...event.extra,
+            localStorage: parseLocalStorage(),
+        };
+        return event;
+    },
+});
 
 const router = createBrowserRouter(
     [
-        { path: '*', element: <>[ERROR] 404 NOT FOUND</> },
         {
             path: '/',
-            element: <App />,
+            element: (
+                <Sentry.ErrorBoundary fallback={<ErrorPage />}>
+                    <App />
+                </Sentry.ErrorBoundary>
+            ),
+            errorElement: <ErrorPage />,
             children: [
                 {
                     index: true,
@@ -18,6 +50,10 @@ const router = createBrowserRouter(
                     element: <MainPage />,
                 },
             ],
+        },
+        {
+            path: '*',
+            element: <NotFoundPage />,
         },
     ],
     {
