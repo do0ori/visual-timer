@@ -1,15 +1,15 @@
-# ⏰ Visual Timer
+# ⏰ Mellow Visual Timer
 
 [![ko1](https://img.shields.io/badge/Nomad%20Coders%20커뮤니티-Visual%20Timer%20소개-4A7658)](https://nomadcoders.co/community/thread/10687)
 [![ko2](https://img.shields.io/badge/Velog%20포스트-Visual%20Timer%20--%20쉽고%20간단하게%20시각적으로%20시간%20관리하기-9079C9)](https://velog.io/@do0ori/Visual-Timer-쉽고-간단하게-시각적으로-시간-관리하기)
 
-**Visual Timer** is a user-friendly, customizable web-based timer application designed to help users efficiently manage their time. It features a **base timer**, a **timer list** for creating predefined timers(basic timers), and a **routine timer** to sequentially execute timers—making it perfect for techniques like the Pomodoro method. The app offers various customization options, including themes, sound settings, and flexible timer configurations.
+**Mellow Visual Timer** is a user-friendly, customizable web-based timer application designed to help users efficiently manage their time. It features a **base timer**, a **timer list** for creating predefined timers(basic timers), and a **routine timer** to sequentially execute timers—making it perfect for techniques like the Pomodoro method. The app offers various customization options, including themes, sound settings, and flexible timer configurations.
 
 ## 🛠️ Usage
 
-👉 [**Try it out**](https://do0ori.github.io/visual-timer) | Experience Visual Timer and take control of your time effectively!
+👉 [**Try it out**](https://do0ori.github.io/visual-timer) | Experience Mellow Visual Timer and take control of your time effectively!
 
-[![image](https://github.com/user-attachments/assets/a3b601ed-1108-4123-9a79-121320655cb7)](https://do0ori.github.io/visual-timer)
+[![visual-timer-UI-Design](https://github.com/user-attachments/assets/23eabb3c-1689-4492-b051-e5d7fd53f28b)](https://do0ori.github.io/visual-timer)
 
 1. **Set the Timer**:
     - Use the **unit toggle button** to switch between **minutes** and **seconds**.
@@ -52,6 +52,7 @@
     -   **Gray-Purple**
     -   **Black-Green**
 -   Adjust the color of the timer disk independently for a personalized look.
+-   It is also possible to create your own custom themes.
 
 ### 4. **Screen Wake Lock**
 
