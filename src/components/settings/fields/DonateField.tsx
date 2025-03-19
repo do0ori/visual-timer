@@ -17,7 +17,7 @@ const DonateField: React.FC = () => {
                 return (
                     <div className="flex w-full flex-col gap-2">
                         <DisclosureButton className="flex w-full items-center justify-between rounded-lg text-lg transition">
-                            <span>Support Visual Timer</span>
+                            <span>Support Mellow Visual Timer</span>
                             <MdExpandMore
                                 className={`${open ? 'rotate-180' : ''} size-5 transition-transform duration-200`}
                             />
@@ -25,9 +25,9 @@ const DonateField: React.FC = () => {
 
                         <DisclosurePanel ref={panelRef} className="flex flex-col gap-2">
                             <p className="text-gray-500">
-                                Visual Timer is completely free to use without any functional restrictions or ads. If
-                                you like this app, consider supporting the app to help keep it free and improve its
-                                features.
+                                Mellow Visual Timer is completely free to use without any functional restrictions or
+                                ads. If you like this app, consider supporting the app to help keep it free and improve
+                                its features.
                             </p>
                             <a
                                 href="https://www.paypal.com/paypalme/do0ori"
