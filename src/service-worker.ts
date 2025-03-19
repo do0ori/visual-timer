@@ -101,7 +101,7 @@ self.addEventListener('message', (event) => {
             if (isIOS) {
                 self.registration.showNotification(timer.title, {
                     body: 'Timer is currently running in the background',
-                    icon: '/visual-timer/logo500.png',
+                    icon: '/visual-timer/logo512.png',
                     tag: timer.id,
                     silent: true,
                 });
@@ -112,7 +112,7 @@ self.addEventListener('message', (event) => {
 
                     await self.registration.showNotification(timer.title, {
                         body: convertMsToMmSs(remainingTime),
-                        icon: '/visual-timer/logo500.png',
+                        icon: '/visual-timer/logo512.png',
                         tag: timer.id,
                         silent: true,
                     });
