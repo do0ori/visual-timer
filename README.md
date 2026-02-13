@@ -105,7 +105,7 @@
 <p>
     <img src="https://img.shields.io/badge/Typescript-2d79c7?style=for-the-badge&logo=Typescript&logoColor=white">
     <img src="https://img.shields.io/badge/Create React App-282c35?style=for-the-badge&logo=createreactapp&logoColor=09D3AC">
-    <img src="https://img.shields.io/badge/Tailwind CSS-131729?style=for-the-badge&logo=Tailwind CSS&logoColor=78baf2">
+    <img src="https://img.shields.io/badge/Tailwind CSS-131729?style=for-the-badge&logo=tailwindcss&logoColor=78baf2">
     <img src="https://img.shields.io/badge/Zustand-494237?style=for-the-badge&logo=React">
 </p>
 
