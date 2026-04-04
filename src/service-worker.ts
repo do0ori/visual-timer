@@ -79,6 +79,8 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 /** Wall-clock based remaining ms; do not use interval delta (setInterval is throttled in background). */
 const NOTIFICATION_TICK_MS = 1000;
+/** Stop updating the notification this long after the timer ended (battery / spam guard). */
+const OVERTIME_CAP_MS = 10 * 60 * 1000;
 
 const clearTimerHandles = (timerId: string) => {
     const handles = timers[timerId];
@@ -124,8 +126,9 @@ self.addEventListener('message', (event) => {
             } else {
                 let intervalHandle: NodeJS.Timer | undefined;
                 const tick = async () => {
-                    const msLeft = Math.max(0, endTimeMs - Date.now());
-                    if (msLeft <= 0) {
+                    const rawMs = endTimeMs - Date.now();
+
+                    if (rawMs < -OVERTIME_CAP_MS) {
                         if (intervalHandle !== undefined) {
                             clearInterval(intervalHandle);
                             intervalHandle = undefined;
@@ -136,8 +139,9 @@ self.addEventListener('message', (event) => {
                         }
                         return;
                     }
+
                     await self.registration.showNotification(timer.title, {
-                        body: convertMsToMmSs(msLeft),
+                        body: convertMsToMmSs(rawMs),
                         icon: '/visual-timer/logo512.png',
                         tag: timer.id,
                         silent: true,
