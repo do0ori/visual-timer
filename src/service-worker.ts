@@ -71,10 +71,23 @@ self.addEventListener('message', (event) => {
         self.skipWaiting();
     }
 });
-
 // Any other custom service worker logic can go here.
-const timers: Record<string, { timeoutId: NodeJS.Timeout | undefined; intervalId: NodeJS.Timer | undefined }> = {};
+type TimerHandles = { timeoutId: NodeJS.Timeout | undefined; intervalId: NodeJS.Timer | undefined };
+
+const timers: Record<string, TimerHandles> = {};
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+/** Wall-clock based remaining ms; do not use interval delta (setInterval is throttled in background). */
+const NOTIFICATION_TICK_MS = 1000;
+
+const clearTimerHandles = (timerId: string) => {
+    const handles = timers[timerId];
+    if (handles) {
+        clearTimeout(handles.timeoutId);
+        clearInterval(handles.intervalId);
+        delete timers[timerId];
+    }
+};
 
 self.addEventListener('message', (event) => {
     if (event.source) {
@@ -82,10 +95,13 @@ self.addEventListener('message', (event) => {
         const { command, timer, endTime } = event.data;
 
         if (command === 'start-timer') {
-            let remainingTime = endTime - Date.now();
-            console.debug(`Starting timer with ID: ${timer.id}, Remainig Time: ${remainingTime}ms`);
+            const endTimeMs = Number(endTime);
+            clearTimerHandles(timer.id);
 
-            let timeoutId;
+            const remainingTime = Math.max(0, endTimeMs - Date.now());
+            console.debug(`Starting timer with ID: ${timer.id}, Remaining time: ${remainingTime}ms`);
+
+            let timeoutId: NodeJS.Timeout | undefined;
             if (remainingTime > 0) {
                 timeoutId = setTimeout(async () => {
                     const clientList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
@@ -97,7 +113,7 @@ self.addEventListener('message', (event) => {
                 }, remainingTime);
             }
 
-            let intervalId;
+            let intervalId: NodeJS.Timer | undefined;
             if (isIOS) {
                 self.registration.showNotification(timer.title, {
                     body: 'Timer is currently running in the background',
@@ -106,27 +122,39 @@ self.addEventListener('message', (event) => {
                     silent: true,
                 });
             } else {
-                // Enable periodic notification updates only for Android
-                intervalId = setInterval(async () => {
-                    remainingTime -= 500;
-
+                let intervalHandle: NodeJS.Timer | undefined;
+                const tick = async () => {
+                    const msLeft = Math.max(0, endTimeMs - Date.now());
+                    if (msLeft <= 0) {
+                        if (intervalHandle !== undefined) {
+                            clearInterval(intervalHandle);
+                            intervalHandle = undefined;
+                        }
+                        const handles = timers[timer.id];
+                        if (handles) {
+                            handles.intervalId = undefined;
+                        }
+                        return;
+                    }
                     await self.registration.showNotification(timer.title, {
-                        body: convertMsToMmSs(remainingTime),
+                        body: convertMsToMmSs(msLeft),
                         icon: '/visual-timer/logo512.png',
                         tag: timer.id,
                         silent: true,
                     });
-                }, 500);
+                };
+
+                void tick();
+                intervalHandle = setInterval(() => {
+                    void tick();
+                }, NOTIFICATION_TICK_MS);
+                intervalId = intervalHandle;
             }
 
             timers[timer.id] = { timeoutId, intervalId };
         } else if (command === 'clear-timer') {
             console.debug(`Clearing timer with ID: ${timer.id}`);
-            if (timers[timer.id]) {
-                clearTimeout(timers[timer.id].timeoutId);
-                clearInterval(timers[timer.id].intervalId);
-                delete timers[timer.id];
-            }
+            clearTimerHandles(timer.id);
 
             const clearAllRelatedNotifications = async () => {
                 while ((await self.registration.getNotifications({ tag: timer.id })).length > 0) {
