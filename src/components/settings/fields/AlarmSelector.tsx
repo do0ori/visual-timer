@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BiSolidBellRing } from 'react-icons/bi';
 import { IoMdCloudUpload, IoMdPlay, IoMdSquare } from 'react-icons/io';
 import { useSettingsStore } from '../../../store/settingsStore';
@@ -12,6 +12,7 @@ const AlarmSelector: React.FC = () => {
   const { selectedAlarm, setSelectedAlarm, volume, mute } = useSettingsStore();
   const [isPlaying, setIsPlaying] = useState(false);
   const stopAudioRef = useRef<(() => void) | void>(undefined);
+  const previewTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [customSoundName, setCustomSoundName] = useState<string>('');
 
@@ -34,25 +35,48 @@ const AlarmSelector: React.FC = () => {
       : []),
   ];
 
-  const handleAlarmChange = (newAlarm: string) => {
-    setSelectedAlarm(newAlarm);
-    handlePreview(newAlarm);
-  };
-
-  const handlePreview = (soundValue?: string) => {
+  const stopPreview = useCallback(() => {
     if (stopAudioRef.current) {
       stopAudioRef.current();
       stopAudioRef.current = undefined;
     }
 
+    if (previewTimeoutRef.current) {
+      clearTimeout(previewTimeoutRef.current);
+      previewTimeoutRef.current = undefined;
+    }
+
+    setIsPlaying(false);
+  }, []);
+
+  const startPreview = useCallback((soundValue?: string) => {
+    stopPreview();
+
     const soundToPlay = soundValue || selectedAlarm;
-    setIsPlaying(true);
     const stopFn = playSound(soundToPlay, volume, mute);
     stopAudioRef.current = stopFn;
+    setIsPlaying(Boolean(stopFn));
 
-    setTimeout(() => {
-      setIsPlaying(false);
-    }, 3000);
+    if (stopFn) {
+      previewTimeoutRef.current = setTimeout(() => {
+        stopPreview();
+      }, 3000);
+    }
+  }, [mute, selectedAlarm, stopPreview, volume]);
+
+  useEffect(() => stopPreview, [stopPreview]);
+
+  const handleAlarmChange = (newAlarm: string) => {
+    setSelectedAlarm(newAlarm);
+    startPreview(newAlarm);
+  };
+
+  const handlePreviewButtonClick = () => {
+    if (isPlaying) {
+      stopPreview();
+    } else {
+      startPreview();
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +89,7 @@ const AlarmSelector: React.FC = () => {
       if (dataUrl) {
         setCustomSoundName(file.name);
         setSelectedAlarm(dataUrl);
-        handlePreview(dataUrl);
+        startPreview(dataUrl);
       }
     };
     reader.readAsDataURL(file);
@@ -94,7 +118,7 @@ const AlarmSelector: React.FC = () => {
 
           {/* Sound Preview Play Button */}
           <button
-            onClick={() => handlePreview()}
+            onClick={handlePreviewButtonClick}
             className="btn-tactile p-2 rounded-xl text-white shadow-soft flex items-center justify-center transition-transform active:scale-95"
             style={{ backgroundColor: selectedTheme.color.point }}
             aria-label="Preview Sound"

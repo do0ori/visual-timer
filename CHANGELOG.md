@@ -2,6 +2,18 @@
 
 All notable changes to Mellow Visual Timer are documented in this file.
 
+## [0.4.1] - 2026-08-20
+
+### Fixed
+
+- Made alarm previews consistently stoppable from the settings control, including synthesized alarm sounds.
+- Decoupled timer-editor surfaces from the browser color scheme so they follow the selected app theme.
+- Widened desktop timer cards and aligned the Routine Timer interactive dial with the Basic Timer editor.
+
+### Changed
+
+- Added staged-file formatting through `lint-staged` and Prettier.
+
 ## [0.4.0] - 2026-08-19
 
 ### Added
