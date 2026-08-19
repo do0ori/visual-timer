@@ -56,16 +56,18 @@
 
 ### 4. **Customizable Themes**
 
--   Choose from three unique themes:
-    -   **Beige-Green**
-    -   **Gray-Purple**
-    -   **Black-Green**
+-   Choose from five built-in themes:
+    -   **Beige Green**
+    -   **Gray Purple**
+    -   **Black Green**
+    -   **Sky Blue**
+    -   **Lovely Pink**
 -   Adjust the color of the timer disk independently for a personalized look.
 -   It is also possible to create your own custom themes.
 
 ### 5. **Customizable Timer & Sound Settings**
 
--   Adjust timer direction and counting preferences from one settings tab.
+-   Set the timer direction to clockwise or counter-clockwise from one settings tab.
 -   Choose a preset alarm tone, control its volume, or upload a custom audio file.
 
 ### 6. **Screen Wake Lock**
@@ -117,11 +119,18 @@
 ## 💻 Technology Stack
 
 <p>
+    <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white">
     <img src="https://img.shields.io/badge/Typescript-2d79c7?style=for-the-badge&logo=Typescript&logoColor=white">
-    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
+    <img src="https://img.shields.io/badge/Vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white">
     <img src="https://img.shields.io/badge/Tailwind CSS-131729?style=for-the-badge&logo=tailwindcss&logoColor=78baf2">
     <img src="https://img.shields.io/badge/Zustand-494237?style=for-the-badge&logo=React">
+    <img src="https://img.shields.io/badge/PWA-vite--plugin--pwa-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white">
 </p>
+
+-   **UI & routing:** React 18, React Router 7, Headless UI, React Icons
+-   **State & forms:** Zustand 5, React Hook Form
+-   **Build & styling:** Vite 6, TypeScript 5, Tailwind CSS 3
+-   **Offline support:** Vite PWA and Workbox
 
 ## 📦 Setup and Installation
 
@@ -142,6 +151,13 @@
 
     ```bash
     npm run dev
+    ```
+
+4. Create a production build or preview it locally:
+
+    ```bash
+    npm run build
+    npm run preview
     ```
 
 ## 🤝 Contributions
