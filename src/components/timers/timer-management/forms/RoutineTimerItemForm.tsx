@@ -75,7 +75,7 @@ const RoutineTimerItemForm = ({
             </span>
             <BaseTimerIcon size={28} time={item.time} stroke={pointColor} className="shrink-0" />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-bold">{item.title || `Step ${index + 1}`}</span>
+              <span className="block truncate text-sm font-bold">{item.title || `Timer ${index + 1}`}</span>
               <span className="mt-0.5 block text-xs text-zinc-500">
                 {duration} · {alarm}
               </span>

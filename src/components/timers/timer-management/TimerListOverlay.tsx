@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMdAdd, IoMdClose, IoMdFlash, IoMdSearch } from 'react-icons/io';
-import { MdDeleteOutline, MdEdit, MdHourglassTop, MdPlayArrow } from 'react-icons/md';
+import { MdDeleteOutline, MdEdit, MdExpandMore, MdHourglassTop, MdPlayArrow } from 'react-icons/md';
 import { getCardSurface, getTextColor } from '../../../utils/colorUtils';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
 import { useOverlay } from '../../../hooks/useOverlay';
@@ -8,7 +8,7 @@ import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useRoutineTimerStore } from '../../../store/routineTimerStore';
 import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
-import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
+import { TimerData } from '../../../store/types/timer';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import Button from '../../common/Button';
 import TimerItemOverlay from './TimerItemOverlay';
@@ -91,13 +91,14 @@ const QUICK_TEMPLATES: {
 const TimerListOverlay: React.FC = () => {
   const { selectedTheme, compColor } = useThemeStore();
   const selectTimer = useSelectedTimerStore((state) => state.selectTimer);
-  const { timers: baseTimers, addTimer: addBaseTimer, removeTimer: removeBaseTimer } = useBaseTimerStore();
-  const { timers: routineTimers, addTimer: addRoutineTimer, removeTimer: removeRoutineTimer } = useRoutineTimerStore();
+  const { timers: baseTimers, removeTimer: removeBaseTimer } = useBaseTimerStore();
+  const { timers: routineTimers, removeTimer: removeRoutineTimer } = useRoutineTimerStore();
 
   const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
   const [mode, setMode] = useState<'add' | 'edit'>('add');
   const [activeTab, setActiveTab] = useState<'all' | 'base' | 'routine'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isTemplatesOpen, setIsTemplatesOpen] = useState(true);
 
   const { isOpen, close } = useOverlay('timer-list');
 
@@ -118,9 +119,13 @@ const TimerListOverlay: React.FC = () => {
     close();
   };
 
-  const openOverlay = (timer?: TimerData) => {
+  useEffect(() => {
+    if (isOpen) setIsTemplatesOpen(timers.length === 0);
+  }, [isOpen]);
+
+  const openOverlay = (timer?: TimerData, nextMode: 'add' | 'edit' = timer ? 'edit' : 'add') => {
     setTargetTimer(timer || null);
-    setMode(timer ? 'edit' : 'add');
+    setMode(nextMode);
     window.location.hash = 'timer-list&timer-item';
   };
 
@@ -159,15 +164,7 @@ const TimerListOverlay: React.FC = () => {
     }
   };
 
-  const handleAddTemplate = (tpl: (typeof QUICK_TEMPLATES)[0]) => {
-    const newTimer = tpl.create(4);
-    if (newTimer.type === TIMER_TYPE.BASE) {
-      addBaseTimer(newTimer as BaseTimerData);
-    } else {
-      addRoutineTimer(newTimer as RoutineTimerData);
-    }
-    handleSelectTimer(newTimer.id);
-  };
+  const handleCustomizeTemplate = (tpl: (typeof QUICK_TEMPLATES)[0]) => openOverlay(tpl.create(4), 'add');
 
   if (!isOpen) return null;
 
@@ -271,15 +268,23 @@ const TimerListOverlay: React.FC = () => {
             {/* Quick 1-Click Templates */}
             {!searchQuery && (
               <div className="space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider opacity-80">
-                  <IoMdFlash className="text-amber-500 text-base" />
-                  <span>Popular Preset Templates</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsTemplatesOpen((open) => !open)}
+                  aria-expanded={isTemplatesOpen}
+                  className="flex w-full items-center justify-between rounded-xl px-1 py-1 text-xs font-bold uppercase tracking-wider opacity-80 transition-opacity hover:opacity-100"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <IoMdFlash className="text-amber-500 text-base" />
+                    Popular Preset Templates
+                  </span>
+                  <MdExpandMore className={`text-lg transition-transform ${isTemplatesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isTemplatesOpen && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {QUICK_TEMPLATES.map((tpl, i) => (
                     <button
                       key={i}
-                      onClick={() => handleAddTemplate(tpl)}
+                      onClick={() => handleCustomizeTemplate(tpl)}
                       className="btn-tactile group text-left p-4 rounded-2xl border shadow-soft hover:shadow-dial transition-all flex flex-col justify-between"
                       style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
                     >
@@ -294,11 +299,11 @@ const TimerListOverlay: React.FC = () => {
                         className="flex items-center gap-1 text-xs font-bold mt-3.5 pt-2 border-t"
                         style={{ color: selectedTheme.color.point, borderColor: cardBorder }}
                       >
-                        <MdPlayArrow size={16} /> Use Template
+                        <MdEdit size={16} /> Customize Template
                       </div>
                     </button>
                   ))}
-                </div>
+                </div>}
               </div>
             )}
 
