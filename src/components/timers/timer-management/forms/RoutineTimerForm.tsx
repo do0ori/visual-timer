@@ -25,6 +25,7 @@ type RoutineTimerFormProps = {
 
 const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, timerType, setTimerType, close }) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [expandedStepId, setExpandedStepId] = useState<string | null>(null);
   const { selectedThemeCopy, defaultPointColorIndex } = useTheme();
   const { selectedTheme } = useThemeStore();
   const { addTimer, updateTimer } = useRoutineTimerStore();
@@ -102,6 +103,25 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
     ]);
   };
 
+  const handleAddStep = () => {
+    const current = watch('items') || [];
+    const id = `step_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`;
+
+    setValue('items', [
+      ...current,
+      {
+        id,
+        title: `Step ${current.length + 1}`,
+        time: 10,
+        isMinutes: true,
+        pointColorIndex: defaultPointColorIndex,
+        interval: 5,
+        type: TIMER_TYPE.BASE,
+      },
+    ]);
+    setExpandedStepId(id);
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full space-y-6">
       {mode === 'add' && (
@@ -177,15 +197,17 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
                       <div ref={providedDraggable.innerRef} {...providedDraggable.draggableProps}>
                         <RoutineTimerItemForm
                           index={index}
-                          mode={mode}
                           currentTheme={selectedThemeCopy}
                           dragHandleProps={providedDraggable.dragHandleProps ?? undefined}
                           register={register}
                           setValue={setValue}
                           watch={watch}
+                          isOpen={expandedStepId === item.id}
+                          onToggle={() => setExpandedStepId(expandedStepId === item.id ? null : item.id)}
                           onDelete={() => {
                             const newItems = items.filter((_, i) => i !== index);
                             setValue('items', newItems);
+                            if (expandedStepId === item.id) setExpandedStepId(null);
                           }}
                         />
                       </div>
@@ -203,21 +225,7 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
         {/* Add Step Button */}
         <button
           type="button"
-          onClick={() => {
-            const current = watch('items') || [];
-            setValue('items', [
-              ...current,
-              {
-                id: `step_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
-                title: `Step ${current.length + 1}`,
-                time: 10,
-                isMinutes: true,
-                pointColorIndex: defaultPointColorIndex,
-                interval: 5,
-                type: TIMER_TYPE.BASE,
-              },
-            ]);
-          }}
+          onClick={handleAddStep}
           className="btn-tactile w-full py-3.5 rounded-2xl border-2 border-dashed font-bold text-sm flex items-center justify-center gap-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
           style={{ borderColor: selectedTheme.color.point, color: selectedTheme.color.point }}
         >
