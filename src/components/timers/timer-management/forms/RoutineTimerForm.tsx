@@ -1,16 +1,15 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IoMdAdd, IoMdCheckmark, IoMdFlash } from 'react-icons/io';
+import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 import { MdOutlinePalette, MdTextFields } from 'react-icons/md';
-import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
+import { TIMER_TYPE } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useRoutineTimerStore } from '../../../../store/routineTimerStore';
 import { useThemeStore } from '../../../../store/themeStore';
 import { RoutineTimerData } from '../../../../store/types/timer';
 import Button from '../../../common/Button';
 import PointColorSelector from '../fields/PointColorSelector';
-import TimerTypeSelector from '../fields/TimerTypeSelector';
 import RoutineTimerItemForm from './RoutineTimerItemForm';
 
 export type RoutineTimerFormData = Omit<RoutineTimerData, 'id' | 'type'>;
@@ -18,13 +17,12 @@ export type RoutineTimerFormData = Omit<RoutineTimerData, 'id' | 'type'>;
 type RoutineTimerFormProps = {
   initialData?: RoutineTimerData | null;
   mode: 'add' | 'edit';
-  timerType: TimerType;
-  setTimerType: React.Dispatch<React.SetStateAction<TimerType>>;
   close: () => void;
 };
 
-const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, timerType, setTimerType, close }) => {
+const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, close }) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [expandedStepId, setExpandedStepId] = useState<string | null>(null);
   const { selectedThemeCopy, defaultPointColorIndex } = useTheme();
   const { selectedTheme } = useThemeStore();
   const { addTimer, updateTimer } = useRoutineTimerStore();
@@ -102,17 +100,30 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
     ]);
   };
 
+  const handleAddStep = () => {
+    const current = watch('items') || [];
+    const id = `step_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`;
+
+    setValue('items', [
+      ...current,
+      {
+        id,
+        title: `Step ${current.length + 1}`,
+        time: 10,
+        isMinutes: true,
+        pointColorIndex: defaultPointColorIndex,
+        interval: 5,
+        type: TIMER_TYPE.BASE,
+      },
+    ]);
+    setExpandedStepId(id);
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full space-y-6">
-      {mode === 'add' && (
-        <div className="max-w-md mx-auto w-full">
-          <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />
-        </div>
-      )}
-
       {/* Routine Metadata & Summary Header */}
       <div className="p-4 sm:p-5 rounded-2xl bg-white/40 dark:bg-black/20 backdrop-blur-md border border-white/30 shadow-soft space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+        <div className="space-y-4">
           {/* Title Input */}
           <div className="space-y-1">
             <label className="text-xs font-bold uppercase tracking-wider opacity-75 flex items-center gap-1.5">
@@ -127,22 +138,15 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
           </div>
 
           {/* Quick Stats Pill */}
-          <div className="flex items-center justify-between sm:justify-end gap-3">
-            <div className="px-3.5 py-2 rounded-xl bg-black/5 dark:bg-white/10 text-center">
-              <div className="text-xs opacity-70 font-semibold">Total Steps</div>
-              <div className="text-base font-bold font-display">{items?.length || 0}</div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-black/5 px-3.5 py-2.5 text-center dark:bg-white/10">
+              <div className="text-xs font-semibold opacity-70">Timers</div>
+              <div className="text-lg font-bold font-display">{items?.length || 0}</div>
             </div>
-            <div className="px-3.5 py-2 rounded-xl bg-black/5 dark:bg-white/10 text-center">
-              <div className="text-xs opacity-70 font-semibold">Total Duration</div>
-              <div className="text-base font-bold font-display">~{totalMinutes} mins</div>
+            <div className="rounded-xl bg-black/5 px-3.5 py-2.5 text-center dark:bg-white/10">
+              <div className="text-xs font-semibold opacity-70">Duration</div>
+              <div className="text-lg font-bold font-display">~{totalMinutes} mins</div>
             </div>
-            <button
-              type="button"
-              onClick={handleApplyPomodoroPreset}
-              className="btn-tactile px-3 py-2 rounded-xl bg-red-500/10 text-red-600 dark:text-red-300 font-bold text-xs flex items-center gap-1 border border-red-500/20"
-            >
-              <IoMdFlash /> Fill Pomodoro
-            </button>
           </div>
         </div>
 
@@ -159,10 +163,14 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
         </div>
       </div>
 
-      {/* Routine Steps List with Drag and Drop */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-bold uppercase tracking-wider opacity-80">
+        {/* Routine Steps List with Drag and Drop */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider opacity-80">Timers in this routine</span>
+              <p className="mt-0.5 text-xs opacity-60">Each timer starts after the previous one ends.</p>
+            </div>
+            <span className="sr-only">
             Routine Steps ({items?.length || 0}) • Drag to reorder
           </span>
         </div>
@@ -177,15 +185,17 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
                       <div ref={providedDraggable.innerRef} {...providedDraggable.draggableProps}>
                         <RoutineTimerItemForm
                           index={index}
-                          mode={mode}
                           currentTheme={selectedThemeCopy}
                           dragHandleProps={providedDraggable.dragHandleProps ?? undefined}
                           register={register}
                           setValue={setValue}
                           watch={watch}
+                          isOpen={expandedStepId === item.id}
+                          onToggle={() => setExpandedStepId(expandedStepId === item.id ? null : item.id)}
                           onDelete={() => {
                             const newItems = items.filter((_, i) => i !== index);
                             setValue('items', newItems);
+                            if (expandedStepId === item.id) setExpandedStepId(null);
                           }}
                         />
                       </div>
@@ -201,29 +211,17 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
         {errorMessage && <div className="text-xs text-red-500 font-bold px-1">{errorMessage}</div>}
 
         {/* Add Step Button */}
-        <button
-          type="button"
-          onClick={() => {
-            const current = watch('items') || [];
-            setValue('items', [
-              ...current,
-              {
-                id: `step_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
-                title: `Step ${current.length + 1}`,
-                time: 10,
-                isMinutes: true,
-                pointColorIndex: defaultPointColorIndex,
-                interval: 5,
-                type: TIMER_TYPE.BASE,
-              },
-            ]);
-          }}
-          className="btn-tactile w-full py-3.5 rounded-2xl border-2 border-dashed font-bold text-sm flex items-center justify-center gap-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-          style={{ borderColor: selectedTheme.color.point, color: selectedTheme.color.point }}
-        >
-          <IoMdAdd size={20} />
-          <span>Add Next Routine Step</span>
-        </button>
+        <div className="space-y-2">
+          <button
+            type="button"
+            onClick={handleAddStep}
+            className="btn-tactile w-full py-3.5 rounded-2xl border-2 border-dashed font-bold text-sm flex items-center justify-center gap-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            style={{ borderColor: selectedTheme.color.point, color: selectedTheme.color.point }}
+          >
+            <IoMdAdd size={20} />
+            <span>Add Timer to Routine</span>
+          </button>
+        </div>
       </div>
 
       {/* Submit Button */}

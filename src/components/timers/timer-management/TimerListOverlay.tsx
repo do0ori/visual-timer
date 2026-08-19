@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMdAdd, IoMdClose, IoMdFlash, IoMdSearch } from 'react-icons/io';
-import { MdDeleteOutline, MdEdit, MdHourglassTop, MdPlayArrow } from 'react-icons/md';
+import { MdDeleteOutline, MdEdit, MdExpandMore, MdHourglassTop } from 'react-icons/md';
 import { getCardSurface, getTextColor } from '../../../utils/colorUtils';
-import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
+import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/type';
 import { useOverlay } from '../../../hooks/useOverlay';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useRoutineTimerStore } from '../../../store/routineTimerStore';
 import { useSelectedTimerStore } from '../../../store/selectedTimerStore';
 import { useThemeStore } from '../../../store/themeStore';
-import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
+import { TimerData } from '../../../store/types/timer';
 import { getTimerPointColor } from '../../../utils/themeUtils';
 import Button from '../../common/Button';
 import TimerItemOverlay from './TimerItemOverlay';
@@ -75,7 +75,7 @@ const QUICK_TEMPLATES: {
   {
     title: '☕ Power Nap 15m',
     desc: '15 minutes quick recharge',
-    badge: 'Single',
+    badge: 'Basic',
     badgeColor: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
     create: (idx) => ({
       id: `base_nap_${Date.now()}`,
@@ -91,13 +91,15 @@ const QUICK_TEMPLATES: {
 const TimerListOverlay: React.FC = () => {
   const { selectedTheme, compColor } = useThemeStore();
   const selectTimer = useSelectedTimerStore((state) => state.selectTimer);
-  const { timers: baseTimers, addTimer: addBaseTimer, removeTimer: removeBaseTimer } = useBaseTimerStore();
-  const { timers: routineTimers, addTimer: addRoutineTimer, removeTimer: removeRoutineTimer } = useRoutineTimerStore();
+  const { timers: baseTimers, removeTimer: removeBaseTimer } = useBaseTimerStore();
+  const { timers: routineTimers, removeTimer: removeRoutineTimer } = useRoutineTimerStore();
 
   const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
   const [mode, setMode] = useState<'add' | 'edit'>('add');
+  const [initialTimerType, setInitialTimerType] = useState<TimerType>(TIMER_TYPE.BASE);
   const [activeTab, setActiveTab] = useState<'all' | 'base' | 'routine'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isTemplatesOpen, setIsTemplatesOpen] = useState(true);
 
   const { isOpen, close } = useOverlay('timer-list');
 
@@ -118,9 +120,14 @@ const TimerListOverlay: React.FC = () => {
     close();
   };
 
-  const openOverlay = (timer?: TimerData) => {
+  useEffect(() => {
+    if (isOpen) setIsTemplatesOpen(timers.length === 0);
+  }, [isOpen]);
+
+  const openOverlay = (timer?: TimerData, nextMode: 'add' | 'edit' = timer ? 'edit' : 'add') => {
     setTargetTimer(timer || null);
-    setMode(timer ? 'edit' : 'add');
+    setMode(nextMode);
+    setInitialTimerType(activeTab === 'routine' ? TIMER_TYPE.ROUTINE : TIMER_TYPE.BASE);
     window.location.hash = 'timer-list&timer-item';
   };
 
@@ -159,15 +166,7 @@ const TimerListOverlay: React.FC = () => {
     }
   };
 
-  const handleAddTemplate = (tpl: (typeof QUICK_TEMPLATES)[0]) => {
-    const newTimer = tpl.create(4);
-    if (newTimer.type === TIMER_TYPE.BASE) {
-      addBaseTimer(newTimer as BaseTimerData);
-    } else {
-      addRoutineTimer(newTimer as RoutineTimerData);
-    }
-    handleSelectTimer(newTimer.id);
-  };
+  const handleCustomizeTemplate = (tpl: (typeof QUICK_TEMPLATES)[0]) => openOverlay(tpl.create(4), 'add');
 
   if (!isOpen) return null;
 
@@ -214,23 +213,31 @@ const TimerListOverlay: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               {/* Category Segmented Control */}
               <div
-                className="w-full sm:w-auto grid grid-cols-3 sm:flex rounded-2xl p-1"
+                className="relative grid w-full grid-cols-3 rounded-2xl p-1 sm:w-[17.5rem]"
                 style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.07)' }}
               >
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-xl bg-white/95 shadow-sm transition-transform duration-200 ease-out ${
+                    activeTab === 'all'
+                      ? 'translate-x-0'
+                      : activeTab === 'base'
+                        ? 'translate-x-full'
+                        : 'translate-x-[200%]'
+                  }`}
+                />
                 {(['all', 'base', 'routine'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className="py-2 px-3 sm:px-4 text-xs sm:text-sm rounded-xl transition-all text-center"
+                    className="relative z-10 rounded-xl px-3 py-2 text-center text-xs transition-colors sm:px-4 sm:text-sm"
                     style={{
-                      backgroundColor: activeTab === tab ? 'rgba(255,255,255,0.95)' : 'transparent',
                       color: activeTab === tab ? selectedTheme.color.point : compColor,
                       fontWeight: activeTab === tab ? 700 : 500,
                       opacity: activeTab === tab ? 1 : 0.65,
-                      boxShadow: activeTab === tab ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
                     }}
                   >
-                    {tab === 'all' ? 'All' : tab === 'base' ? 'Single' : 'Routines'}
+                    {tab === 'all' ? 'All' : tab === 'base' ? 'Basic' : 'Routine'}
                   </button>
                 ))}
               </div>
@@ -271,15 +278,23 @@ const TimerListOverlay: React.FC = () => {
             {/* Quick 1-Click Templates */}
             {!searchQuery && (
               <div className="space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider opacity-80">
-                  <IoMdFlash className="text-amber-500 text-base" />
-                  <span>Popular Preset Templates</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsTemplatesOpen((open) => !open)}
+                  aria-expanded={isTemplatesOpen}
+                  className="flex w-full items-center justify-between rounded-xl px-1 py-1 text-xs font-bold uppercase tracking-wider opacity-80 transition-opacity hover:opacity-100"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <IoMdFlash className="text-amber-500 text-base" />
+                    Popular Preset Templates
+                  </span>
+                  <MdExpandMore className={`text-lg transition-transform ${isTemplatesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isTemplatesOpen && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {QUICK_TEMPLATES.map((tpl, i) => (
                     <button
                       key={i}
-                      onClick={() => handleAddTemplate(tpl)}
+                      onClick={() => handleCustomizeTemplate(tpl)}
                       className="btn-tactile group text-left p-4 rounded-2xl border shadow-soft hover:shadow-dial transition-all flex flex-col justify-between"
                       style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
                     >
@@ -294,11 +309,11 @@ const TimerListOverlay: React.FC = () => {
                         className="flex items-center gap-1 text-xs font-bold mt-3.5 pt-2 border-t"
                         style={{ color: selectedTheme.color.point, borderColor: cardBorder }}
                       >
-                        <MdPlayArrow size={16} /> Use Template
+                        <MdEdit size={16} /> Customize Template
                       </div>
                     </button>
                   ))}
-                </div>
+                </div>}
               </div>
             )}
 
@@ -333,10 +348,10 @@ const TimerListOverlay: React.FC = () => {
                     <div
                       key={timer.id}
                       onClick={() => handleSelectTimer(timer.id)}
-                      className="btn-tactile group cursor-pointer p-4 rounded-2xl border shadow-soft hover:shadow-dial transition-all flex flex-col justify-between gap-3"
+                      className="btn-tactile group flex cursor-pointer items-center gap-3 rounded-2xl border p-4 shadow-soft transition-all hover:shadow-dial"
                       style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
                     >
-                      <div className="flex items-start gap-3.5">
+                      <div className="flex min-w-0 flex-1 items-center gap-3.5">
                         <div className="group-hover:scale-105 transition-transform">{getTimerIcon(timer)}</div>
                         <div className="min-w-0 flex-1">
                           <h4 className="font-bold text-base line-clamp-1 group-hover:underline">
@@ -353,40 +368,25 @@ const TimerListOverlay: React.FC = () => {
                                     )}m total)`}
                             </span>
                           </div>
-                          <span
-                            className="inline-block mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                            style={{ backgroundColor: `${selectedTheme.color.point}20`, color: selectedTheme.color.point }}
-                          >
-                             {timer.type}
-                          </span>
                         </div>
                       </div>
 
-                      {/* Card Action Footer */}
-                      <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
-                        <span
-                          className="text-xs font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
-                          style={{ color: selectedTheme.color.point }}
+                      <div className="flex shrink-0 items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={(e) => handleEditTimer(e, timer)}
+                          aria-label="Edit Timer"
+                          className="rounded-xl border p-2 opacity-70 transition-colors hover:opacity-100"
+                          style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
                         >
-                          <MdPlayArrow size={18} /> Start Timer
-                        </span>
-                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={(e) => handleEditTimer(e, timer)}
-                            aria-label="Edit Timer"
-                            className="p-2 rounded-xl transition-colors opacity-70 hover:opacity-100 border"
-                            style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
-                          >
-                            <MdEdit size={18} />
-                          </button>
-                          <button
-                            onClick={(e) => handleDeleteTimer(e, timer)}
-                            aria-label="Delete Timer"
-                            className="p-2 rounded-xl hover:bg-red-500/20 text-red-500 transition-colors opacity-75 hover:opacity-100"
-                          >
-                            <MdDeleteOutline size={18} />
-                          </button>
-                        </div>
+                          <MdEdit size={18} />
+                        </button>
+                        <button
+                          onClick={(e) => handleDeleteTimer(e, timer)}
+                          aria-label="Delete Timer"
+                          className="rounded-xl p-2 text-red-500 opacity-75 transition-colors hover:bg-red-500/20 hover:opacity-100"
+                        >
+                          <MdDeleteOutline size={18} />
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -396,7 +396,7 @@ const TimerListOverlay: React.FC = () => {
           </div>
 
           {/* Mobile Bottom Bar */}
-          <div className="sm:hidden p-4 border-t border-black/10 dark:border-white/10 bg-black/5">
+          <div className="sm:hidden p-4 border-t border-black/10 dark:border-white/10">
             <Button
               currentTheme={selectedTheme}
               onClick={() => openOverlay()}
@@ -410,7 +410,12 @@ const TimerListOverlay: React.FC = () => {
         </div>
       </div>
 
-      <TimerItemOverlay initialTimerData={targetTimer} onClose={closeOverlay} mode={mode} />
+      <TimerItemOverlay
+        initialTimerData={targetTimer}
+        initialTimerType={initialTimerType}
+        onClose={closeOverlay}
+        mode={mode}
+      />
     </>
   );
 };

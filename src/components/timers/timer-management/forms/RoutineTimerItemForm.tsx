@@ -1,16 +1,6 @@
-import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@headlessui/react';
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
-import { useEffect, useState } from 'react';
 import { UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form';
-import { HiOutlineDotsVertical } from 'react-icons/hi';
-import {
-    MdDeleteOutline,
-    MdDragIndicator,
-    MdExpandMore,
-    MdOutlineHourglassEmpty,
-    MdOutlinePalette,
-    MdOutlineTimer,
-} from 'react-icons/md';
+import { MdDeleteOutline, MdDragIndicator, MdExpandMore, MdOutlineHourglassEmpty, MdOutlinePalette, MdOutlineTimer } from 'react-icons/md';
 import { useAutoScroll } from '../../../../hooks/useAutoScroll';
 import { Theme } from '../../../../store/types/theme';
 import { getTimerPointColor } from '../../../../utils/themeUtils';
@@ -18,175 +8,152 @@ import { BaseTimerIcon } from '../../../icons';
 import TimeDisplay from '../../shared/displays/TimeDisplay';
 import PointColorSelector from '../fields/PointColorSelector';
 import TimeSelector from '../fields/TimeSelector';
+import TimerUnitSelector from '../fields/TimerUnitSelector';
 import { RoutineTimerFormData } from './RoutineTimerForm';
 
 type RoutineTimerItemFormProps = {
-    index: number;
-    mode: 'add' | 'edit';
-    currentTheme: Theme;
-    dragHandleProps?: DraggableProvidedDragHandleProps;
-    register: UseFormRegister<RoutineTimerFormData>;
-    setValue: UseFormSetValue<RoutineTimerFormData>;
-    watch: UseFormWatch<RoutineTimerFormData>;
-    onDelete: () => void;
+  index: number;
+  currentTheme: Theme;
+  dragHandleProps?: DraggableProvidedDragHandleProps;
+  register: UseFormRegister<RoutineTimerFormData>;
+  setValue: UseFormSetValue<RoutineTimerFormData>;
+  watch: UseFormWatch<RoutineTimerFormData>;
+  isOpen: boolean;
+  onToggle: () => void;
+  onDelete: () => void;
 };
 
 const RoutineTimerItemForm = ({
-    index,
-    mode,
-    currentTheme,
-    dragHandleProps,
-    register,
-    setValue,
-    watch,
-    onDelete,
+  index,
+  currentTheme,
+  dragHandleProps,
+  register,
+  setValue,
+  watch,
+  isOpen,
+  onToggle,
+  onDelete,
 }: RoutineTimerItemFormProps) => {
-    const item = watch(`items.${index}`);
-    const [isOpen, setIsOpen] = useState(false);
+  const item = watch(`items.${index}`);
+  const pointColor = getTimerPointColor(currentTheme, item.pointColorIndex);
+  const stepTheme = { ...currentTheme, color: { ...currentTheme.color, point: pointColor } };
+  const containerRef = useAutoScroll<HTMLDivElement>(isOpen);
+  const duration = `${item.time} ${item.isMinutes ? 'min' : 'sec'}`;
+  const alarm = item.interval > 0 ? `${item.interval}s alarm` : 'No alarm';
 
-    currentTheme.color.point = getTimerPointColor(currentTheme, item.pointColorIndex);
+  return (
+    <div ref={containerRef}>
+      <div
+        className="overflow-hidden rounded-2xl border shadow-soft transition-colors"
+        style={{
+          backgroundColor: '#FFFFFF',
+          borderColor: isOpen ? pointColor : 'rgba(0,0,0,0.09)',
+          color: '#1A1A1A',
+          boxShadow: isOpen ? `0 0 0 2px ${pointColor}30` : undefined,
+        }}
+      >
+        <div className="flex items-center gap-2 p-3 sm:p-3.5">
+          <button
+            type="button"
+            {...dragHandleProps}
+            aria-label={`Reorder step ${index + 1}`}
+            className="shrink-0 rounded-xl p-2 text-zinc-400 transition-colors hover:bg-black/5 hover:text-zinc-700 cursor-grab active:cursor-grabbing"
+          >
+            <MdDragIndicator size={20} />
+          </button>
 
-    const containerRef = useAutoScroll<HTMLDivElement>(isOpen);
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={isOpen}
+            className="flex min-w-0 flex-1 items-center gap-3 text-left"
+          >
+            <span
+              className="flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-black"
+              style={{ backgroundColor: `${pointColor}20`, color: pointColor }}
+            >
+              {index + 1}
+            </span>
+            <BaseTimerIcon size={28} time={item.time} stroke={pointColor} className="shrink-0" />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm font-bold">{item.title || `Timer ${index + 1}`}</span>
+              <span className="mt-0.5 block text-xs text-zinc-500">
+                {duration} · {alarm}
+              </span>
+            </span>
+            <MdExpandMore
+              size={22}
+              className={`shrink-0 text-zinc-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            />
+          </button>
 
-    return (
-        <div ref={containerRef}>
-            <div className="rounded-lg border border-gray-500 p-4">
-                <Disclosure defaultOpen={mode === 'add'}>
-                    {({ open }) => {
-                        useEffect(() => {
-                            setIsOpen(open);
-                        }, [open]);
-                        return (
-                            <>
-                                <DisclosureButton className="flex w-full items-center justify-between gap-8">
-                                    <div className="flex items-center gap-4">
-                                        <div {...dragHandleProps}>
-                                            <MdDragIndicator size={24} className="cursor-move" />
-                                        </div>
-                                        <BaseTimerIcon
-                                            size={24}
-                                            time={item.time}
-                                            stroke={getTimerPointColor(currentTheme, item.pointColorIndex)}
-                                            className="shrink-0"
-                                        />
-                                        <input
-                                            {...register(`items.${index}.title`)}
-                                            placeholder={`Timer ${index + 1}`}
-                                            className="w-full rounded border px-2 py-1 text-black"
-                                            onClick={(e) => e.stopPropagation()}
-                                            onKeyDown={(e) => e.stopPropagation()}
-                                            onBlur={(e) => {
-                                                const trimmedValue = e.target.value.trim();
-                                                setValue(`items.${index}.title`, trimmedValue);
-                                            }}
-                                        />
-                                        {!isOpen && (
-                                            <span className="shrink-0">{`${item.time} ${item.isMinutes ? 'min' : 'sec'}`}</span>
-                                        )}
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <MdExpandMore
-                                            size={24}
-                                            className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-                                        />
-                                        <MdDeleteOutline
-                                            size={24}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onDelete();
-                                            }}
-                                            className="shrink-0 rounded"
-                                        />
-                                    </div>
-                                </DisclosureButton>
-                                <Transition
-                                    enter="transition duration-100 ease-out"
-                                    enterFrom="transform scale-95 opacity-0"
-                                    enterTo="transform scale-100 opacity-100"
-                                    leave="transition duration-75 ease-out"
-                                    leaveFrom="transform scale-100 opacity-100"
-                                    leaveTo="transform scale-95 opacity-0"
-                                >
-                                    <DisclosurePanel className="flex flex-col gap-4 pl-11 pt-6">
-                                        <div className="flex items-center gap-4">
-                                            <MdOutlinePalette size={20} className="shrink-0" />
-                                            <PointColorSelector
-                                                colors={currentTheme.color.pointOptions}
-                                                selectedIndex={item.pointColorIndex}
-                                                onSelect={(colorIndex) =>
-                                                    setValue(`items.${index}.pointColorIndex`, colorIndex)
-                                                }
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <MdOutlineTimer size={20} className="shrink-0" />
-                                            <div className="flex flex-col gap-2">
-                                                <div className="flex items-center justify-center gap-4">
-                                                    <TimeDisplay
-                                                        className="pointer-events-none w-10 text-center text-xl"
-                                                        currentTime={item.time.toString()}
-                                                    />
-                                                    <div className="flex items-center gap-2">
-                                                        <input
-                                                            type="radio"
-                                                            name={`timeUnit-${index}`}
-                                                            onChange={() => setValue(`items.${index}.isMinutes`, true)}
-                                                            checked={item.isMinutes}
-                                                            className="form-radio"
-                                                            style={{ accentColor: currentTheme.color.point }}
-                                                        />
-                                                        <span>Min</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <input
-                                                            type="radio"
-                                                            name={`timeUnit-${index}`}
-                                                            onChange={() => setValue(`items.${index}.isMinutes`, false)}
-                                                            checked={!item.isMinutes}
-                                                            className="form-radio"
-                                                            style={{ accentColor: currentTheme.color.point }}
-                                                        />
-                                                        <span>Sec</span>
-                                                    </div>
-                                                </div>
-                                                <TimeSelector
-                                                    time={item.time}
-                                                    currentTheme={currentTheme}
-                                                    setTime={(newTime) => setValue(`items.${index}.time`, newTime)}
-                                                    text={item.title}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <MdOutlineHourglassEmpty size={20} className="shrink-0" />
-                                            <span>Alarm for</span>
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                {...register(`items.${index}.interval`, { valueAsNumber: true })}
-                                                className="w-16 rounded border px-2 py-1 text-black"
-                                                onClick={(e) => e.stopPropagation()}
-                                            />
-                                            <span>seconds</span>
-                                        </div>
-                                    </DisclosurePanel>
-                                </Transition>
-                            </>
-                        );
-                    }}
-                </Disclosure>
-            </div>
-
-            <div className="relative">
-                {!isOpen && (
-                    <div className="pointer-events-none absolute left-[calc(50%-10px)] top-0 flex items-center text-gray-400">
-                        <HiOutlineDotsVertical size={20} className="mr-2" />
-                        <span>{item.interval > 0 ? `${item.interval} sec Alarm` : 'No Alarm'}</span>
-                    </div>
-                )}
-            </div>
+          <button
+            type="button"
+            onClick={onDelete}
+            aria-label={`Delete step ${index + 1}`}
+            className="shrink-0 rounded-xl p-2 text-red-500 transition-colors hover:bg-red-500/10"
+          >
+            <MdDeleteOutline size={20} />
+          </button>
         </div>
-    );
+
+        {isOpen && (
+          <div className="space-y-5 border-t border-black/5 px-4 pb-5 pt-4 sm:px-5">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Step name</label>
+              <input
+                {...register(`items.${index}.title`)}
+                placeholder={`Step ${index + 1}`}
+                className="w-full rounded-xl border border-black/10 bg-white px-3.5 py-2.5 text-sm font-semibold text-zinc-900 outline-none transition-shadow focus:ring-2"
+                style={{ '--tw-ring-color': `${pointColor}66` } as React.CSSProperties}
+                onBlur={(event) => setValue(`items.${index}.title`, event.target.value.trim())}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-zinc-500">
+                <MdOutlineTimer className="text-base" /> Duration
+              </label>
+              <div className="flex flex-wrap items-center gap-3 rounded-xl bg-black/[0.03] p-3">
+                <TimeDisplay className="pointer-events-none w-12 text-center text-xl font-bold" currentTime={item.time.toString()} />
+                <div className="min-w-44 flex-1">
+                  <TimerUnitSelector
+                    isMinutes={item.isMinutes}
+                    onChange={(nextIsMinutes) => setValue(`items.${index}.isMinutes`, nextIsMinutes)}
+                  />
+                </div>
+              </div>
+              <TimeSelector time={item.time} currentTheme={stepTheme} setTime={(time) => setValue(`items.${index}.time`, time)} text={item.title} />
+            </div>
+
+            <div className="space-y-2">
+              <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-zinc-500">
+                <MdOutlinePalette className="text-base" /> Step color
+              </label>
+              <PointColorSelector
+                colors={currentTheme.color.pointOptions}
+                selectedIndex={item.pointColorIndex}
+                onSelect={(colorIndex) => setValue(`items.${index}.pointColorIndex`, colorIndex)}
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 rounded-xl bg-black/[0.03] p-3 text-sm text-zinc-700">
+              <MdOutlineHourglassEmpty size={20} style={{ color: pointColor }} />
+              <span className="font-semibold">Alarm for</span>
+              <input
+                type="number"
+                min="0"
+                {...register(`items.${index}.interval`, { valueAsNumber: true })}
+                className="w-16 rounded-lg border border-black/10 bg-white px-2 py-1.5 text-center font-bold text-zinc-900 outline-none focus:ring-2"
+                style={{ '--tw-ring-color': `${pointColor}66` } as React.CSSProperties}
+              />
+              <span>seconds</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default RoutineTimerItemForm;

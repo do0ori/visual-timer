@@ -16,7 +16,7 @@
     - **Drag** on the clock face or **click** to set your desired time quickly and easily.
 2. **Create Your Own Timers**:
     - Save your frequently used timers as **Basic Timers** in the **Timer List**.
-    - Combine multiple Basic Timers into a **Routine Timer** for sequential execution, perfect for workflows or workout routines.
+    - Combine multiple Basic Timers into a **Routine Timer** for sequential execution, then edit, reorder, or remove its individual steps.
 3. **Start the Timer**:
     - Press the **Play** button and watch the timer progress in real-time.
     - The timer will continue running even if you switch tabs or minimize the app.
@@ -42,7 +42,8 @@
     -   Create single timers with predefined durations and custom colors.
 -   **Routine Timer**
     -   Group multiple Basic Timers to run sequentially.
-    -   Customize **time intervals**, **start points**, and **repeat modes** (single or infinite loop).
+    -   Add, edit, reorder, or remove individual timer steps, including each step's duration, color, and alarm interval.
+    -   Start a routine once or enable repeat mode while it runs.
     -   **Use cases**:
         -   Pomodoro sessions (e.g., 50-minute focus + 10-minute break).
         -   Workout routines with different exercises and rest periods.
@@ -170,7 +171,9 @@ Contributions are welcome! To contribute:
 
 Feel free to open [issues](https://github.com/do0ori/visual-timer/issues) for bug reports or feature suggestions.
 
-## Release Roadmap
+## Release History
 
 - **v0.3.0:** Vite migration, focus stats, custom alarm audio, unified settings, updated themes, and version information.
-- **v0.4.0 (planned):** A dedicated Routine Timer editing UX update, focused on clearer step creation, editing, reordering, and deletion.
+- **v0.4.0:** A streamlined Routine Timer editing flow with clearer step creation, inline editing, reordering, deletion, context-aware timer creation, and compact timer cards.
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.

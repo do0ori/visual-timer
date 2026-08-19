@@ -2,14 +2,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlinePalette, MdOutlineTimer, MdTextFields } from 'react-icons/md';
-import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
+import { TIMER_TYPE } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useBaseTimerStore } from '../../../../store/baseTimerStore';
 import { useThemeStore } from '../../../../store/themeStore';
 import { BaseTimerData } from '../../../../store/types/timer';
 import Button from '../../../common/Button';
 import PointColorSelector from '../fields/PointColorSelector';
-import TimerTypeSelector from '../fields/TimerTypeSelector';
+import TimerUnitSelector from '../fields/TimerUnitSelector';
 import TimeSelector from '../fields/TimeSelector';
 
 type BaseTimerFormData = Omit<BaseTimerData, 'id' | 'type'>;
@@ -17,12 +17,10 @@ type BaseTimerFormData = Omit<BaseTimerData, 'id' | 'type'>;
 type BaseTimerFormProps = {
   initialData?: BaseTimerData | null;
   mode: 'add' | 'edit';
-  timerType: TimerType;
-  setTimerType: React.Dispatch<React.SetStateAction<TimerType>>;
   close: () => void;
 };
 
-const BaseTimerForm: React.FC<BaseTimerFormProps> = ({ initialData, mode, timerType, setTimerType, close }) => {
+const BaseTimerForm: React.FC<BaseTimerFormProps> = ({ initialData, mode, close }) => {
   const { selectedTheme } = useThemeStore();
   const { defaultPointColorIndex } = useTheme();
   const { addTimer, updateTimer } = useBaseTimerStore();
@@ -59,12 +57,6 @@ const BaseTimerForm: React.FC<BaseTimerFormProps> = ({ initialData, mode, timerT
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full space-y-6">
-      {mode === 'add' && (
-        <div className="max-w-md mx-auto w-full">
-          <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />
-        </div>
-      )}
-
       {/* 2-Column Responsive Form Layout on Desktop */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center flex-1">
         {/* Left Column: Interactive Visual Dial Preview */}
@@ -107,30 +99,7 @@ const BaseTimerForm: React.FC<BaseTimerFormProps> = ({ initialData, mode, timerT
             <label className="text-xs font-bold uppercase tracking-wider opacity-75 flex items-center gap-1.5">
               <MdOutlineTimer className="text-base" /> Time Duration & Unit
             </label>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setValue('isMinutes', true)}
-                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-                  isMinutes
-                    ? 'bg-white text-gray-900 shadow-soft'
-                    : 'bg-black/5 dark:bg-white/10 text-current opacity-70'
-                }`}
-              >
-                Minutes (min)
-              </button>
-              <button
-                type="button"
-                onClick={() => setValue('isMinutes', false)}
-                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-                  !isMinutes
-                    ? 'bg-white text-gray-900 shadow-soft'
-                    : 'bg-black/5 dark:bg-white/10 text-current opacity-70'
-                }`}
-              >
-                Seconds (sec)
-              </button>
-            </div>
+            <TimerUnitSelector isMinutes={isMinutes} onChange={(nextIsMinutes) => setValue('isMinutes', nextIsMinutes)} />
 
             {/* Quick time chips */}
             <div className="flex flex-wrap gap-1.5 pt-1">

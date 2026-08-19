@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSettingsStore } from '../../store/settingsStore';
 import { Theme } from '../../store/types/theme';
 import { getAdjustedColor } from '../../utils/colorUtils';
@@ -24,6 +24,17 @@ const TimerFace: React.FC<TimerFaceProps> = ({
 }) => {
   const { isClockwise } = useSettingsStore();
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const dialCircleRef = useRef<SVGCircleElement>(null);
+
+  useEffect(() => {
+    const dialCircle = dialCircleRef.current;
+    if (!dialCircle || !handleDragEvent) return;
+
+    const preventTouchScroll = (event: TouchEvent) => event.preventDefault();
+    dialCircle.addEventListener('touchmove', preventTouchScroll, { passive: false });
+
+    return () => dialCircle.removeEventListener('touchmove', preventTouchScroll);
+  }, [handleDragEvent]);
 
   const fullProgress = 2 * Math.PI * progressRadius;
 
@@ -48,6 +59,7 @@ const TimerFace: React.FC<TimerFaceProps> = ({
       <svg className="size-full" viewBox="-50 -50 100 100">
         {/* Timer Background */}
         <circle
+          ref={dialCircleRef}
           cx={0}
           cy={0}
           r={baseRadius}
@@ -57,11 +69,20 @@ const TimerFace: React.FC<TimerFaceProps> = ({
           onMouseDown={() => setIsDragging(true)}
           onMouseUp={() => setIsDragging(false)}
           onMouseMove={handleMouseMove}
-          onTouchStart={() => setIsDragging(true)}
+          onTouchStart={(e) => {
+            if (!handleDragEvent) return;
+            e.preventDefault();
+            setIsDragging(true);
+          }}
           onTouchEnd={() => setIsDragging(false)}
-          onTouchMove={handleMouseMove}
+          onTouchCancel={() => setIsDragging(false)}
+          onTouchMove={(e) => {
+            if (!handleDragEvent) return;
+            e.preventDefault();
+            handleMouseMove(e);
+          }}
           onClick={handleDragEvent}
-          style={{ pointerEvents: 'visiblePainted' }}
+          style={{ pointerEvents: 'visiblePainted', touchAction: handleDragEvent ? 'none' : 'auto' }}
           className="relative cursor-pointer"
         />
         {/* Clock Ticks */}
