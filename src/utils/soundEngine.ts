@@ -18,13 +18,13 @@ class SoundEngine {
   }
 
   // 1. Zen Bell (Rich meditative chime with harmonic overtones)
-  playZenBell(volume = 1) {
+  playZenBell(volume = 1): () => void {
     const ctx = this.getContext();
     const now = ctx.currentTime;
     const frequencies = [528, 1056, 1584, 2112]; // Solfeggio Love frequency harmonics
     const gains = [0.6, 0.25, 0.1, 0.05];
 
-    frequencies.forEach((freq, i) => {
+    const oscillators = frequencies.map((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
@@ -38,16 +38,19 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 3.0);
+      return osc;
     });
+
+    return () => oscillators.forEach((osc) => osc.stop());
   }
 
   // 2. Digital Chime (Upbeat marimba melody)
-  playDigitalChime(volume = 1) {
+  playDigitalChime(volume = 1): () => void {
     const ctx = this.getContext();
     const now = ctx.currentTime;
     const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6 arpeggio
 
-    notes.forEach((freq, i) => {
+    const oscillators = notes.map((freq, i) => {
       const startTime = now + i * 0.12;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -63,14 +66,18 @@ class SoundEngine {
 
       osc.start(startTime);
       osc.stop(startTime + 1.2);
+      return osc;
     });
+
+    return () => oscillators.forEach((osc) => osc.stop());
   }
 
   // 3. Classic Alarm Beep
-  playClassicAlarm(volume = 1) {
+  playClassicAlarm(volume = 1): () => void {
     const ctx = this.getContext();
     const now = ctx.currentTime;
 
+    const oscillators: OscillatorNode[] = [];
     for (let b = 0; b < 3; b++) {
       const startTime = now + b * 0.25;
       const osc = ctx.createOscillator();
@@ -87,16 +94,19 @@ class SoundEngine {
 
       osc.start(startTime);
       osc.stop(startTime + 0.15);
+      oscillators.push(osc);
     }
+
+    return () => oscillators.forEach((osc) => osc.stop());
   }
 
   // 4. Gentle Gong (Deep calming gong)
-  playGentleGong(volume = 1) {
+  playGentleGong(volume = 1): () => void {
     const ctx = this.getContext();
     const now = ctx.currentTime;
     const frequencies = [220, 440, 660, 880];
 
-    frequencies.forEach((freq, i) => {
+    const oscillators = frequencies.map((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
@@ -110,22 +120,29 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 4.0);
+      return osc;
     });
+
+    return () => oscillators.forEach((osc) => osc.stop());
   }
 
   // 5. Play Audio File or User Uploaded Sound
   playAudioUrl(url: string, volume = 1, loop = false): () => void {
     try {
       const audio = new Audio(url);
+      let stopped = false;
+      let stopFallback: (() => void) | undefined;
       audio.volume = Math.max(0, Math.min(1, volume));
       audio.loop = loop;
       void audio.play().catch((err) => {
         console.debug('Audio play fallback to synth:', err);
-        this.playZenBell(volume);
+        if (!stopped) stopFallback = this.playZenBell(volume);
       });
       return () => {
+        stopped = true;
         audio.pause();
         audio.currentTime = 0;
+        stopFallback?.();
       };
     } catch {
       this.playZenBell(volume);
@@ -154,24 +171,20 @@ export const PRESET_SOUNDS: SoundOption[] = [
   { id: 'beep-beep', label: '🔊 Beep Beep Alarm', type: 'audio', description: 'Crisp audible alarm', value: '/visual-timer/audios/beep-beep.mp3' },
 ];
 
-export function playSound(soundId: string, volume = 1, mute = false): (() => void) | void {
-  if (mute || volume <= 0) return;
+export function playSound(soundId: string, volume = 1, mute = false): (() => void) | undefined {
+  if (mute || volume <= 0) return undefined;
 
   if (soundId === 'synth:zen-bell' || soundId === 'zen-bell') {
-    soundEngine.playZenBell(volume);
-    return;
+    return soundEngine.playZenBell(volume);
   }
   if (soundId === 'synth:digital-chime' || soundId === 'digital-chime') {
-    soundEngine.playDigitalChime(volume);
-    return;
+    return soundEngine.playDigitalChime(volume);
   }
   if (soundId === 'synth:gentle-gong' || soundId === 'gentle-gong') {
-    soundEngine.playGentleGong(volume);
-    return;
+    return soundEngine.playGentleGong(volume);
   }
   if (soundId === 'synth:classic-beep' || soundId === 'classic-beep') {
-    soundEngine.playClassicAlarm(volume);
-    return;
+    return soundEngine.playClassicAlarm(volume);
   }
 
   // Audio file path or data URL
