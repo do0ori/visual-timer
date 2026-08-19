@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { IoIosShareAlt, IoMdFlame, IoMdTime } from 'react-icons/io';
-import { MdCheckCircle, MdDeleteOutline, MdTrendingUp } from 'react-icons/md';
+import React, { useState } from 'react';
+import { IoIosShareAlt } from 'react-icons/io';
+import { MdCheckCircle, MdDeleteOutline } from 'react-icons/md';
 import { useStatsStore } from '../../../store/statsStore';
 import { useThemeStore } from '../../../store/themeStore';
 import { getCardSurface } from '../../../utils/colorUtils';
@@ -11,8 +11,6 @@ const StatsSettings: React.FC = () => {
   const { sessions, getTodayMinutes, getWeeklyMinutes, getStreakDays, clearHistory } = useStatsStore();
 
   const [isGeneratingShare, setIsGeneratingShare] = useState(false);
-  const shareCardRef = useRef<HTMLDivElement>(null);
-
   const todayMinutes = getTodayMinutes();
   const weeklyMinutes = getWeeklyMinutes();
   const streakDays = getStreakDays();
@@ -156,12 +154,9 @@ const StatsSettings: React.FC = () => {
           className="flex flex-col items-center justify-center p-3.5 sm:p-4 rounded-2xl border shadow-soft transition-transform hover:scale-[1.02]"
           style={{ backgroundColor: '#FFFFFF', borderColor: `${selectedTheme.color.point}35`, color: '#1A1A1A' }}
         >
-          <div
-            className="p-2 rounded-xl mb-1.5"
-            style={{ backgroundColor: `${selectedTheme.color.point}15`, color: selectedTheme.color.point }}
-          >
-            <IoMdTime size={22} />
-          </div>
+          <span className="mb-1.5 text-2xl" role="img" aria-label="Timer">
+            ⏱️
+          </span>
           <span className="text-xl sm:text-2xl font-black font-display" style={{ color: '#1A1A1A' }}>
             {formatHoursMins(todayMinutes)}
           </span>
@@ -175,12 +170,9 @@ const StatsSettings: React.FC = () => {
           className="flex flex-col items-center justify-center p-3.5 sm:p-4 rounded-2xl border shadow-soft transition-transform hover:scale-[1.02]"
           style={{ backgroundColor: '#FFFFFF', borderColor: `${selectedTheme.color.point}35`, color: '#1A1A1A' }}
         >
-          <div
-            className="p-2 rounded-xl mb-1.5"
-            style={{ backgroundColor: `${selectedTheme.color.point}15`, color: selectedTheme.color.point }}
-          >
-            <IoMdFlame size={22} />
-          </div>
+          <span className="mb-1.5 text-2xl" role="img" aria-label="Fire">
+            🔥
+          </span>
           <span className="text-xl sm:text-2xl font-black font-display" style={{ color: '#1A1A1A' }}>
             {streakDays}
           </span>
@@ -194,12 +186,9 @@ const StatsSettings: React.FC = () => {
           className="flex flex-col items-center justify-center p-3.5 sm:p-4 rounded-2xl border shadow-soft transition-transform hover:scale-[1.02]"
           style={{ backgroundColor: '#FFFFFF', borderColor: `${selectedTheme.color.point}35`, color: '#1A1A1A' }}
         >
-          <div
-            className="p-2 rounded-xl mb-1.5"
-            style={{ backgroundColor: `${selectedTheme.color.point}15`, color: selectedTheme.color.point }}
-          >
-            <MdTrendingUp size={22} />
-          </div>
+          <span className="mb-1.5 text-2xl" role="img" aria-label="Chart increasing">
+            📈
+          </span>
           <span className="text-xl sm:text-2xl font-black font-display" style={{ color: '#1A1A1A' }}>
             {formatHoursMins(weeklyMinutes)}
           </span>
@@ -209,45 +198,15 @@ const StatsSettings: React.FC = () => {
         </div>
       </div>
 
-      {/* Share Card Generator Studio */}
-      <div className="space-y-3">
-        <span className="text-xs font-bold uppercase tracking-wider opacity-75">
-          Share Achievement Card to SNS
-        </span>
-        <div
-          ref={shareCardRef}
-          className="p-6 rounded-3xl shadow-dial border border-white/40 flex flex-col items-center text-center space-y-4 max-w-md mx-auto"
-          style={{ backgroundColor: '#FFFFFF', color: '#1A1A1A' }}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-xl">✨</span>
-            <h4 className="font-bold text-base font-display" style={{ color: selectedTheme.color.point }}>
-              Daily Focus Card
-            </h4>
-          </div>
-
-          <div className="py-1">
-            <div className="text-4xl font-black font-display tracking-tight text-gray-900">
-              {formatHoursMins(todayMinutes)}
-            </div>
-            <p className="text-xs text-gray-500 mt-1 font-medium">Total focus logged today</p>
-          </div>
-
-          <div className="w-full bg-gray-50 rounded-2xl p-3 text-xs italic text-gray-600">
-            "{selectedTheme.text.replace(/\n/g, ' ')}"
-          </div>
-
-          <Button
-            currentTheme={selectedTheme}
-            onClick={handleShareCard}
-            disabled={isGeneratingShare}
-            className="w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-soft"
-          >
-            <IoIosShareAlt size={18} />
-            <span>{isGeneratingShare ? 'Generating Card...' : 'Save & Share Image Card'}</span>
-          </Button>
-        </div>
-      </div>
+      <Button
+        currentTheme={selectedTheme}
+        onClick={handleShareCard}
+        disabled={isGeneratingShare}
+        className="w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-soft"
+      >
+        <IoIosShareAlt size={18} />
+        <span>{isGeneratingShare ? 'Generating Card...' : 'Save & Share Image Card'}</span>
+      </Button>
 
       {/* Activity History */}
       <div className="space-y-3">
