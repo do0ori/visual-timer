@@ -8,7 +8,7 @@ import ThemeButton from '../../common/ThemeButton';
 import ThemeOverlay from '../ThemeOverlay';
 
 const CustomThemeSelector: React.FC = () => {
-  const { selectedTheme, compColor, themes, setTheme, removeTheme } = useThemeStore();
+  const { selectedTheme, themes, setTheme, removeTheme } = useThemeStore();
   const [targetTheme, setTargetTheme] = useState<Theme | null>(null);
   const [mode, setMode] = useState<'add' | 'edit'>('add');
 
@@ -41,11 +41,11 @@ const CustomThemeSelector: React.FC = () => {
 
       {customThemes.length === 0 ? (
         <div
-          className="p-6 rounded-2xl border-2 border-dashed text-center space-y-2 w-full"
+          className="p-8 text-center rounded-2xl border border-dashed space-y-2 w-full"
           style={{
-            backgroundColor: `${selectedTheme.color.sub}20`,
-            borderColor: `${selectedTheme.color.point}40`,
-            color: compColor,
+            backgroundColor: '#FFFFFF',
+            borderColor: 'rgba(0,0,0,0.12)',
+            color: '#1A1A1A',
           }}
         >
           <p className="text-xs opacity-80">No custom themes created yet.</p>
