@@ -169,3 +169,8 @@ Contributions are welcome! To contribute:
 3. Submit a **pull request** with a clear description of your changes.
 
 Feel free to open [issues](https://github.com/do0ori/visual-timer/issues) for bug reports or feature suggestions.
+
+## Release Roadmap
+
+- **v0.3.0:** Vite migration, focus stats, custom alarm audio, unified settings, updated themes, and version information.
+- **v0.4.0 (planned):** A dedicated Routine Timer editing UX update, focused on clearer step creation, editing, reordering, and deletion.
