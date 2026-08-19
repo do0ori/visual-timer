@@ -60,6 +60,7 @@ const Dropdown = <T,>({
                 style={{
                   backgroundColor: '#FFFFFF',
                   borderColor: buttonBorderColor || `${currentTheme.color.point}60`,
+                  color: '#1A1A1A',
                 }}
               >
                 {customHeader ?? (
