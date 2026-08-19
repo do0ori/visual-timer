@@ -58,7 +58,7 @@ const Dropdown = <T,>({
                   open ? 'ring-2' : ''
                 }`}
                 style={{
-                  backgroundColor: `${currentTheme.color.sub}25`,
+                  backgroundColor: '#FFFFFF',
                   borderColor: buttonBorderColor || `${currentTheme.color.point}60`,
                 }}
               >
