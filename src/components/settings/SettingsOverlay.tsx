@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { BiSolidBellRing } from 'react-icons/bi';
 import { IoMdClose, IoMdColorPalette, IoMdInformationCircle } from 'react-icons/io';
 import { MdOutlineBarChart, MdOutlineTimer } from 'react-icons/md';
 import { useOverlay } from '../../hooks/useOverlay';
@@ -10,7 +9,7 @@ import StatsSettings from './sections/StatsSettings';
 import ThemeSettings from './sections/ThemeSettings';
 import TimerSettings from './sections/TimerSettings';
 
-type SettingsTab = 'stats' | 'theme' | 'timer' | 'sound' | 'about';
+type SettingsTab = 'stats' | 'theme' | 'timer' | 'about';
 
 const SettingsOverlay: React.FC = () => {
   const { selectedTheme, compColor } = useThemeStore();
@@ -22,8 +21,7 @@ const SettingsOverlay: React.FC = () => {
   const tabs: { id: SettingsTab; label: string; shortLabel: string; icon: React.ReactNode }[] = [
     { id: 'stats', label: 'Focus Stats & Share', shortLabel: 'Stats', icon: <MdOutlineBarChart size={20} /> },
     { id: 'theme', label: 'Theme & Colors', shortLabel: 'Theme', icon: <IoMdColorPalette size={20} /> },
-    { id: 'timer', label: 'Timer & Direction', shortLabel: 'Timer', icon: <MdOutlineTimer size={20} /> },
-    { id: 'sound', label: 'Sound & Volume', shortLabel: 'Sound', icon: <BiSolidBellRing size={20} /> },
+    { id: 'timer', label: 'Timer & Sound', shortLabel: 'Timer', icon: <MdOutlineTimer size={20} /> },
     { id: 'about', label: 'About & Developer', shortLabel: 'About', icon: <IoMdInformationCircle size={20} /> },
   ];
 
@@ -51,8 +49,8 @@ const SettingsOverlay: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Tab Bar (Full Width 5-Column Grid on Mobile) */}
-        <div className="md:hidden grid grid-cols-5 p-1.5 gap-1 border-b border-black/5 dark:border-white/5 bg-black/5">
+        {/* Mobile Tab Bar */}
+        <div className="md:hidden grid grid-cols-4 p-1.5 gap-1 border-b border-black/5 dark:border-white/5 bg-black/5">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -118,19 +116,10 @@ const SettingsOverlay: React.FC = () => {
             {activeTab === 'timer' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold font-display">Timer Behavior</h3>
-                  <p className="text-xs opacity-70 mt-0.5">Customize dial direction and counting preferences.</p>
+                  <h3 className="text-lg sm:text-xl font-bold font-display">Timer & Sound</h3>
+                  <p className="text-xs opacity-70 mt-0.5">Customize timer behavior, alarm sounds, and volume.</p>
                 </div>
                 <TimerSettings />
-              </div>
-            )}
-
-            {activeTab === 'sound' && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold font-display">Alarm & Audio</h3>
-                  <p className="text-xs opacity-70 mt-0.5">Choose synth tones, adjust volume, or upload custom alarm files.</p>
-                </div>
                 <AlarmSettings />
               </div>
             )}

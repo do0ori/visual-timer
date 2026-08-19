@@ -8,7 +8,7 @@ import Dropdown from '../../common/Dropdown';
 import ListItem from '../../common/ListItem';
 
 const AlarmSelector: React.FC = () => {
-  const { selectedTheme, compColor } = useThemeStore();
+  const { selectedTheme } = useThemeStore();
   const { selectedAlarm, setSelectedAlarm, volume, mute } = useSettingsStore();
   const [isPlaying, setIsPlaying] = useState(false);
   const stopAudioRef = useRef<(() => void) | void>(undefined);
@@ -74,19 +74,15 @@ const AlarmSelector: React.FC = () => {
   const alarmSelector = (
     <div className="flex w-full flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="text-lg font-bold">Alarm Sound</span>
+        <span className="text-base sm:text-lg font-bold whitespace-nowrap">Alarm Sound</span>
         <div className="flex items-center gap-2">
           {/* Custom Sound Upload Button */}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="btn-tactile px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border shadow-xs transition-transform active:scale-95"
-            style={{
-              backgroundColor: `${selectedTheme.color.sub}30`,
-              borderColor: `${selectedTheme.color.point}45`,
-              color: compColor,
-            }}
+            className="btn-tactile px-3 py-2 rounded-xl text-xs font-semibold text-white shadow-soft flex items-center gap-1.5 transition-transform active:scale-95"
+            style={{ backgroundColor: selectedTheme.color.point }}
           >
-            <IoMdCloudUpload size={16} style={{ color: selectedTheme.color.point }} /> Upload Audio
+            <IoMdCloudUpload size={18} /> Upload Audio
           </button>
           <input
             ref={fileInputRef}
@@ -114,6 +110,7 @@ const AlarmSelector: React.FC = () => {
         onChange={handleAlarmChange}
         currentTheme={selectedTheme}
         buttonBorderColor={selectedTheme.color.point}
+        hideSubLabelOnMobile
       />
     </div>
   );

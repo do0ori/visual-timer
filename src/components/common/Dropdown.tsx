@@ -21,6 +21,7 @@ type DropdownProps<T> = {
   placeholder?: string;
   buttonBorderColor?: string;
   onToggle?: (isOpen: boolean) => void;
+  hideSubLabelOnMobile?: boolean;
 };
 
 const Dropdown = <T,>({
@@ -32,6 +33,7 @@ const Dropdown = <T,>({
   placeholder = 'Select an option',
   buttonBorderColor,
   onToggle,
+  hideSubLabelOnMobile = false,
 }: DropdownProps<T>) => {
   const selectedItemRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -105,7 +107,13 @@ const Dropdown = <T,>({
                         <span className="text-left">{option.label}</span>
                       </div>
                       {option.subLabel && (
-                        <span className="shrink-0 text-xs opacity-60 font-normal">{option.subLabel}</span>
+                        <span
+                          className={`shrink-0 text-xs opacity-60 font-normal ${
+                            hideSubLabelOnMobile ? 'hidden sm:inline' : ''
+                          }`}
+                        >
+                          {option.subLabel}
+                        </span>
                       )}
                     </button>
                   ))}
