@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IoMdAdd, IoMdClose, IoMdFlash, IoMdSearch } from 'react-icons/io';
 import { MdDeleteOutline, MdEdit, MdExpandMore, MdHourglassTop, MdPlayArrow } from 'react-icons/md';
 import { getCardSurface, getTextColor } from '../../../utils/colorUtils';
-import { TIMER_TYPE, TIMER_TYPE_CONFIG } from '../../../config/timer/type';
+import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/type';
 import { useOverlay } from '../../../hooks/useOverlay';
 import { useBaseTimerStore } from '../../../store/baseTimerStore';
 import { useRoutineTimerStore } from '../../../store/routineTimerStore';
@@ -75,7 +75,7 @@ const QUICK_TEMPLATES: {
   {
     title: '☕ Power Nap 15m',
     desc: '15 minutes quick recharge',
-    badge: 'Single',
+    badge: 'Basic',
     badgeColor: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
     create: (idx) => ({
       id: `base_nap_${Date.now()}`,
@@ -96,6 +96,7 @@ const TimerListOverlay: React.FC = () => {
 
   const [targetTimer, setTargetTimer] = useState<TimerData | null>(null);
   const [mode, setMode] = useState<'add' | 'edit'>('add');
+  const [initialTimerType, setInitialTimerType] = useState<TimerType>(TIMER_TYPE.BASE);
   const [activeTab, setActiveTab] = useState<'all' | 'base' | 'routine'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isTemplatesOpen, setIsTemplatesOpen] = useState(true);
@@ -126,6 +127,7 @@ const TimerListOverlay: React.FC = () => {
   const openOverlay = (timer?: TimerData, nextMode: 'add' | 'edit' = timer ? 'edit' : 'add') => {
     setTargetTimer(timer || null);
     setMode(nextMode);
+    setInitialTimerType(activeTab === 'routine' ? TIMER_TYPE.ROUTINE : TIMER_TYPE.BASE);
     window.location.hash = 'timer-list&timer-item';
   };
 
@@ -211,23 +213,31 @@ const TimerListOverlay: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               {/* Category Segmented Control */}
               <div
-                className="w-full sm:w-auto grid grid-cols-3 sm:flex rounded-2xl p-1"
+                className="relative grid w-full grid-cols-3 rounded-2xl p-1 sm:w-[17.5rem]"
                 style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.07)' }}
               >
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-xl bg-white/95 shadow-sm transition-transform duration-200 ease-out ${
+                    activeTab === 'all'
+                      ? 'translate-x-0'
+                      : activeTab === 'base'
+                        ? 'translate-x-full'
+                        : 'translate-x-[200%]'
+                  }`}
+                />
                 {(['all', 'base', 'routine'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className="py-2 px-3 sm:px-4 text-xs sm:text-sm rounded-xl transition-all text-center"
+                    className="relative z-10 rounded-xl px-3 py-2 text-center text-xs transition-colors sm:px-4 sm:text-sm"
                     style={{
-                      backgroundColor: activeTab === tab ? 'rgba(255,255,255,0.95)' : 'transparent',
                       color: activeTab === tab ? selectedTheme.color.point : compColor,
                       fontWeight: activeTab === tab ? 700 : 500,
                       opacity: activeTab === tab ? 1 : 0.65,
-                      boxShadow: activeTab === tab ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
                     }}
                   >
-                    {tab === 'all' ? 'All' : tab === 'base' ? 'Single' : 'Routines'}
+                    {tab === 'all' ? 'All' : tab === 'base' ? 'Basic' : 'Routine'}
                   </button>
                 ))}
               </div>
@@ -362,7 +372,7 @@ const TimerListOverlay: React.FC = () => {
                             className="inline-block mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
                             style={{ backgroundColor: `${selectedTheme.color.point}20`, color: selectedTheme.color.point }}
                           >
-                             {timer.type}
+                            {TIMER_TYPE_CONFIG[timer.type].label}
                           </span>
                         </div>
                       </div>
@@ -415,7 +425,12 @@ const TimerListOverlay: React.FC = () => {
         </div>
       </div>
 
-      <TimerItemOverlay initialTimerData={targetTimer} onClose={closeOverlay} mode={mode} />
+      <TimerItemOverlay
+        initialTimerData={targetTimer}
+        initialTimerType={initialTimerType}
+        onClose={closeOverlay}
+        mode={mode}
+      />
     </>
   );
 };

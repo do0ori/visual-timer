@@ -6,24 +6,28 @@ import { useThemeStore } from '../../../store/themeStore';
 import { BaseTimerData, RoutineTimerData, TimerData } from '../../../store/types/timer';
 import BaseTimerForm from './forms/BaseTimerForm';
 import RoutineTimerForm from './forms/RoutineTimerForm';
+import TimerTypeSelector from './fields/TimerTypeSelector';
 
 type TimerItemOverlayProps = {
   initialTimerData: TimerData | null;
+  initialTimerType?: TimerType;
   mode: 'add' | 'edit';
   onClose: () => void;
 };
 
-const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, mode, onClose }) => {
+const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, initialTimerType, mode, onClose }) => {
   const { selectedTheme, compColor } = useThemeStore();
-  const [timerType, setTimerType] = useState<TimerType>(initialTimerData?.type || TIMER_TYPE.BASE);
+  const [timerType, setTimerType] = useState<TimerType>(
+    initialTimerData?.type || initialTimerType || TIMER_TYPE.BASE
+  );
 
   const { isOpen, close } = useOverlay('timer-item', onClose);
 
   useEffect(() => {
     if (isOpen) {
-      setTimerType(initialTimerData?.type || TIMER_TYPE.BASE);
+      setTimerType(initialTimerData?.type || initialTimerType || TIMER_TYPE.BASE);
     }
-  }, [isOpen, initialTimerData]);
+  }, [isOpen, initialTimerData, initialTimerType]);
 
   if (!isOpen) return null;
 
@@ -55,12 +59,16 @@ const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, m
 
         {/* Content Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 no-scrollbar">
+          {mode === 'add' && (
+            <div className="max-w-md mx-auto mb-6 w-full">
+              <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />
+            </div>
+          )}
+
           {timerType === TIMER_TYPE.BASE && (
             <BaseTimerForm
               initialData={initialTimerData as BaseTimerData}
               mode={mode}
-              timerType={timerType}
-              setTimerType={setTimerType}
               close={close}
             />
           )}
@@ -69,8 +77,6 @@ const TimerItemOverlay: React.FC<TimerItemOverlayProps> = ({ initialTimerData, m
             <RoutineTimerForm
               initialData={initialTimerData as RoutineTimerData}
               mode={mode}
-              timerType={timerType}
-              setTimerType={setTimerType}
               close={close}
             />
           )}

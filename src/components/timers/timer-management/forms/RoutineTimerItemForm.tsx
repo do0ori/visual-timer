@@ -8,6 +8,7 @@ import { BaseTimerIcon } from '../../../icons';
 import TimeDisplay from '../../shared/displays/TimeDisplay';
 import PointColorSelector from '../fields/PointColorSelector';
 import TimeSelector from '../fields/TimeSelector';
+import TimerUnitSelector from '../fields/TimerUnitSelector';
 import { RoutineTimerFormData } from './RoutineTimerForm';
 
 type RoutineTimerItemFormProps = {
@@ -115,26 +116,12 @@ const RoutineTimerItemForm = ({
               </label>
               <div className="flex flex-wrap items-center gap-3 rounded-xl bg-black/[0.03] p-3">
                 <TimeDisplay className="pointer-events-none w-12 text-center text-xl font-bold" currentTime={item.time.toString()} />
-                <label className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
-                  <input
-                    type="radio"
-                    name={`timeUnit-${index}`}
-                    onChange={() => setValue(`items.${index}.isMinutes`, true)}
-                    checked={item.isMinutes}
-                    style={{ accentColor: pointColor }}
+                <div className="min-w-44 flex-1">
+                  <TimerUnitSelector
+                    isMinutes={item.isMinutes}
+                    onChange={(nextIsMinutes) => setValue(`items.${index}.isMinutes`, nextIsMinutes)}
                   />
-                  Min
-                </label>
-                <label className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
-                  <input
-                    type="radio"
-                    name={`timeUnit-${index}`}
-                    onChange={() => setValue(`items.${index}.isMinutes`, false)}
-                    checked={!item.isMinutes}
-                    style={{ accentColor: pointColor }}
-                  />
-                  Sec
-                </label>
+                </div>
               </div>
               <TimeSelector time={item.time} currentTheme={stepTheme} setTime={(time) => setValue(`items.${index}.time`, time)} text={item.title} />
             </div>

@@ -3,14 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 import { MdOutlinePalette, MdTextFields } from 'react-icons/md';
-import { TIMER_TYPE, TimerType } from '../../../../config/timer/type';
+import { TIMER_TYPE } from '../../../../config/timer/type';
 import { useTheme } from '../../../../hooks/useTheme';
 import { useRoutineTimerStore } from '../../../../store/routineTimerStore';
 import { useThemeStore } from '../../../../store/themeStore';
 import { RoutineTimerData } from '../../../../store/types/timer';
 import Button from '../../../common/Button';
 import PointColorSelector from '../fields/PointColorSelector';
-import TimerTypeSelector from '../fields/TimerTypeSelector';
 import RoutineTimerItemForm from './RoutineTimerItemForm';
 
 export type RoutineTimerFormData = Omit<RoutineTimerData, 'id' | 'type'>;
@@ -18,12 +17,10 @@ export type RoutineTimerFormData = Omit<RoutineTimerData, 'id' | 'type'>;
 type RoutineTimerFormProps = {
   initialData?: RoutineTimerData | null;
   mode: 'add' | 'edit';
-  timerType: TimerType;
-  setTimerType: React.Dispatch<React.SetStateAction<TimerType>>;
   close: () => void;
 };
 
-const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, timerType, setTimerType, close }) => {
+const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, close }) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [expandedStepId, setExpandedStepId] = useState<string | null>(null);
   const { selectedThemeCopy, defaultPointColorIndex } = useTheme();
@@ -124,12 +121,6 @@ const RoutineTimerForm: React.FC<RoutineTimerFormProps> = ({ initialData, mode, 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full space-y-6">
-      {mode === 'add' && (
-        <div className="max-w-md mx-auto w-full">
-          <TimerTypeSelector selectedType={timerType} onTypeSelect={setTimerType} />
-        </div>
-      )}
-
       {/* Routine Metadata & Summary Header */}
       <div className="p-4 sm:p-5 rounded-2xl bg-white/40 dark:bg-black/20 backdrop-blur-md border border-white/30 shadow-soft space-y-4">
         <div className="space-y-4">
