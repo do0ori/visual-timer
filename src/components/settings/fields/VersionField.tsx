@@ -1,10 +1,9 @@
 import { IoMdInformationCircleOutline } from 'react-icons/io';
+import { MdOpenInNew } from 'react-icons/md';
 import packageMetadata from '../../../../package.json';
-import { useThemeStore } from '../../../store/themeStore';
 import ListItem from '../../common/ListItem';
 
 const VersionField: React.FC = () => {
-    const { selectedTheme } = useThemeStore();
     const versionIcon = <IoMdInformationCircleOutline size={24} className="size-full" />;
 
     const versionContent = (
@@ -13,19 +12,20 @@ const VersionField: React.FC = () => {
                 <div className="text-lg">Version</div>
                 <p className="text-xs opacity-70">v{packageMetadata.version}</p>
             </div>
-            <a
-                href="https://github.com/do0ori/visual-timer/releases"
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs font-bold hover:underline"
-                style={{ color: selectedTheme.color.point }}
-            >
-                Release notes
-            </a>
+            <MdOpenInNew size={18} className="shrink-0 opacity-60" aria-hidden="true" />
         </div>
     );
 
-    return <ListItem icon={versionIcon} content={versionContent} />;
+    return (
+        <a
+            href="https://github.com/do0ori/visual-timer/releases"
+            target="_blank"
+            rel="noreferrer"
+            className="block -m-3 rounded-2xl p-3 cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2"
+        >
+            <ListItem icon={versionIcon} content={versionContent} />
+        </a>
+    );
 };
 
 export default VersionField;
