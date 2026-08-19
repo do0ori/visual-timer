@@ -1,120 +1,131 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from '@headlessui/react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { useAutoScroll } from '../../hooks/useAutoScroll';
 import { useScrollToSelected } from '../../hooks/useScrollToSelected';
 import { Theme } from '../../store/types/theme';
 
 type DropdownOption<T> = {
-    label: string;
-    value: T;
-    prefix?: string;
-    subLabel?: string;
+  label: string;
+  value: T;
+  prefix?: string;
+  subLabel?: string;
 };
 
 type DropdownProps<T> = {
-    options: DropdownOption<T>[];
-    selectedValue: T;
-    currentTheme: Theme;
-    onChange: (value: T) => void;
-    customHeader?: React.ReactNode;
-    placeholder?: string;
-    buttonBorderColor?: string;
-    onToggle?: (isOpen: boolean) => void;
+  options: DropdownOption<T>[];
+  selectedValue: T;
+  currentTheme: Theme;
+  onChange: (value: T) => void;
+  customHeader?: React.ReactNode;
+  placeholder?: string;
+  buttonBorderColor?: string;
+  onToggle?: (isOpen: boolean) => void;
+  hideSubLabelOnMobile?: boolean;
 };
 
 const Dropdown = <T,>({
-    options,
-    selectedValue,
-    currentTheme,
-    onChange,
-    customHeader,
-    placeholder = 'Select an option',
-    buttonBorderColor,
-    onToggle,
+  options,
+  selectedValue,
+  currentTheme,
+  onChange,
+  customHeader,
+  placeholder = 'Select an option',
+  buttonBorderColor,
+  onToggle,
+  hideSubLabelOnMobile = false,
 }: DropdownProps<T>) => {
-    const selectedItemRef = useRef<HTMLButtonElement>(null);
-    const panelRef = useRef<HTMLDivElement>(null);
-    const [isOpen, setIsOpen] = useState(false);
+  const selectedItemRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-    // Auto-scroll the entire Dropdown component into view
-    const dropdownRef = useAutoScroll<HTMLDivElement>(isOpen);
+  const dropdownRef = useAutoScroll<HTMLDivElement>(isOpen);
+  useScrollToSelected(panelRef, selectedItemRef, isOpen);
 
-    // Auto-scroll to selected item inside the panel
-    useScrollToSelected(panelRef, selectedItemRef, isOpen);
+  return (
+    <div ref={dropdownRef} className="relative">
+      <Disclosure>
+        {({ open }) => {
+          useEffect(() => {
+            setIsOpen(open);
+            if (onToggle) onToggle(open);
+          }, [open]);
 
-    return (
-        <div ref={dropdownRef} className="relative">
-            <Disclosure>
-                {({ open }) => {
-                    useEffect(() => {
-                        setIsOpen(open);
-                        if (onToggle) onToggle(open);
-                    }, [open]);
-
-                    return (
-                        <>
-                            <DisclosureButton
-                                className={`${buttonBorderColor ? 'border' : ''} flex w-full items-center rounded-lg bg-white/5 px-4 py-2`}
-                                style={{ borderColor: buttonBorderColor }}
-                            >
-                                {customHeader ?? (
-                                    <div className="flex w-full items-center justify-between">
-                                        <span>
-                                            {options.find((option) => option.value === selectedValue)?.label ||
-                                                placeholder}
-                                        </span>
-                                    </div>
-                                )}
-                                <MdExpandMore
-                                    className={`${open ? 'rotate-180' : ''} size-5 transition-transform duration-200`}
-                                />
-                            </DisclosureButton>
-
-                            <Transition
-                                enter="transition duration-100 ease-out"
-                                enterFrom="transform scale-95 opacity-0"
-                                enterTo="transform scale-100 opacity-100"
-                                leave="transition duration-75 ease-out"
-                                leaveFrom="transform scale-100 opacity-100"
-                                leaveTo="transform scale-95 opacity-0"
-                            >
-                                <DisclosurePanel
-                                    ref={panelRef}
-                                    className="absolute inset-x-0 top-full z-10 mt-2 max-h-[calc(30vh)] overflow-y-auto rounded-lg bg-white no-scrollbar"
-                                >
-                                    {options.map((option) => (
-                                        <button
-                                            key={`${option.value}`}
-                                            ref={option.value === selectedValue ? selectedItemRef : null}
-                                            onClick={() => onChange(option.value)}
-                                            className={`flex w-full items-center justify-between gap-4 px-4 py-2 text-black transition-colors ${
-                                                option.value === selectedValue ? 'bg-black/20' : 'hover:bg-black/10'
-                                            }`}
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <div
-                                                    className={`size-2 shrink-0 rounded-full ${
-                                                        option.value === selectedValue ? 'opacity-100' : 'opacity-0'
-                                                    }`}
-                                                    style={{ backgroundColor: currentTheme.color.point }}
-                                                />
-                                                {option.prefix && <span className="shrink-0">{option.prefix}</span>}
-                                                <span className="text-balance text-left">{option.label}</span>
-                                            </div>
-                                            {option.subLabel && (
-                                                <span className="shrink-0 text-sm">{option.subLabel}</span>
-                                            )}
-                                        </button>
-                                    ))}
-                                </DisclosurePanel>
-                            </Transition>
-                        </>
-                    );
+          return (
+            <>
+              <DisclosureButton
+                className={`flex w-full items-center justify-between rounded-xl px-4 py-2.5 transition-colors border shadow-xs ${
+                  open ? 'ring-2' : ''
+                }`}
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderColor: buttonBorderColor || `${currentTheme.color.point}60`,
+                  color: '#1A1A1A',
                 }}
-            </Disclosure>
-        </div>
-    );
+              >
+                {customHeader ?? (
+                  <span className="font-semibold text-sm">
+                    {options.find((option) => option.value === selectedValue)?.label || placeholder}
+                  </span>
+                )}
+                <MdExpandMore
+                  className={`${open ? 'rotate-180' : ''} size-5 transition-transform duration-200 opacity-75`}
+                  style={{ color: currentTheme.color.point }}
+                />
+              </DisclosureButton>
+
+              <Transition
+                enter="transition duration-100 ease-out"
+                enterFrom="transform scale-95 opacity-0"
+                enterTo="transform scale-100 opacity-100"
+                leave="transition duration-75 ease-out"
+                leaveFrom="transform scale-100 opacity-100"
+                leaveTo="transform scale-95 opacity-0"
+              >
+                <DisclosurePanel
+                  ref={panelRef}
+                  className="absolute inset-x-0 top-full z-30 mt-2 max-h-[calc(35vh)] overflow-y-auto rounded-2xl bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/15 shadow-2xl no-scrollbar p-1.5 space-y-1"
+                >
+                  {options.map((option) => (
+                    <button
+                      key={`${option.value}`}
+                      ref={option.value === selectedValue ? selectedItemRef : null}
+                      onClick={() => onChange(option.value)}
+                      className={`flex w-full items-center justify-between gap-4 px-3.5 py-2.5 rounded-xl text-zinc-900 dark:text-zinc-100 transition-colors text-sm ${
+                        option.value === selectedValue
+                          ? 'bg-black/5 dark:bg-white/10 font-bold'
+                          : 'hover:bg-black/5 dark:hover:bg-white/5 opacity-80 hover:opacity-100'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`size-2.5 shrink-0 rounded-full ${
+                            option.value === selectedValue ? 'opacity-100' : 'opacity-0'
+                          }`}
+                          style={{ backgroundColor: currentTheme.color.point }}
+                        />
+                        {option.prefix && <span className="shrink-0">{option.prefix}</span>}
+                        <span className="text-left">{option.label}</span>
+                      </div>
+                      {option.subLabel && (
+                        <span
+                          className={`shrink-0 text-xs opacity-60 font-normal ${
+                            hideSubLabelOnMobile ? 'hidden sm:inline' : ''
+                          }`}
+                        >
+                          {option.subLabel}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </DisclosurePanel>
+              </Transition>
+            </>
+          );
+        }}
+      </Disclosure>
+    </div>
+  );
 };
 
 export default Dropdown;

@@ -1,103 +1,99 @@
+import React from 'react';
 import { IoAdd, IoList, IoPause, IoPlay, IoRefresh, IoSettingsSharp } from 'react-icons/io5';
 import { Theme } from '../../../../store/types/theme';
 import Button from '../../../common/Button';
-import SettingsOverlay from '../../../settings/SettingsOverlay';
-import TimerListOverlay from '../../timer-management/TimerListOverlay';
 
 type ControlButtonsProps = {
-    isMinutes: boolean;
-    isRunning: boolean;
-    isInitialized: boolean;
-    currentTheme: Theme;
-    start: () => void;
-    stop: () => void;
-    reset: () => void;
-    add: (time: number) => void;
+  isMinutes: boolean;
+  isRunning: boolean;
+  isInitialized: boolean;
+  currentTheme: Theme;
+  start: () => void;
+  stop: () => void;
+  reset: () => void;
+  add: (time: number) => void;
 };
 
 const ControlButtons: React.FC<ControlButtonsProps> = ({
-    isMinutes,
-    isRunning,
-    isInitialized,
-    currentTheme,
-    start,
-    stop,
-    reset,
-    add,
+  isMinutes,
+  isRunning,
+  isInitialized,
+  currentTheme,
+  start,
+  stop,
+  reset,
+  add,
 }) => {
-    const startWithPermissionCheck = async () => {
-        if (!('Notification' in window)) {
-            alert('Your browser does not support notifications.');
-            return;
-        }
+  const handleStart = async () => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      try {
+        await Notification.requestPermission();
+      } catch (err) {
+        console.debug('Notification permission request skipped:', err);
+      }
+    }
+    start();
+  };
 
-        if (Notification.permission === 'denied') {
-            alert('Notifications are blocked. Please enable notifications in your browser settings to use the timer.');
-            return;
-        }
+  return (
+    <div className="flex items-center justify-between w-full">
+      {/* Left Action: Timer List / Add Time */}
+      <div className="flex items-center justify-start min-w-[50px]">
+        {isInitialized ? (
+          <Button
+            onClick={() => (window.location.hash = 'timer-list')}
+            aria-label="Timer List"
+            title="Timer Presets & Routines"
+          >
+            <IoList size={30} />
+          </Button>
+        ) : (
+          <Button
+            onClick={() => add(isMinutes ? 1 : 10)}
+            aria-label="Add time"
+            currentTheme={currentTheme}
+          >
+            <div className="flex items-center justify-center font-bold">
+              <IoAdd size={20} />
+              <span className="text-lg">{isMinutes ? 1 : 10}</span>
+            </div>
+          </Button>
+        )}
+      </div>
 
-        if (Notification.permission === 'default') {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission !== 'granted') {
-                    alert('You need to allow notifications to use the timer.');
-                    return;
-                }
-            } catch (error) {
-                console.error('Notification request failed:', error);
-                alert('Failed to request notification permissions. Please try again.');
-                return;
-            }
-        }
+      {/* Center Action: Start / Stop Button (Exact Center) */}
+      <div className="flex items-center justify-center">
+        <Button
+          onClick={isRunning ? stop : handleStart}
+          aria-label={isRunning ? 'Pause Timer' : 'Start Timer'}
+          currentTheme={currentTheme}
+        >
+          {isRunning ? <IoPause size={28} /> : <IoPlay size={28} className="ml-0.5" />}
+        </Button>
+      </div>
 
-        start(); // If permission is granted, start the timer
-    };
-
-    return (
-        <div className="flex justify-between">
-            {isInitialized ? (
-                <>
-                    {/* Timer List Button */}
-                    <Button onClick={() => (window.location.hash = 'timer-list')} aria-label="Timer List">
-                        <IoList size={30} />
-                    </Button>
-                    <TimerListOverlay />
-                </>
-            ) : (
-                /* Add Button */
-                <Button onClick={() => add(isMinutes ? 1 : 10)} aria-label="Add one" currentTheme={currentTheme}>
-                    <div className="flex items-center justify-center">
-                        <IoAdd size={20} />
-                        <span className="text-lg">{isMinutes ? 1 : 10}</span>
-                    </div>
-                </Button>
-            )}
-
-            {/* Stop/Start Button */}
-            <Button
-                onClick={isRunning ? stop : startWithPermissionCheck}
-                aria-label={isRunning ? 'Pause Timer' : 'Start Timer'}
-                currentTheme={currentTheme}
-            >
-                {isRunning ? <IoPause size={25} /> : <IoPlay size={25} />}
-            </Button>
-
-            {isInitialized ? (
-                <>
-                    {/* Settings Button */}
-                    <Button onClick={() => (window.location.hash = 'settings')} aria-label="Settings">
-                        <IoSettingsSharp size={30} />
-                    </Button>
-                    <SettingsOverlay />
-                </>
-            ) : (
-                /* Reset Button */
-                <Button onClick={reset} aria-label="Reset Timer" currentTheme={currentTheme}>
-                    <IoRefresh size={25} className="-scale-x-100" />
-                </Button>
-            )}
-        </div>
-    );
+      {/* Right Action: Settings / Reset Button */}
+      <div className="flex items-center justify-end min-w-[50px]">
+        {isInitialized ? (
+          <Button
+            onClick={() => (window.location.hash = 'settings')}
+            aria-label="Settings"
+            title="Settings"
+          >
+            <IoSettingsSharp size={30} />
+          </Button>
+        ) : (
+          <Button
+            onClick={reset}
+            aria-label="Reset Timer"
+            currentTheme={currentTheme}
+          >
+            <IoRefresh size={28} className="-scale-x-100" />
+          </Button>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ControlButtons;

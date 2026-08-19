@@ -94,3 +94,19 @@ export const getAdjustedColor = (
         return adjustBrightness(targetColor, Math.max(0.2, adjustment));
     }
 };
+
+/**
+ * Returns a clean white card surface with a subtle dark border.
+ * Cards are always white regardless of theme — tab containers use dark tints separately.
+ */
+export const getCardSurface = (
+    _mainColor?: string,
+    _subColor?: string,
+    _pointColor?: string
+): { cardBg: string; cardBorder: string; cardText: string } => {
+    return {
+        cardBg: '#FFFFFF',
+        cardBorder: 'rgba(0,0,0,0.09)',
+        cardText: '#1A1A1A',
+    };
+};

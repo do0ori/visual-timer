@@ -1,104 +1,48 @@
 {
-    "name": "visual-timer",
-    "version": "0.1.8",
-    "private": false,
-    "dependencies": {
-        "@headlessui/react": "^2.2.0",
-        "@hello-pangea/dnd": "^17.0.0",
-        "@sentry/react": "^9.5.0",
-        "@testing-library/jest-dom": "^5.17.0",
-        "@testing-library/react": "^13.4.0",
-        "@testing-library/user-event": "^13.5.0",
-        "@types/dom-screen-wake-lock": "^1.0.3",
-        "@types/jest": "^27.5.2",
-        "@types/node": "^16.18.108",
-        "@types/react": "^18.3.8",
-        "@types/react-dom": "^18.3.0",
-        "react": "^18.3.1",
-        "react-colorful": "^5.6.1",
-        "react-dom": "^18.3.1",
-        "react-hook-form": "^7.54.2",
-        "react-icons": "^5.3.0",
-        "react-router-dom": "^6.30.3",
-        "sweetalert2": "^11.14.5",
-        "typescript": "^4.9.5",
-        "usehooks-ts": "^3.1.0",
-        "workbox-background-sync": "^6.6.0",
-        "workbox-broadcast-update": "^6.6.0",
-        "workbox-cacheable-response": "^6.6.0",
-        "workbox-core": "^6.6.0",
-        "workbox-expiration": "^6.6.0",
-        "workbox-google-analytics": "^6.6.1",
-        "workbox-navigation-preload": "^6.6.0",
-        "workbox-precaching": "^6.6.0",
-        "workbox-range-requests": "^6.6.0",
-        "workbox-routing": "^6.6.0",
-        "workbox-strategies": "^6.6.0",
-        "workbox-streams": "^6.6.0",
-        "zustand": "^5.0.0"
-    },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "format": "prettier . --write",
-        "lint": "eslint --fix \"./src/**/*.{js,ts,jsx,tsx}\"",
-        "prepare": "husky"
-    },
-    "lint-staged": {
-        "*.{ts,tsx}": [
-            "eslint --fix",
-            "prettier --write"
-        ]
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-        "@eslint/js": "^9.11.1",
-        "autoprefixer": "^10.4.20",
-        "eslint": "^8.57.1",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-prettier": "^5.2.1",
-        "eslint-plugin-react": "^7.37.0",
-        "eslint-plugin-tailwindcss": "^3.17.4",
-        "globals": "^15.9.0",
-        "husky": "^9.1.7",
-        "lint-staged": "^15.3.0",
-        "postcss": "^8.4.47",
-        "prettier": "^3.3.3",
-        "prettier-plugin-tailwindcss": "^0.6.8",
-        "react-scripts": "5.0.1",
-        "tailwindcss": "^3.4.13",
-        "typescript-eslint": "^8.7.0"
-    },
-    "homepage": "https://do0ori.github.io/visual-timer",
-    "overrides": {
-        "svgo": {
-            "nth-check": ">=2.0.2"
-        },
-        "react-scripts": {
-            "postcss": ">=8.4.31"
-        },
-        "express": {
-            "cookie": ">=0.7.0"
-        }
-    }
+  "name": "visual-timer",
+  "version": "0.3.0",
+  "private": false,
+  "type": "module",
+  "homepage": "https://do0ori.github.io/visual-timer",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "format": "prettier . --write"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "@hello-pangea/dnd": "^17.0.0",
+    "@sentry/react": "^9.5.0",
+    "canvas-confetti": "^1.9.4",
+    "react": "^18.3.1",
+    "react-colorful": "^5.6.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.18.2",
+    "sweetalert2": "^11.17.2",
+    "usehooks-ts": "^3.1.0",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^22.13.4",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0",
+    "vite-plugin-pwa": "^0.21.1",
+    "workbox-core": "^7.3.0",
+    "workbox-expiration": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-strategies": "^7.3.0",
+    "workbox-window": "^7.3.0"
+  }
 }
