@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IoMdClose, IoMdColorPalette, IoMdInformationCircle } from 'react-icons/io';
 import { MdOutlineBarChart, MdOutlineTimer } from 'react-icons/md';
+import packageMetadata from '../../../package.json';
 import { useOverlay } from '../../hooks/useOverlay';
 import { useThemeStore } from '../../store/themeStore';
 import AlarmSettings from './sections/AlarmSettings';
@@ -128,7 +129,9 @@ const SettingsOverlay: React.FC = () => {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold font-display">About & Developer</h3>
-                  <p className="text-xs opacity-70 mt-0.5">Mellow Visual Timer 2.0 • Made with care for deep focus.</p>
+                  <p className="text-xs opacity-70 mt-0.5">
+                    Mellow Visual Timer v{packageMetadata.version} • Made with care for deep focus.
+                  </p>
                 </div>
                 <OthersSettings />
               </div>
