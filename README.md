@@ -3,7 +3,7 @@
 [![ko1](https://img.shields.io/badge/Nomad%20Coders%20커뮤니티-Visual%20Timer%20소개-4A7658)](https://nomadcoders.co/community/thread/10687)
 [![ko2](https://img.shields.io/badge/Velog%20포스트-Visual%20Timer%20--%20쉽고%20간단하게%20시각적으로%20시간%20관리하기-9079C9)](https://velog.io/@do0ori/Visual-Timer-쉽고-간단하게-시각적으로-시간-관리하기)
 
-**Mellow Visual Timer** is a user-friendly, customizable web-based timer application designed to help users efficiently manage their time. It features a **base timer**, a **timer list** for creating predefined timers(basic timers), and a **routine timer** to sequentially execute timers—making it perfect for techniques like the Pomodoro method. The app offers various customization options, including themes, sound settings, and flexible timer configurations.
+**Mellow Visual Timer** is a user-friendly, customizable web-based timer application designed to help users efficiently manage their time. It features a **base timer**, a **timer list** for creating predefined timers (basic timers), and a **routine timer** to sequentially execute timers—making it perfect for techniques like the Pomodoro method. The app also provides focus statistics, shareable achievement cards, customizable themes, and flexible timer and sound settings.
 
 ## 🛠️ Usage
 
@@ -22,8 +22,11 @@
     - The timer will continue running even if you switch tabs or minimize the app.
 4. **Stay Notified**:
     - A **popup notification** and **alarm sound** will alert you when the timer finishes.
-    - Set your preferred alarm sound and volume in the **Settings menu**.
-5. **Switch Between Modes**:
+    - Set a preset or uploaded audio file, then adjust its volume in **Timer & Sound** settings.
+5. **Track Your Focus**:
+    - Review today's focus time, seven-day total, completed session history, and current streak.
+    - Download a shareable daily achievement card from **Focus Stats & Share** settings.
+6. **Switch Between Modes**:
     - The app automatically optimizes its layout for both **portrait** and **landscape** modes.
 
 ## ✨ Key Features
@@ -45,7 +48,13 @@
         -   Workout routines with different exercises and rest periods.
         -   Extending beyond the default 60-minute limit by chaining timers together.
 
-### 3. **Customizable Themes**
+### 3. **Focus Stats & Share Cards**
+
+-   Automatically records completed focus sessions.
+-   View today's focused time, a seven-day total, session history, and day streaks.
+-   Generate a shareable daily achievement card for social media.
+
+### 4. **Customizable Themes**
 
 -   Choose from three unique themes:
     -   **Beige-Green**
@@ -54,24 +63,29 @@
 -   Adjust the color of the timer disk independently for a personalized look.
 -   It is also possible to create your own custom themes.
 
-### 4. **Screen Wake Lock**
+### 5. **Customizable Timer & Sound Settings**
+
+-   Adjust timer direction and counting preferences from one settings tab.
+-   Choose a preset alarm tone, control its volume, or upload a custom audio file.
+
+### 6. **Screen Wake Lock**
 
 -   Prevents the screen from turning off while the timer is running, ensuring uninterrupted visibility during tasks like workouts or study sessions.
 
-### 5. **Background Functionality with Notifications**
+### 7. **Background Functionality with Notifications**
 
 -   Even when the app is in the background, the timer continues to function.
 -   Notifications provide real-time updates on the remaining time or when the timer finishes.
 
-### 6. **Intuitive and Familiar Controls**
+### 8. **Intuitive and Familiar Controls**
 
 -   Close the timer using the **ESC key** or cancel actions with the **back button**—supporting both web and app-like usage.
 
-### 7. **Optimized for Both Portrait and Landscape Modes**
+### 9. **Optimized for Both Portrait and Landscape Modes**
 
 -   Automatically adjusts the layout based on device orientation for a more user-friendly experience.
 
-### 8. **PWA Support for Web and Mobile**
+### 10. **PWA Support for Web and Mobile**
 
 -   Fully functional on both web and mobile platforms.
 
@@ -104,7 +118,7 @@
 
 <p>
     <img src="https://img.shields.io/badge/Typescript-2d79c7?style=for-the-badge&logo=Typescript&logoColor=white">
-    <img src="https://img.shields.io/badge/Create React App-282c35?style=for-the-badge&logo=createreactapp&logoColor=09D3AC">
+    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
     <img src="https://img.shields.io/badge/Tailwind CSS-131729?style=for-the-badge&logo=tailwindcss&logoColor=78baf2">
     <img src="https://img.shields.io/badge/Zustand-494237?style=for-the-badge&logo=React">
 </p>
@@ -127,7 +141,7 @@
 3. Start the development server:
 
     ```bash
-    npm start
+    npm run dev
     ```
 
 ## 🤝 Contributions
