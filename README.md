@@ -173,7 +173,7 @@ Feel free to open [issues](https://github.com/do0ori/visual-timer/issues) for bu
 
 ## Release History
 
-- **v0.3.0:** Vite migration, focus stats, custom alarm audio, unified settings, updated themes, and version information.
 - **v0.4.0:** A streamlined Routine Timer editing flow with clearer step creation, inline editing, reordering, deletion, context-aware timer creation, and compact timer cards.
+- **v0.3.0:** Vite migration, focus stats, custom alarm audio, unified settings, updated themes, and version information.
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.
