@@ -33,77 +33,76 @@
 
 ### 1. **Base Timer (Default Timer)**
 
--   Quickly set a timer by **dragging and clicking** on the clock interface.
--   Ideal for simple, immediate use without additional setup.
+- Quickly set a timer by **dragging and clicking** on the clock interface.
+- Ideal for simple, immediate use without additional setup.
 
 ### 2. **Customizable User Timers**
 
--   **Basic Timer**
-    -   Create single timers with predefined durations and custom colors.
--   **Routine Timer**
-    -   Group multiple Basic Timers to run sequentially.
-    -   Add, edit, reorder, or remove individual timer steps, including each step's duration, color, and alarm interval.
-    -   Start a routine once or enable repeat mode while it runs.
-    -   **Use cases**:
-        -   Pomodoro sessions (e.g., 50-minute focus + 10-minute break).
-        -   Workout routines with different exercises and rest periods.
-        -   Extending beyond the default 60-minute limit by chaining timers together.
+- **Basic Timer**
+    - Create single timers with predefined durations and custom colors.
+- **Routine Timer**
+    - Group multiple Basic Timers to run sequentially.
+    - Add, edit, reorder, or remove individual timer steps, including each step's duration, color, and alarm interval.
+    - Start a routine once or enable repeat mode while it runs.
+    - **Use cases**:
+        - Pomodoro sessions (e.g., 50-minute focus + 10-minute break).
+        - Workout routines with different exercises and rest periods.
+        - Extending beyond the default 60-minute limit by chaining timers together.
 
 ### 3. **Focus Stats & Share Cards**
 
--   Automatically records completed focus sessions.
--   View today's focused time, a seven-day total, session history, and day streaks.
--   Generate a shareable daily achievement card for social media.
+- Automatically records completed focus sessions.
+- View today's focused time, a seven-day total, session history, and day streaks.
+- Generate a shareable daily achievement card for social media.
 
 ### 4. **Customizable Themes**
 
--   Choose from five built-in themes:
-    -   **Beige Green**
-    -   **Gray Purple**
-    -   **Black Green**
-    -   **Sky Blue**
-    -   **Lovely Pink**
--   Adjust the color of the timer disk independently for a personalized look.
--   It is also possible to create your own custom themes.
+- Choose from five built-in themes:
+    - **Beige Green**
+    - **Gray Purple**
+    - **Black Green**
+    - **Sky Blue**
+    - **Lovely Pink**
+- Adjust the color of the timer disk independently for a personalized look.
+- It is also possible to create your own custom themes.
 
 ### 5. **Customizable Timer & Sound Settings**
 
--   Set the timer direction to clockwise or counter-clockwise from one settings tab.
--   Choose a preset alarm tone, control its volume, or upload a custom audio file.
+- Set the timer direction to clockwise or counter-clockwise from one settings tab.
+- Choose a preset alarm tone, control its volume, or upload a custom audio file.
 
 ### 6. **Screen Wake Lock**
 
--   Prevents the screen from turning off while the timer is running, ensuring uninterrupted visibility during tasks like workouts or study sessions.
+- Prevents the screen from turning off while the timer is running, ensuring uninterrupted visibility during tasks like workouts or study sessions.
 
 ### 7. **Background Functionality with Notifications**
 
--   Even when the app is in the background, the timer continues to function.
--   Notifications provide real-time updates on the remaining time or when the timer finishes.
+- Even when the app is in the background, the timer continues to function.
+- Notifications provide real-time updates on the remaining time or when the timer finishes.
 
 ### 8. **Intuitive and Familiar Controls**
 
--   Close the timer using the **ESC key** or cancel actions with the **back button**—supporting both web and app-like usage.
+- Close the timer using the **ESC key** or cancel actions with the **back button**—supporting both web and app-like usage.
 
 ### 9. **Optimized for Both Portrait and Landscape Modes**
 
--   Automatically adjusts the layout based on device orientation for a more user-friendly experience.
+- Automatically adjusts the layout based on device orientation for a more user-friendly experience.
 
 ### 10. **PWA Support for Web and Mobile**
 
--   Fully functional on both web and mobile platforms.
+- Fully functional on both web and mobile platforms.
 
-    <details>
+      <details>
 
-    <summary><strong>Install as a web app</strong> for an app-like experience on desktop and mobile devices.</summary>
-
-    -   On **desktop**, click the monitor icon in the address bar on Chrome to install.
+      <summary><strong>Install as a web app</strong> for an app-like experience on desktop and mobile devices.</summary>
+      - On **desktop**, click the monitor icon in the address bar on Chrome to install.
         ![](https://velog.velcdn.com/images/do0ori/post/e6511118-a852-4715-adbb-ab95ea089d40/image.png)
-    -   On **mobile**, a prompt will appear automatically to install the app:
+      - On **mobile**, a prompt will appear automatically to install the app:
         ![](https://velog.velcdn.com/images/do0ori/post/964a854d-8575-482e-a554-bc37c5f0029f/image.png)
-        -   If not, use the menu (three dots) to find the mobile icon with "Install App" or "Add to Home Screen" option:
+          - If not, use the menu (three dots) to find the mobile icon with "Install App" or "Add to Home Screen" option:
             ![](https://velog.velcdn.com/images/do0ori/post/ee7afc63-dcc0-4695-9685-3ad292326d04/image.jpg)
 
-    </details>
+      </details>
 
 ## 🌐 Browser Compatibility
 
@@ -128,10 +127,10 @@
     <img src="https://img.shields.io/badge/PWA-vite--plugin--pwa-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white">
 </p>
 
--   **UI & routing:** React 18, React Router 7, Headless UI, React Icons
--   **State & forms:** Zustand 5, React Hook Form
--   **Build & styling:** Vite 6, TypeScript 5, Tailwind CSS 3
--   **Offline support:** Vite PWA and Workbox
+- **UI & routing:** React 18, React Router 7, Headless UI, React Icons
+- **State & forms:** Zustand 5, React Hook Form
+- **Build & styling:** Vite 6, TypeScript 5, Tailwind CSS 3
+- **Offline support:** Vite PWA and Workbox
 
 ## 📦 Setup and Installation
 
@@ -173,6 +172,7 @@ Feel free to open [issues](https://github.com/do0ori/visual-timer/issues) for bu
 
 ## Release History
 
+- **v0.4.1:** Stoppable alarm previews, app-theme-driven editor surfaces, wider desktop timer cards, and an aligned Routine Timer interactive dial.
 - **v0.4.0:** A streamlined Routine Timer editing flow with clearer step creation, inline editing, reordering, deletion, context-aware timer creation, and compact timer cards.
 - **v0.3.0:** Vite migration, focus stats, custom alarm audio, unified settings, updated themes, and version information.
 
