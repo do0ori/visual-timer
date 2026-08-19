@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IoMdAdd, IoMdClose, IoMdFlash, IoMdSearch } from 'react-icons/io';
-import { MdDeleteOutline, MdEdit, MdExpandMore, MdHourglassTop, MdPlayArrow } from 'react-icons/md';
+import { MdDeleteOutline, MdEdit, MdExpandMore, MdHourglassTop } from 'react-icons/md';
 import { getCardSurface, getTextColor } from '../../../utils/colorUtils';
 import { TIMER_TYPE, TIMER_TYPE_CONFIG, TimerType } from '../../../config/timer/type';
 import { useOverlay } from '../../../hooks/useOverlay';
@@ -348,10 +348,10 @@ const TimerListOverlay: React.FC = () => {
                     <div
                       key={timer.id}
                       onClick={() => handleSelectTimer(timer.id)}
-                      className="btn-tactile group cursor-pointer p-4 rounded-2xl border shadow-soft hover:shadow-dial transition-all flex flex-col justify-between gap-3"
+                      className="btn-tactile group flex cursor-pointer items-center gap-3 rounded-2xl border p-4 shadow-soft transition-all hover:shadow-dial"
                       style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
                     >
-                      <div className="flex items-start gap-3.5">
+                      <div className="flex min-w-0 flex-1 items-center gap-3.5">
                         <div className="group-hover:scale-105 transition-transform">{getTimerIcon(timer)}</div>
                         <div className="min-w-0 flex-1">
                           <h4 className="font-bold text-base line-clamp-1 group-hover:underline">
@@ -368,40 +368,25 @@ const TimerListOverlay: React.FC = () => {
                                     )}m total)`}
                             </span>
                           </div>
-                          <span
-                            className="inline-block mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                            style={{ backgroundColor: `${selectedTheme.color.point}20`, color: selectedTheme.color.point }}
-                          >
-                            {TIMER_TYPE_CONFIG[timer.type].label}
-                          </span>
                         </div>
                       </div>
 
-                      {/* Card Action Footer */}
-                      <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: 'rgba(0,0,0,0.07)' }}>
-                        <span
-                          className="text-xs font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
-                          style={{ color: selectedTheme.color.point }}
+                      <div className="flex shrink-0 items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={(e) => handleEditTimer(e, timer)}
+                          aria-label="Edit Timer"
+                          className="rounded-xl border p-2 opacity-70 transition-colors hover:opacity-100"
+                          style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
                         >
-                          <MdPlayArrow size={18} /> Start Timer
-                        </span>
-                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={(e) => handleEditTimer(e, timer)}
-                            aria-label="Edit Timer"
-                            className="p-2 rounded-xl transition-colors opacity-70 hover:opacity-100 border"
-                            style={{ backgroundColor: '#FFFFFF', borderColor: 'rgba(0,0,0,0.09)', color: '#1A1A1A' }}
-                          >
-                            <MdEdit size={18} />
-                          </button>
-                          <button
-                            onClick={(e) => handleDeleteTimer(e, timer)}
-                            aria-label="Delete Timer"
-                            className="p-2 rounded-xl hover:bg-red-500/20 text-red-500 transition-colors opacity-75 hover:opacity-100"
-                          >
-                            <MdDeleteOutline size={18} />
-                          </button>
-                        </div>
+                          <MdEdit size={18} />
+                        </button>
+                        <button
+                          onClick={(e) => handleDeleteTimer(e, timer)}
+                          aria-label="Delete Timer"
+                          className="rounded-xl p-2 text-red-500 opacity-75 transition-colors hover:bg-red-500/20 hover:opacity-100"
+                        >
+                          <MdDeleteOutline size={18} />
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -411,7 +396,7 @@ const TimerListOverlay: React.FC = () => {
           </div>
 
           {/* Mobile Bottom Bar */}
-          <div className="sm:hidden p-4 border-t border-black/10 dark:border-white/10 bg-black/5">
+          <div className="sm:hidden p-4 border-t border-black/10 dark:border-white/10">
             <Button
               currentTheme={selectedTheme}
               onClick={() => openOverlay()}
