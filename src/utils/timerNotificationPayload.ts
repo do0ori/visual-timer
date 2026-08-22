@@ -16,3 +16,14 @@ export const createFinishedNotification = (payload: TimerFinishedPayload) => ({
         data: { deepLink: payload.deepLink },
     },
 });
+
+export const createRunningStatusNotification = (timerId: string, title: string, endAt: number) => ({
+    title: `${title} running`,
+    options: {
+        body: `Ends at ${new Date(endAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`,
+        icon: '/visual-timer/logo512.png',
+        tag: `running-${timerId}`,
+        silent: true,
+        timestamp: endAt,
+    },
+});
