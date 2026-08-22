@@ -1,4 +1,4 @@
-import { base64UrlToUint8Array, getNotificationSupport } from './timerNotificationService';
+import { base64UrlToUint8Array, createScheduleCredentials, getNotificationSupport } from './timerNotificationService';
 
 describe('timer notification service', () => {
     it('converts a URL-safe VAPID key into subscription bytes', () => {
@@ -7,5 +7,11 @@ describe('timer notification service', () => {
 
     it('reports unavailable when Push APIs are missing', () => {
         expect(getNotificationSupport({} as Navigator)).toBe(false);
+    });
+
+    it('creates persistent credentials for one timer schedule', () => {
+        const credentials = createScheduleCredentials('timer-1', () => 'generated-token');
+
+        expect(credentials).toEqual({ scheduleId: 'timer-1', capability: 'generated-token' });
     });
 });

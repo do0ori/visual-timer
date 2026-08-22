@@ -4,6 +4,7 @@ import { timerUnits, Unit } from '../config/timer/units';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 import { convertMsToMmSs } from '../utils/timeUtils';
 import { getRemainingCount } from '../utils/timerDeadline';
+import { cancelTimerNotification, scheduleTimerNotification } from '../services/timerNotificationService';
 import { useWakeLock } from './useWakeLock';
 
 type TimerOptions = {
@@ -85,29 +86,47 @@ export function useTimer({
     // State to prevent duplicated onFinish execution
     const finishTriggeredRef = useRef(false);
 
-    // State to handle tab visibility change event
-    const lastUpdateTimeRef = useRef<number>(Date.now());
-    const wasRunningRef = useRef<boolean>(false);
     const endAtRef = useRef<number | null>(null);
+    const [isDocumentVisible, setIsDocumentVisible] = useState(() => document.visibilityState === 'visible');
 
     // Calculate maximum possible count value if maxTime is given
     const maxCountStart = maxTime ? maxTime * currentUnit.multiple : undefined;
 
     // Manage count state with useCounter, which provides decrement and setCount functions
-    const { count, decrement, setCount } = useCounter(countStart);
+    const { count, setCount } = useCounter(countStart);
 
     // Manage the running state of the timer
     const { value: isRunning, setTrue: startCountdown, setFalse: stopCountdown } = useBoolean(false);
+
+    const postServiceWorkerMessage = useCallback((message: Record<string, unknown>) => {
+        navigator.serviceWorker.controller?.postMessage(message);
+    }, []);
+
+    const scheduleBackgroundNotification = useCallback(
+        (visibleUntil: number | null) => {
+            if (!endAtRef.current) return;
+
+            void scheduleTimerNotification({
+                timerId: timer.id,
+                endAt: endAtRef.current,
+                title: timer.title || 'Timer',
+                deepLink: '/visual-timer/',
+                visibleUntil,
+            }).catch((error) => console.debug('Unable to schedule background timer alert:', error));
+        },
+        [timer.id, timer.title]
+    );
 
     // Resets the countdown to the initial value and stops it
     const resetCountdown = useCallback(() => {
         stopCountdown();
         finishTriggeredRef.current = false;
-        wasRunningRef.current = false;
         endAtRef.current = null;
+        void cancelTimerNotification(timer.id);
+        postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
         setCount(countStart);
         setIsInitialized(true);
-    }, [stopCountdown, setCount, countStart]);
+    }, [countStart, postServiceWorkerMessage, setCount, stopCountdown, timer.id]);
 
     // The callback for the countdown logic
     const countdownCallback = useCallback(() => {
@@ -118,10 +137,12 @@ export function useTimer({
 
         if (remainingCount === 0 && onFinish && !finishTriggeredRef.current) {
             finishTriggeredRef.current = true;
+            stopCountdown();
+            void cancelTimerNotification(timer.id);
+            postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
             onFinish(resetCountdown);
         }
-        lastUpdateTimeRef.current = Date.now();
-    }, [intervalMs, onFinish, resetCountdown, setCount]);
+    }, [intervalMs, onFinish, postServiceWorkerMessage, resetCountdown, setCount, stopCountdown, timer.id]);
 
     // useInterval hook triggers the countdown logic when the timer is running
     useInterval(countdownCallback, isRunning ? intervalMs : null);
@@ -131,7 +152,8 @@ export function useTimer({
         endAtRef.current = Date.now() + count * intervalMs;
         startCountdown();
         setIsInitialized(false);
-    }, [count, intervalMs, startCountdown]);
+        scheduleBackgroundNotification(isDocumentVisible ? Date.now() + 15_000 : null);
+    }, [count, intervalMs, isDocumentVisible, scheduleBackgroundNotification, startCountdown]);
 
     // Sets a new time for the countdown and resets it
     const handleSetTime = useCallback(
@@ -141,10 +163,12 @@ export function useTimer({
             setTime(validatedTime);
             setCount(newCountStart);
             endAtRef.current = null;
+            void cancelTimerNotification(timer.id);
+            postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
             setIsInitialized(true);
             stopCountdown();
         },
-        [setCount, stopCountdown, currentUnit.multiple, maxTime]
+        [currentUnit.multiple, maxTime, postServiceWorkerMessage, setCount, stopCountdown, timer.id]
     );
 
     // Toggles between minutes and seconds mode
@@ -153,9 +177,11 @@ export function useTimer({
         toggleIsMinutes();
         setCount(newCountStart);
         endAtRef.current = null;
+        void cancelTimerNotification(timer.id);
+        postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
         setIsInitialized(true);
         stopCountdown();
-    }, [setCount, stopCountdown, time, isMinutes]);
+    }, [isMinutes, postServiceWorkerMessage, setCount, stopCountdown, time, timer.id]);
 
     // Function to add a specific time to the current count
     const add = useCallback(
@@ -166,9 +192,20 @@ export function useTimer({
             }
             newCountStart = Math.max(newCountStart, 0);
             setCount(newCountStart);
-            if (endAtRef.current) endAtRef.current = Date.now() + newCountStart * intervalMs;
+            if (endAtRef.current) {
+                endAtRef.current = Date.now() + newCountStart * intervalMs;
+                scheduleBackgroundNotification(isDocumentVisible ? Date.now() + 15_000 : null);
+            }
         },
-        [count, maxCountStart, currentUnit.multiple, intervalMs, setCount]
+        [
+            count,
+            currentUnit.multiple,
+            intervalMs,
+            isDocumentVisible,
+            maxCountStart,
+            scheduleBackgroundNotification,
+            setCount,
+        ]
     );
 
     const currentTime = useMemo(() => {
@@ -182,75 +219,24 @@ export function useTimer({
 
     useWakeLock(isRunning);
 
-    // Handle the case where the timer is assigned in the background
-    useEffect(() => {
-        if (document.visibilityState === 'hidden' && isRunning) {
-            const endTime = Date.now() + count * intervalMs;
-            navigator.serviceWorker.controller?.postMessage({
-                command: 'start-timer',
-                timer,
-                endTime,
-            });
-        }
-    }, [timer.id]);
-
-    useEffect(() => {
-        const handleServiceWorkerMessage = (event: MessageEvent) => {
-            const { command, id: messageId } = event.data;
-
-            if (command === 'finished' && messageId === timer.id) {
-                console.debug('Timer finished in background.');
-                setCount(0);
-                startCountdown();
-            }
-        };
-
-        navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
-
-        return () => {
-            navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
-        };
-    }, [setCount, startCountdown]);
-
     // Visibility change handling
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'hidden') {
-                wasRunningRef.current = isRunning;
+                setIsDocumentVisible(false);
                 if (isRunning) {
-                    lastUpdateTimeRef.current = Date.now();
-                    stopCountdown();
-
-                    // Send remaining time to service worker
-                    if (count > 0) {
-                        const endTime = Date.now() + count * intervalMs;
-                        navigator.serviceWorker.controller?.postMessage({
-                            command: 'start-timer',
-                            timer,
-                            endTime,
-                        });
-                    }
-                }
-            } else if (document.visibilityState === 'visible') {
-                if (wasRunningRef.current) {
-                    // Restore timer based on remaining time when the tab becomes active
-                    const elapsedMs = Date.now() - lastUpdateTimeRef.current;
-                    const elapsedCount = Math.floor(elapsedMs / intervalMs);
-                    const newCountStart = count - elapsedCount;
-
-                    if (count > 0) {
-                        setCount(Math.max(0, newCountStart));
-                    } else {
-                        setCount(newCountStart);
-                    }
-
-                    startCountdown();
-
-                    navigator.serviceWorker.controller?.postMessage({
-                        command: 'clear-timer',
-                        timer,
+                    scheduleBackgroundNotification(null);
+                    postServiceWorkerMessage({
+                        command: 'show-running-status',
+                        timerId: timer.id,
+                        title: timer.title || 'Timer',
+                        endAt: endAtRef.current,
                     });
                 }
+            } else if (document.visibilityState === 'visible') {
+                setIsDocumentVisible(true);
+                postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
+                countdownCallback();
             }
         };
 
@@ -259,14 +245,28 @@ export function useTimer({
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
-    }, [count, isRunning, intervalMs, startCountdown, stopCountdown, setCount]);
+    }, [countdownCallback, isRunning, postServiceWorkerMessage, scheduleBackgroundNotification, timer.id, timer.title]);
+
+    useInterval(
+        () => scheduleBackgroundNotification(Date.now() + 15_000),
+        isRunning && isDocumentVisible ? 5_000 : null
+    );
 
     // Reset timer with new input data
     useEffect(() => {
         setTime(initialTime);
         setIsMinutes(unit === 'minutes');
         setCount(initialTime * currentUnit.multiple);
+        endAtRef.current = null;
+        void cancelTimerNotification(timer.id);
     }, [initialTime, unit, currentUnit.multiple, setCount]);
+
+    const stop = useCallback(() => {
+        stopCountdown();
+        endAtRef.current = null;
+        void cancelTimerNotification(timer.id);
+        postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
+    }, [postServiceWorkerMessage, stopCountdown, timer.id]);
 
     return {
         totalTime: time,
@@ -278,7 +278,7 @@ export function useTimer({
         isMinutes,
         isInitialized,
         start,
-        stop: stopCountdown,
+        stop,
         reset: resetCountdown,
         toggleUnit,
         setTime: handleSetTime,
