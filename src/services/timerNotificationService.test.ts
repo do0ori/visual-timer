@@ -46,12 +46,33 @@ describe('timer notification service', () => {
         expect(getTimerNotificationApiUrl()).toBe('https://worker.example');
     });
 
-    it('requests alerts only when permission has not been decided', async () => {
+    it('requests alerts when permission has not been decided', async () => {
         const requestAlerts = jest.fn().mockResolvedValue('subscribed');
 
         await expect(requestBackgroundAlertsIfNeeded('needs-permission', requestAlerts)).resolves.toBe('subscribed');
         await expect(requestBackgroundAlertsIfNeeded('denied', requestAlerts)).resolves.toBeNull();
 
         expect(requestAlerts).toHaveBeenCalledTimes(1);
+    });
+
+    it('subscribes when notification permission was granted before Push was enabled', async () => {
+        const requestAlerts = jest.fn().mockResolvedValue('subscribed');
+        const getSubscription = jest.fn().mockResolvedValue(null);
+
+        await expect(requestBackgroundAlertsIfNeeded('enabled', requestAlerts, getSubscription)).resolves.toBe(
+            'subscribed'
+        );
+
+        expect(getSubscription).toHaveBeenCalledTimes(1);
+        expect(requestAlerts).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not replace an existing Push subscription', async () => {
+        const requestAlerts = jest.fn();
+        const getSubscription = jest.fn().mockResolvedValue({} as PushSubscription);
+
+        await expect(requestBackgroundAlertsIfNeeded('enabled', requestAlerts, getSubscription)).resolves.toBeNull();
+
+        expect(requestAlerts).not.toHaveBeenCalled();
     });
 });

@@ -11,6 +11,18 @@ import { configureTimerNotificationApiUrl } from './services/timerNotificationSe
 
 configureTimerNotificationApiUrl(import.meta.env.VITE_TIMER_NOTIFICATION_API_URL);
 
+document.addEventListener(
+    'click',
+    () => {
+        if ('Notification' in window && Notification.permission === 'default') {
+            void Notification.requestPermission().catch((error) =>
+                console.debug('Unable to request notification permission:', error)
+            );
+        }
+    },
+    { once: true }
+);
+
 const parseLocalStorage = () => {
     return Object.keys(localStorage).reduce(
         (acc, key) => {

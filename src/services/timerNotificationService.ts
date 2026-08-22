@@ -121,8 +121,11 @@ export const enableBackgroundAlerts = async () => {
 
 export const requestBackgroundAlertsIfNeeded = async (
     alertStatus = getBackgroundAlertStatus(),
-    requestAlerts: () => Promise<unknown> = enableBackgroundAlerts
+    requestAlerts: () => Promise<unknown> = enableBackgroundAlerts,
+    getSubscription: () => Promise<PushSubscription | null> = getActiveSubscription
 ) => {
-    if (alertStatus !== 'needs-permission') return null;
+    if (alertStatus === 'unsupported' || alertStatus === 'denied') return null;
+    if (alertStatus === 'enabled' && (await getSubscription())) return null;
+
     return requestAlerts();
 };
