@@ -73,6 +73,9 @@ root.render(<RouterProvider router={router} />);
 // Register Service Worker with auto-update
 registerSW({
     immediate: true,
+    onRegisterError(error) {
+        console.error('Service worker registration failed:', error);
+    },
     onNeedRefresh() {
         console.debug('New content available, updating service worker.');
     },
