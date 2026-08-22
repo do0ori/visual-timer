@@ -6,6 +6,10 @@ import {
 } from './timerNotificationService';
 
 describe('timer notification service', () => {
+    afterEach(() => {
+        localStorage.clear();
+    });
+
     it('converts a URL-safe VAPID key into subscription bytes', () => {
         expect(Array.from(base64UrlToUint8Array('AQI'))).toEqual([1, 2]);
     });
@@ -18,6 +22,7 @@ describe('timer notification service', () => {
         const credentials = createScheduleCredentials('timer-1', () => 'generated-token');
 
         expect(credentials).toEqual({ scheduleId: 'timer-1', capability: 'generated-token' });
+        expect(localStorage.getItem('timer-notification:timer-1')).toContain('generated-token');
     });
 
     it('reports when a supported browser still needs notification permission', () => {

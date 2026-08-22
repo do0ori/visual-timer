@@ -73,27 +73,27 @@ self.addEventListener('message', (event) => {
     }
 });
 
-const navigateToApp = async () => {
+const navigateToApp = async (deepLink = '/visual-timer/') => {
     const clientList = await self.clients.matchAll({
         type: 'window',
         includeUncontrolled: true,
     });
 
-    const hadClientOpen = clientList.some((client) => {
+    for (const client of clientList) {
         if (client.url.includes('/visual-timer') && 'focus' in client) {
-            return (client as WindowClient).focus();
+            await (client as WindowClient).focus();
+            return;
         }
-        return false;
-    });
+    }
 
-    if (!hadClientOpen && self.clients.openWindow) {
-        await self.clients.openWindow('/visual-timer/');
+    if (self.clients.openWindow) {
+        await self.clients.openWindow(deepLink);
     }
 };
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-    event.waitUntil(navigateToApp());
+    event.waitUntil(navigateToApp(event.notification.data?.deepLink));
 });
 
 self.addEventListener('push', (event) => {

@@ -237,6 +237,9 @@ export function useTimer({
                 setIsDocumentVisible(true);
                 postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
                 countdownCallback();
+                if (isRunning) {
+                    scheduleBackgroundNotification(Date.now() + 15_000);
+                }
             }
         };
 

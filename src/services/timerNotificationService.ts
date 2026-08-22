@@ -39,11 +39,11 @@ export const createScheduleCredentials = (
     timerId: string,
     createToken = () => crypto.randomUUID()
 ): ScheduleCredentials => {
-    const existing = sessionStorage.getItem(scheduleCredentialsKey(timerId));
+    const existing = localStorage.getItem(scheduleCredentialsKey(timerId));
     if (existing) return JSON.parse(existing) as ScheduleCredentials;
 
     const credentials = { scheduleId: timerId, capability: createToken() };
-    sessionStorage.setItem(scheduleCredentialsKey(timerId), JSON.stringify(credentials));
+    localStorage.setItem(scheduleCredentialsKey(timerId), JSON.stringify(credentials));
     return credentials;
 };
 
@@ -82,7 +82,7 @@ export const scheduleTimerNotification = async (request: ScheduleRequest) => {
 
 export const cancelTimerNotification = async (timerId: string) => {
     const apiBaseUrl = getApiBaseUrl();
-    const storedCredentials = sessionStorage.getItem(scheduleCredentialsKey(timerId));
+    const storedCredentials = localStorage.getItem(scheduleCredentialsKey(timerId));
     if (!apiBaseUrl || !storedCredentials) return;
 
     const credentials = JSON.parse(storedCredentials) as ScheduleCredentials;
@@ -91,7 +91,7 @@ export const cancelTimerNotification = async (timerId: string) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ capability: credentials.capability }),
     });
-    sessionStorage.removeItem(scheduleCredentialsKey(timerId));
+    localStorage.removeItem(scheduleCredentialsKey(timerId));
 };
 
 export const requestPushSubscription = async (apiBaseUrl: string) => {
