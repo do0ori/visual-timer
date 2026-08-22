@@ -4,7 +4,12 @@ import { timerUnits, Unit } from '../config/timer/units';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 import { convertMsToMmSs } from '../utils/timeUtils';
 import { getRemainingCount } from '../utils/timerDeadline';
-import { cancelTimerNotification, scheduleTimerNotification } from '../services/timerNotificationService';
+import {
+    cancelTimerNotification,
+    requestBackgroundAlertsIfNeeded,
+    scheduleTimerNotification,
+} from '../services/timerNotificationService';
+import { postServiceWorkerMessage as postToServiceWorker } from '../services/serviceWorkerMessages';
 import { useWakeLock } from './useWakeLock';
 
 type TimerOptions = {
@@ -42,7 +47,7 @@ type TimerControllers = {
     /** If true, the timer is initialized. */
     isInitialized: boolean;
     /** Starts the countdown. */
-    start: () => void;
+    start: (requestAlerts?: boolean) => void;
     /** Stops the countdown. */
     stop: () => void;
     /** Resets the countdown to the initial value. */
@@ -99,7 +104,9 @@ export function useTimer({
     const { value: isRunning, setTrue: startCountdown, setFalse: stopCountdown } = useBoolean(false);
 
     const postServiceWorkerMessage = useCallback((message: Record<string, unknown>) => {
-        navigator.serviceWorker.controller?.postMessage(message);
+        void postToServiceWorker(message).catch((error) =>
+            console.debug('Unable to send timer status to the service worker:', error)
+        );
     }, []);
 
     const scheduleBackgroundNotification = useCallback(
@@ -148,12 +155,20 @@ export function useTimer({
     useInterval(countdownCallback, isRunning ? intervalMs : null);
 
     // Function to start the countdown and mark as initialized
-    const start = useCallback(() => {
-        endAtRef.current = Date.now() + count * intervalMs;
-        startCountdown();
-        setIsInitialized(false);
-        scheduleBackgroundNotification(isDocumentVisible ? Date.now() + 15_000 : null);
-    }, [count, intervalMs, isDocumentVisible, scheduleBackgroundNotification, startCountdown]);
+    const start = useCallback(
+        (requestAlerts = true) => {
+            endAtRef.current = Date.now() + count * intervalMs;
+            startCountdown();
+            setIsInitialized(false);
+            scheduleBackgroundNotification(isDocumentVisible ? Date.now() + 15_000 : null);
+            if (requestAlerts) {
+                void requestBackgroundAlertsIfNeeded()
+                    .then(() => scheduleBackgroundNotification(isDocumentVisible ? Date.now() + 15_000 : null))
+                    .catch((error) => console.debug('Unable to request background alerts:', error));
+            }
+        },
+        [count, intervalMs, isDocumentVisible, scheduleBackgroundNotification, startCountdown]
+    );
 
     // Sets a new time for the countdown and resets it
     const handleSetTime = useCallback(
@@ -215,7 +230,7 @@ export function useTimer({
 
     const progress = Math.max(0, count / currentUnit.denominator);
 
-    if (autoStart && isInitialized) start();
+    if (autoStart && isInitialized) start(false);
 
     useWakeLock(isRunning);
 

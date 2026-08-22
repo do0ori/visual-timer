@@ -1,13 +1,17 @@
 import {
     base64UrlToUint8Array,
     createScheduleCredentials,
+    configureTimerNotificationApiUrl,
     getBackgroundAlertStatus,
     getNotificationSupport,
+    getTimerNotificationApiUrl,
+    requestBackgroundAlertsIfNeeded,
 } from './timerNotificationService';
 
 describe('timer notification service', () => {
     afterEach(() => {
         localStorage.clear();
+        configureTimerNotificationApiUrl(undefined);
     });
 
     it('converts a URL-safe VAPID key into subscription bytes', () => {
@@ -29,5 +33,25 @@ describe('timer notification service', () => {
         expect(getBackgroundAlertStatus(true, 'default')).toBe('needs-permission');
         expect(getBackgroundAlertStatus(true, 'granted')).toBe('enabled');
         expect(getBackgroundAlertStatus(true, 'denied')).toBe('denied');
+    });
+
+    it('recognizes an unconfigured timer notification API', () => {
+        expect(getTimerNotificationApiUrl('')).toBeUndefined();
+        expect(getTimerNotificationApiUrl('https://worker.example')).toBe('https://worker.example');
+    });
+
+    it('uses the Vite-provided API URL configured during app startup', () => {
+        configureTimerNotificationApiUrl('https://worker.example');
+
+        expect(getTimerNotificationApiUrl()).toBe('https://worker.example');
+    });
+
+    it('requests alerts only when permission has not been decided', async () => {
+        const requestAlerts = jest.fn().mockResolvedValue('subscribed');
+
+        await expect(requestBackgroundAlertsIfNeeded('needs-permission', requestAlerts)).resolves.toBe('subscribed');
+        await expect(requestBackgroundAlertsIfNeeded('denied', requestAlerts)).resolves.toBeNull();
+
+        expect(requestAlerts).toHaveBeenCalledTimes(1);
     });
 });

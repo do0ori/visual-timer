@@ -147,13 +147,15 @@
     npm install
     ```
 
-3. Start the development server:
+3. Copy `.env.example` to `.env` and set `VITE_TIMER_NOTIFICATION_API_URL` to enable background alert testing locally.
+
+4. Start the development server:
 
     ```bash
     npm run dev
     ```
 
-4. Create a production build or preview it locally:
+5. Create a production build or preview it locally:
 
     ```bash
     npm run build

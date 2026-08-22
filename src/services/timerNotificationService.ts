@@ -8,6 +8,16 @@ export const getNotificationSupport = (navigatorValue: Navigator = navigator) =>
     return 'serviceWorker' in navigatorValue && typeof PushManager !== 'undefined' && 'Notification' in window;
 };
 
+let configuredTimerNotificationApiUrl: string | undefined;
+
+export const configureTimerNotificationApiUrl = (apiUrl: string | undefined) => {
+    configuredTimerNotificationApiUrl = apiUrl || undefined;
+};
+
+export const getTimerNotificationApiUrl = (apiUrl: string | undefined = configuredTimerNotificationApiUrl) => {
+    return apiUrl || undefined;
+};
+
 export type BackgroundAlertStatus = 'unsupported' | 'needs-permission' | 'enabled' | 'denied';
 
 export const getBackgroundAlertStatus = (
@@ -47,12 +57,6 @@ export const createScheduleCredentials = (
     return credentials;
 };
 
-const getApiBaseUrl = () => {
-    return typeof __TIMER_NOTIFICATION_API_URL__ === 'string' && __TIMER_NOTIFICATION_API_URL__
-        ? __TIMER_NOTIFICATION_API_URL__
-        : undefined;
-};
-
 const getActiveSubscription = async () => {
     if (!getNotificationSupport() || Notification.permission !== 'granted') return null;
     const registration = await navigator.serviceWorker.ready;
@@ -60,7 +64,7 @@ const getActiveSubscription = async () => {
 };
 
 export const scheduleTimerNotification = async (request: ScheduleRequest) => {
-    const apiBaseUrl = getApiBaseUrl();
+    const apiBaseUrl = getTimerNotificationApiUrl();
     const subscription = await getActiveSubscription();
     if (!apiBaseUrl || !subscription) return false;
 
@@ -81,7 +85,7 @@ export const scheduleTimerNotification = async (request: ScheduleRequest) => {
 };
 
 export const cancelTimerNotification = async (timerId: string) => {
-    const apiBaseUrl = getApiBaseUrl();
+    const apiBaseUrl = getTimerNotificationApiUrl();
     const storedCredentials = localStorage.getItem(scheduleCredentialsKey(timerId));
     if (!apiBaseUrl || !storedCredentials) return;
 
@@ -110,8 +114,15 @@ export const requestPushSubscription = async (apiBaseUrl: string) => {
 };
 
 export const enableBackgroundAlerts = async () => {
-    const apiBaseUrl = getApiBaseUrl();
+    const apiBaseUrl = getTimerNotificationApiUrl();
     if (!apiBaseUrl) return null;
     return requestPushSubscription(apiBaseUrl);
 };
-declare const __TIMER_NOTIFICATION_API_URL__: string | undefined;
+
+export const requestBackgroundAlertsIfNeeded = async (
+    alertStatus = getBackgroundAlertStatus(),
+    requestAlerts: () => Promise<unknown> = enableBackgroundAlerts
+) => {
+    if (alertStatus !== 'needs-permission') return null;
+    return requestAlerts();
+};

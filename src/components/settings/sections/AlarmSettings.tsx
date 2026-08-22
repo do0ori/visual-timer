@@ -4,6 +4,7 @@ import VolumeSelector from '../fields/VolumeSelector';
 import {
     enableBackgroundAlerts,
     getBackgroundAlertStatus,
+    getTimerNotificationApiUrl,
     type BackgroundAlertStatus,
 } from '../../../services/timerNotificationService';
 
@@ -17,6 +18,7 @@ const alertStatusCopy: Record<BackgroundAlertStatus, string> = {
 const AlarmSettings: React.FC = () => {
     const [alertStatus, setAlertStatus] = useState(() => getBackgroundAlertStatus());
     const [isEnabling, setIsEnabling] = useState(false);
+    const isTimerNotificationApiConfigured = Boolean(getTimerNotificationApiUrl());
 
     const handleEnableAlerts = async () => {
         setIsEnabling(true);
@@ -51,6 +53,12 @@ const AlarmSettings: React.FC = () => {
                         </button>
                     )}
                 </div>
+                {!isTimerNotificationApiConfigured && (
+                    <p className="mt-3 text-xs opacity-60">
+                        Completion alerts are not configured in this development build. Running-status alerts still work
+                        after notification permission is granted.
+                    </p>
+                )}
                 <p className="mt-3 text-xs opacity-60">
                     On iPhone and iPad, install the app to the Home Screen before enabling alerts. Custom uploaded audio
                     plays only while the app is open.

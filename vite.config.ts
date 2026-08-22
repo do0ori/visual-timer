@@ -5,9 +5,6 @@ import { VitePWA } from 'vite-plugin-pwa';
 // https://vitejs.dev/config/
 export default defineConfig({
     base: '/visual-timer/',
-    define: {
-        __TIMER_NOTIFICATION_API_URL__: JSON.stringify(process.env.VITE_TIMER_NOTIFICATION_API_URL || ''),
-    },
     plugins: [
         react(),
         VitePWA({

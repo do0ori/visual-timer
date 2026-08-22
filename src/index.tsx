@@ -7,6 +7,9 @@ import './index.css';
 import ErrorPage from './pages/ErrorPage';
 import MainPage from './pages/MainPage';
 import NotFoundPage from './pages/NotFoundPage';
+import { configureTimerNotificationApiUrl } from './services/timerNotificationService';
+
+configureTimerNotificationApiUrl(import.meta.env.VITE_TIMER_NOTIFICATION_API_URL);
 
 const parseLocalStorage = () => {
     return Object.keys(localStorage).reduce(

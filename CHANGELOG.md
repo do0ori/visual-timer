@@ -15,6 +15,7 @@ All notable changes to Mellow Visual Timer are documented in this file.
 - Persisted uploaded alarm audio and made its preview controllable and removable from settings.
 - Derived timer state from an absolute end time so timer completion remains accurate after background throttling.
 - Made pause, reset, and foreground return cancel or refresh the background alert correctly.
+- Request notification permission from the first manual timer start and deliver running-status messages before the page is controlled by the service worker.
 
 ## [0.4.1] - 2026-08-20
 
