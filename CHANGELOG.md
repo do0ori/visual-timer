@@ -9,6 +9,11 @@ All notable changes to Mellow Visual Timer are documented in this file.
 - Reliable background completion alerts through Web Push and a Cloudflare Durable Object scheduler.
 - A Background alerts control in Timer & Sound settings, including platform guidance for installed iPhone and iPad PWAs.
 - A single, non-intrusive running-status notification while a timer continues in the background.
+- A Test alert action for confirming that background notifications work on the current device.
+
+### Changed
+
+- Enabled Cloudflare Worker observability for timer-scheduling requests and Durable Object failures.
 
 ### Fixed
 
@@ -17,6 +22,9 @@ All notable changes to Mellow Visual Timer are documented in this file.
 - Made pause, reset, and foreground return cancel or refresh the background alert correctly.
 - Request notification permission from the first manual timer start and deliver running-status messages before the page is controlled by the service worker.
 - Restored the negative elapsed-time display after a timer completes without retriggering completion handling.
+- Registered the development service worker with its app-shell fallback so local notification testing works.
+- Created a Push subscription when notification permission was granted before background alerts were enabled.
+- Tightened the spacing of links in the About & Developer settings tab.
 
 ## [0.4.1] - 2026-08-20
 
