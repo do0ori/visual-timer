@@ -1,0 +1,20 @@
+{
+  "name": "visual-timer-notifications",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "TIMER_SCHEDULE",
+        "class_name": "TimerSchedule"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["TimerSchedule"]
+    }
+  ]
+}
