@@ -21,7 +21,7 @@ const VersionField: React.FC = () => {
             href="https://github.com/do0ori/visual-timer/releases"
             target="_blank"
             rel="noreferrer"
-            className="block -m-3 rounded-2xl p-3 cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2"
+            className="-m-1 block cursor-pointer rounded-2xl p-1 transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 dark:hover:bg-white/10"
         >
             <ListItem icon={versionIcon} content={versionContent} />
         </a>
