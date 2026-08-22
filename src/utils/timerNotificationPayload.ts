@@ -23,7 +23,7 @@ export const createRunningStatusNotification = (timerId: string, title: string, 
         body: `Ends at ${new Date(endAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`,
         icon: '/visual-timer/logo512.png',
         tag: `running-${timerId}`,
-        silent: true,
+        renotify: true,
         timestamp: endAt,
     },
 });
