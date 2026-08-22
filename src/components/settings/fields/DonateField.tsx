@@ -20,7 +20,7 @@ const DonateField: React.FC = () => {
             href="https://www.paypal.com/paypalme/do0ori"
             target="_blank"
             rel="noopener noreferrer"
-            className="block -m-3 rounded-2xl p-3 cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2"
+            className="-m-1 block cursor-pointer rounded-2xl p-1 transition-colors hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 dark:hover:bg-white/10"
         >
             <ListItem icon={heartIcon} content={donateContent} />
         </a>

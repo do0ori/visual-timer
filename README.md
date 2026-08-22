@@ -147,13 +147,15 @@
     npm install
     ```
 
-3. Start the development server:
+3. Copy `.env.example` to `.env` and set `VITE_TIMER_NOTIFICATION_API_URL` to enable background alert testing locally.
+
+4. Start the development server:
 
     ```bash
     npm run dev
     ```
 
-4. Create a production build or preview it locally:
+5. Create a production build or preview it locally:
 
     ```bash
     npm run build
@@ -172,6 +174,7 @@ Feel free to open [issues](https://github.com/do0ori/visual-timer/issues) for bu
 
 ## Release History
 
+- **v0.5.0:** Reliable background timer alerts through Web Push, persistent controllable custom alarm audio, and accurate end-time-based countdowns.
 - **v0.4.1:** Stoppable alarm previews, app-theme-driven editor surfaces, wider desktop timer cards, and an aligned Routine Timer interactive dial.
 - **v0.4.0:** A streamlined Routine Timer editing flow with clearer step creation, inline editing, reordering, deletion, context-aware timer creation, and compact timer cards.
 - **v0.3.0:** Vite migration, focus stats, custom alarm audio, unified settings, updated themes, and version information.

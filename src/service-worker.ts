@@ -6,6 +6,11 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import {
+    createFinishedNotification,
+    createRunningStatusNotification,
+    type TimerFinishedPayload,
+} from './utils/timerNotificationPayload';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -16,163 +21,85 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 // SPA App Shell routing for navigation requests
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
-registerRoute(
-  ({ request, url }: { request: Request; url: URL }) => {
+registerRoute(({ request, url }: { request: Request; url: URL }) => {
     if (request.mode !== 'navigate') return false;
     if (url.pathname.startsWith('/_')) return false;
     if (url.pathname.match(fileExtensionRegexp)) return false;
     return true;
-  },
-  createHandlerBoundToURL('/visual-timer/index.html')
-);
+}, createHandlerBoundToURL('/visual-timer/index.html'));
 
 // Cache images
 registerRoute(
-  ({ url }) => url.origin === self.location.origin && (url.pathname.endsWith('.png') || url.pathname.endsWith('.ico') || url.pathname.endsWith('.svg')),
-  new StaleWhileRevalidate({
-    cacheName: 'images',
-    plugins: [new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 30 * 24 * 60 * 60 })],
-  })
+    ({ url }) =>
+        url.origin === self.location.origin &&
+        (url.pathname.endsWith('.png') || url.pathname.endsWith('.ico') || url.pathname.endsWith('.svg')),
+    new StaleWhileRevalidate({
+        cacheName: 'images',
+        plugins: [new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 30 * 24 * 60 * 60 })],
+    })
 );
 
 // Cache audio assets
 registerRoute(
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.mp3'),
-  new CacheFirst({
-    cacheName: 'audio-cache',
-    plugins: [new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 60 * 24 * 60 * 60 })],
-  })
+    ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.mp3'),
+    new CacheFirst({
+        cacheName: 'audio-cache',
+        plugins: [new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 60 * 24 * 60 * 60 })],
+    })
 );
 
 // Skip waiting on demand
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
-
-// Helper for time formatting
-function formatMsToMmSs(ms: number): string {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-type TimerHandles = {
-  timeoutId?: number | ReturnType<typeof setTimeout>;
-  intervalId?: number | ReturnType<typeof setInterval>;
-};
-
-const activeTimers: Record<string, TimerHandles> = {};
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-const NOTIFICATION_TICK_MS = 1000;
-const OVERTIME_CAP_MS = 10 * 60 * 1000;
-
-const clearTimerHandles = (timerId: string) => {
-  const handles = activeTimers[timerId];
-  if (handles) {
-    if (handles.timeoutId) clearTimeout(handles.timeoutId);
-    if (handles.intervalId) clearInterval(handles.intervalId);
-    delete activeTimers[timerId];
-  }
-};
 
 self.addEventListener('message', (event) => {
-  if (!event.source) return;
+    const { command, timerId, title, endAt } = event.data || {};
+    if (!timerId) return;
 
-  const clientId = (event.source as Client).id;
-  const { command, timer, endTime } = event.data || {};
-
-  if (!timer || !timer.id) return;
-
-  if (command === 'start-timer') {
-    const endTimeMs = Number(endTime);
-    clearTimerHandles(timer.id);
-
-    const remainingTime = Math.max(0, endTimeMs - Date.now());
-
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    if (remainingTime > 0) {
-      timeoutId = setTimeout(async () => {
-        const clientList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-        const targetClient = clientList.find((client) => client.id === clientId);
-        if (targetClient) {
-          targetClient.postMessage({ command: 'finished', id: timer.id });
-        }
-      }, remainingTime);
+    if (command === 'show-running-status' && title && Number.isFinite(endAt)) {
+        const notification = createRunningStatusNotification(timerId, title, Number(endAt));
+        event.waitUntil(self.registration.showNotification(notification.title, notification.options));
     }
 
-    let intervalId: ReturnType<typeof setInterval> | undefined;
-    if (isIOS) {
-      self.registration.showNotification(timer.title || 'Timer Running', {
-        body: 'Timer is currently running in the background',
-        icon: '/visual-timer/logo512.png',
-        tag: timer.id,
-        silent: true,
-      });
-    } else {
-      const tick = async () => {
-        const rawMs = endTimeMs - Date.now();
-        if (rawMs < -OVERTIME_CAP_MS) {
-          if (intervalId !== undefined) {
-            clearInterval(intervalId);
-            intervalId = undefined;
-          }
-          if (activeTimers[timer.id]) {
-            activeTimers[timer.id].intervalId = undefined;
-          }
-          return;
-        }
-
-        await self.registration.showNotification(timer.title || 'Timer Running', {
-          body: formatMsToMmSs(rawMs),
-          icon: '/visual-timer/logo512.png',
-          tag: timer.id,
-          silent: true,
-        });
-      };
-
-      void tick();
-      intervalId = setInterval(() => {
-        void tick();
-      }, NOTIFICATION_TICK_MS);
+    if (command === 'clear-running-status') {
+        event.waitUntil(
+            self.registration.getNotifications({ tag: `running-${timerId}` }).then((notifications) => {
+                notifications.forEach((notification) => notification.close());
+            })
+        );
     }
-
-    activeTimers[timer.id] = { timeoutId, intervalId };
-  } else if (command === 'clear-timer') {
-    clearTimerHandles(timer.id);
-
-    void (async () => {
-      try {
-        const notifications = await self.registration.getNotifications({ tag: timer.id });
-        notifications.forEach((notification) => notification.close());
-      } catch (err) {
-        console.error('Error closing notifications:', err);
-      }
-    })();
-  }
 });
 
-const navigateToApp = async () => {
-  const clientList = await self.clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true,
-  });
+const navigateToApp = async (deepLink = '/visual-timer/') => {
+    const clientList = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+    });
 
-  const hadClientOpen = clientList.some((client) => {
-    if (client.url.includes('/visual-timer') && 'focus' in client) {
-      return (client as WindowClient).focus();
+    for (const client of clientList) {
+        if (client.url.includes('/visual-timer') && 'focus' in client) {
+            await (client as WindowClient).focus();
+            return;
+        }
     }
-    return false;
-  });
 
-  if (!hadClientOpen && self.clients.openWindow) {
-    await self.clients.openWindow('/visual-timer/');
-  }
+    if (self.clients.openWindow) {
+        await self.clients.openWindow(deepLink);
+    }
 };
 
 self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil(navigateToApp());
+    event.notification.close();
+    event.waitUntil(navigateToApp(event.notification.data?.deepLink));
+});
+
+self.addEventListener('push', (event) => {
+    const payload = event.data?.json() as (TimerFinishedPayload & { type: 'timer-finished' }) | undefined;
+    if (!payload || payload.type !== 'timer-finished') return;
+
+    const notification = createFinishedNotification(payload);
+    event.waitUntil(self.registration.showNotification(notification.title, notification.options));
 });
