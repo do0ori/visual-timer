@@ -1,4 +1,9 @@
-import { base64UrlToUint8Array, createScheduleCredentials, getNotificationSupport } from './timerNotificationService';
+import {
+    base64UrlToUint8Array,
+    createScheduleCredentials,
+    getBackgroundAlertStatus,
+    getNotificationSupport,
+} from './timerNotificationService';
 
 describe('timer notification service', () => {
     it('converts a URL-safe VAPID key into subscription bytes', () => {
@@ -13,5 +18,11 @@ describe('timer notification service', () => {
         const credentials = createScheduleCredentials('timer-1', () => 'generated-token');
 
         expect(credentials).toEqual({ scheduleId: 'timer-1', capability: 'generated-token' });
+    });
+
+    it('reports when a supported browser still needs notification permission', () => {
+        expect(getBackgroundAlertStatus(true, 'default')).toBe('needs-permission');
+        expect(getBackgroundAlertStatus(true, 'granted')).toBe('enabled');
+        expect(getBackgroundAlertStatus(true, 'denied')).toBe('denied');
     });
 });

@@ -8,6 +8,18 @@ export const getNotificationSupport = (navigatorValue: Navigator = navigator) =>
     return 'serviceWorker' in navigatorValue && typeof PushManager !== 'undefined' && 'Notification' in window;
 };
 
+export type BackgroundAlertStatus = 'unsupported' | 'needs-permission' | 'enabled' | 'denied';
+
+export const getBackgroundAlertStatus = (
+    isSupported = getNotificationSupport(),
+    permission: NotificationPermission = isSupported ? Notification.permission : 'default'
+): BackgroundAlertStatus => {
+    if (!isSupported) return 'unsupported';
+    if (permission === 'granted') return 'enabled';
+    if (permission === 'denied') return 'denied';
+    return 'needs-permission';
+};
+
 type ScheduleCredentials = {
     scheduleId: string;
     capability: string;
@@ -95,5 +107,11 @@ export const requestPushSubscription = async (apiBaseUrl: string) => {
         userVisibleOnly: true,
         applicationServerKey: applicationServerKey.buffer as ArrayBuffer,
     });
+};
+
+export const enableBackgroundAlerts = async () => {
+    const apiBaseUrl = getApiBaseUrl();
+    if (!apiBaseUrl) return null;
+    return requestPushSubscription(apiBaseUrl);
 };
 declare const __TIMER_NOTIFICATION_API_URL__: string | undefined;

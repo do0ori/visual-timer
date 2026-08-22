@@ -9,72 +9,59 @@ import MainPage from './pages/MainPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const parseLocalStorage = () => {
-  return Object.keys(localStorage).reduce(
-    (acc, key) => {
-      try {
-        acc[key] = JSON.parse(localStorage.getItem(key) || '');
-      } catch {
-        acc[key] = localStorage.getItem(key);
-      }
-      return acc;
-    },
-    {} as Record<string, unknown>
-  );
+    return Object.keys(localStorage).reduce(
+        (acc, key) => {
+            try {
+                acc[key] = JSON.parse(localStorage.getItem(key) || '');
+            } catch {
+                acc[key] = localStorage.getItem(key);
+            }
+            return acc;
+        },
+        {} as Record<string, unknown>
+    );
 };
 
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    beforeSend(event) {
-      event.extra = {
-        ...event.extra,
-        localStorage: parseLocalStorage(),
-      };
-      return event;
-    },
-  });
+    Sentry.init({
+        dsn: sentryDsn,
+        beforeSend(event) {
+            event.extra = {
+                ...event.extra,
+                localStorage: parseLocalStorage(),
+            };
+            return event;
+        },
+    });
 }
 
 const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: (
-        <Sentry.ErrorBoundary fallback={<ErrorPage />}>
-          <App />
-        </Sentry.ErrorBoundary>
-      ),
-      errorElement: <ErrorPage />,
-      children: [
+    [
         {
-          index: true,
-          path: '/',
-          element: <MainPage />,
+            path: '/',
+            element: (
+                <Sentry.ErrorBoundary fallback={<ErrorPage />}>
+                    <App />
+                </Sentry.ErrorBoundary>
+            ),
+            errorElement: <ErrorPage />,
+            children: [
+                {
+                    index: true,
+                    path: '/',
+                    element: <MainPage />,
+                },
+            ],
         },
-      ],
-    },
+        {
+            path: '*',
+            element: <NotFoundPage />,
+        },
+    ],
     {
-      path: '*',
-      element: <NotFoundPage />,
-    },
-  ],
-  {
-    basename: '/visual-timer',
-  }
-);
-
-// Request notification permission on first user click
-document.addEventListener(
-  'click',
-  () => {
-    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-      Notification.requestPermission().catch((error) => {
-        console.error('Notification permission error:', error);
-      });
+        basename: '/visual-timer',
     }
-  },
-  { once: true }
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
@@ -82,11 +69,11 @@ root.render(<RouterProvider router={router} />);
 
 // Register Service Worker with auto-update
 registerSW({
-  immediate: true,
-  onNeedRefresh() {
-    console.debug('New content available, updating service worker.');
-  },
-  onOfflineReady() {
-    console.debug('App ready to work offline.');
-  },
+    immediate: true,
+    onNeedRefresh() {
+        console.debug('New content available, updating service worker.');
+    },
+    onOfflineReady() {
+        console.debug('App ready to work offline.');
+    },
 });
