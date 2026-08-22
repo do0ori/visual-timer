@@ -3,6 +3,7 @@ import { useBoolean, useCounter, useInterval } from 'usehooks-ts';
 import { timerUnits, Unit } from '../config/timer/units';
 import { BaseTimerData, RoutineTimerItem } from '../store/types/timer';
 import { convertMsToMmSs } from '../utils/timeUtils';
+import { getRemainingCount } from '../utils/timerDeadline';
 import { useWakeLock } from './useWakeLock';
 
 type TimerOptions = {
@@ -87,6 +88,7 @@ export function useTimer({
     // State to handle tab visibility change event
     const lastUpdateTimeRef = useRef<number>(Date.now());
     const wasRunningRef = useRef<boolean>(false);
+    const endAtRef = useRef<number | null>(null);
 
     // Calculate maximum possible count value if maxTime is given
     const maxCountStart = maxTime ? maxTime * currentUnit.multiple : undefined;
@@ -102,29 +104,34 @@ export function useTimer({
         stopCountdown();
         finishTriggeredRef.current = false;
         wasRunningRef.current = false;
+        endAtRef.current = null;
         setCount(countStart);
         setIsInitialized(true);
     }, [stopCountdown, setCount, countStart]);
 
     // The callback for the countdown logic
     const countdownCallback = useCallback(() => {
-        if (count === 0 && onFinish && !finishTriggeredRef.current) {
+        if (!endAtRef.current) return;
+
+        const remainingCount = getRemainingCount(endAtRef.current, intervalMs);
+        setCount(remainingCount);
+
+        if (remainingCount === 0 && onFinish && !finishTriggeredRef.current) {
             finishTriggeredRef.current = true;
             onFinish(resetCountdown);
         }
-
-        decrement();
         lastUpdateTimeRef.current = Date.now();
-    }, [count, decrement, resetCountdown, onFinish]);
+    }, [intervalMs, onFinish, resetCountdown, setCount]);
 
     // useInterval hook triggers the countdown logic when the timer is running
     useInterval(countdownCallback, isRunning ? intervalMs : null);
 
     // Function to start the countdown and mark as initialized
     const start = useCallback(() => {
+        endAtRef.current = Date.now() + count * intervalMs;
         startCountdown();
         setIsInitialized(false);
-    }, [startCountdown]);
+    }, [count, intervalMs, startCountdown]);
 
     // Sets a new time for the countdown and resets it
     const handleSetTime = useCallback(
@@ -133,6 +140,7 @@ export function useTimer({
             const newCountStart = validatedTime * currentUnit.multiple;
             setTime(validatedTime);
             setCount(newCountStart);
+            endAtRef.current = null;
             setIsInitialized(true);
             stopCountdown();
         },
@@ -144,6 +152,7 @@ export function useTimer({
         const newCountStart = time * (isMinutes ? timerUnits.seconds.multiple : timerUnits.minutes.multiple);
         toggleIsMinutes();
         setCount(newCountStart);
+        endAtRef.current = null;
         setIsInitialized(true);
         stopCountdown();
     }, [setCount, stopCountdown, time, isMinutes]);
@@ -157,8 +166,9 @@ export function useTimer({
             }
             newCountStart = Math.max(newCountStart, 0);
             setCount(newCountStart);
+            if (endAtRef.current) endAtRef.current = Date.now() + newCountStart * intervalMs;
         },
-        [count, maxCountStart, currentUnit.multiple, setCount]
+        [count, maxCountStart, currentUnit.multiple, intervalMs, setCount]
     );
 
     const currentTime = useMemo(() => {
