@@ -43,6 +43,7 @@ jobs:
         run: npm run build
         env:
           VITE_SENTRY_DSN: ${{ secrets.REACT_APP_SENTRY_DSN }}
+          VITE_TIMER_NOTIFICATION_API_URL: ${{ secrets.VITE_TIMER_NOTIFICATION_API_URL }}
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
