@@ -2,6 +2,20 @@
 
 All notable changes to Mellow Visual Timer are documented in this file.
 
+## [0.5.0] - 2026-08-22
+
+### Added
+
+- Reliable background completion alerts through Web Push and a Cloudflare Durable Object scheduler.
+- A Background alerts control in Timer & Sound settings, including platform guidance for installed iPhone and iPad PWAs.
+- A single, non-intrusive running-status notification while a timer continues in the background.
+
+### Fixed
+
+- Persisted uploaded alarm audio and made its preview controllable and removable from settings.
+- Derived timer state from an absolute end time so timer completion remains accurate after background throttling.
+- Made pause, reset, and foreground return cancel or refresh the background alert correctly.
+
 ## [0.4.1] - 2026-08-20
 
 ### Fixed

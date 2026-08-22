@@ -172,6 +172,7 @@ Feel free to open [issues](https://github.com/do0ori/visual-timer/issues) for bu
 
 ## Release History
 
+- **v0.5.0:** Reliable background timer alerts through Web Push, persistent controllable custom alarm audio, and accurate end-time-based countdowns.
 - **v0.4.1:** Stoppable alarm previews, app-theme-driven editor surfaces, wider desktop timer cards, and an aligned Routine Timer interactive dial.
 - **v0.4.0:** A streamlined Routine Timer editing flow with clearer step creation, inline editing, reordering, deletion, context-aware timer creation, and compact timer cards.
 - **v0.3.0:** Vite migration, focus stats, custom alarm audio, unified settings, updated themes, and version information.
