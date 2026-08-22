@@ -1,29 +1,27 @@
-import { createRunningStatusNotification } from '../utils/timerNotificationPayload';
+import { postServiceWorkerMessage } from './serviceWorkerMessages';
 
-type RegistrationSource = ServiceWorkerRegistration | Promise<ServiceWorkerRegistration>;
+type PostMessage = (message: Record<string, unknown>) => Promise<boolean>;
 
-const getReadyRegistration = () => navigator.serviceWorker.ready;
+const TEST_TIMER_ID = 'background-alert-test';
 
 export const showRunningTimerStatus = async (
     timerId: string,
     title: string,
     endAt: number,
-    registrationSource: RegistrationSource = getReadyRegistration(),
+    postMessage: PostMessage = postServiceWorkerMessage,
     permission: NotificationPermission = Notification.permission
 ) => {
     if (permission !== 'granted') return false;
 
-    const registration = await registrationSource;
-    const notification = createRunningStatusNotification(timerId, title, endAt);
-    await registration.showNotification(notification.title, notification.options);
-    return true;
+    return postMessage({ command: 'show-running-status', timerId, title, endAt });
 };
 
-export const clearRunningTimerStatus = async (
-    timerId: string,
-    registrationSource: RegistrationSource = getReadyRegistration()
-) => {
-    const registration = await registrationSource;
-    const notifications = await registration.getNotifications({ tag: `running-${timerId}` });
-    notifications.forEach((notification) => notification.close());
+export const clearRunningTimerStatus = async (timerId: string, postMessage: PostMessage = postServiceWorkerMessage) => {
+    return postMessage({ command: 'clear-running-status', timerId });
 };
+
+export const showTestRunningTimerStatus = (
+    postMessage: PostMessage = postServiceWorkerMessage,
+    permission: NotificationPermission = Notification.permission,
+    now = Date.now()
+) => showRunningTimerStatus(TEST_TIMER_ID, 'Mellow Visual Timer', now + 10 * 60 * 1_000, postMessage, permission);

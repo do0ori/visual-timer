@@ -1,35 +1,41 @@
-import { clearRunningTimerStatus, showRunningTimerStatus } from './timerStatusNotification';
+import { clearRunningTimerStatus, showRunningTimerStatus, showTestRunningTimerStatus } from './timerStatusNotification';
 
 describe('timer status notifications', () => {
-    it('shows the running status directly through the ready service worker registration', async () => {
-        const showNotification = jest.fn().mockResolvedValue(undefined);
-        const registration = { showNotification } as unknown as ServiceWorkerRegistration;
+    it('asks the service worker to show the running status', async () => {
+        const postMessage = jest.fn().mockResolvedValue(true);
 
-        await expect(showRunningTimerStatus('timer-1', 'Focus', 10_000, registration, 'granted')).resolves.toBe(true);
+        await expect(showRunningTimerStatus('timer-1', 'Focus', 10_000, postMessage, 'granted')).resolves.toBe(true);
 
-        expect(showNotification).toHaveBeenCalledWith(
-            'Focus running',
-            expect.objectContaining({ body: expect.stringContaining('Ends at'), tag: 'running-timer-1' })
-        );
+        expect(postMessage).toHaveBeenCalledWith({
+            command: 'show-running-status',
+            timerId: 'timer-1',
+            title: 'Focus',
+            endAt: 10_000,
+        });
     });
 
     it('does not show a status notification before permission is granted', async () => {
-        const showNotification = jest.fn();
-        const registration = { showNotification } as unknown as ServiceWorkerRegistration;
+        const postMessage = jest.fn();
 
-        await expect(showRunningTimerStatus('timer-1', 'Focus', 10_000, registration, 'default')).resolves.toBe(false);
-        expect(showNotification).not.toHaveBeenCalled();
+        await expect(showRunningTimerStatus('timer-1', 'Focus', 10_000, postMessage, 'default')).resolves.toBe(false);
+        expect(postMessage).not.toHaveBeenCalled();
     });
 
     it('clears the matching running status notification', async () => {
-        const close = jest.fn();
-        const registration = {
-            getNotifications: jest.fn().mockResolvedValue([{ close }]),
-        } as unknown as ServiceWorkerRegistration;
+        const postMessage = jest.fn().mockResolvedValue(true);
 
-        await clearRunningTimerStatus('timer-1', registration);
+        await clearRunningTimerStatus('timer-1', postMessage);
 
-        expect(registration.getNotifications).toHaveBeenCalledWith({ tag: 'running-timer-1' });
-        expect(close).toHaveBeenCalled();
+        expect(postMessage).toHaveBeenCalledWith({ command: 'clear-running-status', timerId: 'timer-1' });
+    });
+
+    it('uses the same service worker path for a test alert', async () => {
+        const postMessage = jest.fn().mockResolvedValue(true);
+
+        await expect(showTestRunningTimerStatus(postMessage, 'granted', 10_000)).resolves.toBe(true);
+
+        expect(postMessage).toHaveBeenCalledWith(
+            expect.objectContaining({ command: 'show-running-status', timerId: 'background-alert-test' })
+        );
     });
 });

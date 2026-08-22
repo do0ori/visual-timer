@@ -7,6 +7,7 @@ import {
     getTimerNotificationApiUrl,
     type BackgroundAlertStatus,
 } from '../../../services/timerNotificationService';
+import { showTestRunningTimerStatus } from '../../../services/timerStatusNotification';
 
 const alertStatusCopy: Record<BackgroundAlertStatus, string> = {
     unsupported: 'Background alerts are not supported in this browser.',
@@ -18,6 +19,7 @@ const alertStatusCopy: Record<BackgroundAlertStatus, string> = {
 const AlarmSettings: React.FC = () => {
     const [alertStatus, setAlertStatus] = useState(() => getBackgroundAlertStatus());
     const [isEnabling, setIsEnabling] = useState(false);
+    const [isTesting, setIsTesting] = useState(false);
     const isTimerNotificationApiConfigured = Boolean(getTimerNotificationApiUrl());
 
     const handleEnableAlerts = async () => {
@@ -29,6 +31,17 @@ const AlarmSettings: React.FC = () => {
         } finally {
             setAlertStatus(getBackgroundAlertStatus());
             setIsEnabling(false);
+        }
+    };
+
+    const handleTestAlert = async () => {
+        setIsTesting(true);
+        try {
+            await showTestRunningTimerStatus();
+        } catch (error) {
+            console.debug('Unable to show test background alert:', error);
+        } finally {
+            setIsTesting(false);
         }
     };
 
@@ -50,6 +63,16 @@ const AlarmSettings: React.FC = () => {
                             className="btn-tactile rounded-xl bg-zinc-900 px-3 py-2 text-xs font-semibold text-white shadow-soft transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900"
                         >
                             {isEnabling ? 'Enabling…' : 'Enable alerts'}
+                        </button>
+                    )}
+                    {alertStatus === 'enabled' && (
+                        <button
+                            type="button"
+                            onClick={handleTestAlert}
+                            disabled={isTesting}
+                            className="btn-tactile rounded-xl bg-zinc-900 px-3 py-2 text-xs font-semibold text-white shadow-soft transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-900"
+                        >
+                            {isTesting ? 'Sending…' : 'Test alert'}
                         </button>
                     )}
                 </div>
