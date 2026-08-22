@@ -16,6 +16,7 @@ All notable changes to Mellow Visual Timer are documented in this file.
 - Derived timer state from an absolute end time so timer completion remains accurate after background throttling.
 - Made pause, reset, and foreground return cancel or refresh the background alert correctly.
 - Request notification permission from the first manual timer start and deliver running-status messages before the page is controlled by the service worker.
+- Restored the negative elapsed-time display after a timer completes without retriggering completion handling.
 
 ## [0.4.1] - 2026-08-20
 

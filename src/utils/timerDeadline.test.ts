@@ -5,7 +5,8 @@ describe('timer deadline', () => {
         expect(getRemainingCount(10_000, 1_000, 4_200)).toBe(6);
     });
 
-    it('clamps expired timers to zero', () => {
+    it('reports elapsed time as a negative count after expiry', () => {
         expect(getRemainingCount(10_000, 1_000, 10_000)).toBe(0);
+        expect(getRemainingCount(10_000, 1_000, 11_200)).toBe(-1);
     });
 });

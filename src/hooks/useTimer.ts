@@ -9,7 +9,7 @@ import {
     requestBackgroundAlertsIfNeeded,
     scheduleTimerNotification,
 } from '../services/timerNotificationService';
-import { postServiceWorkerMessage as postToServiceWorker } from '../services/serviceWorkerMessages';
+import { clearRunningTimerStatus, showRunningTimerStatus } from '../services/timerStatusNotification';
 import { useWakeLock } from './useWakeLock';
 
 type TimerOptions = {
@@ -103,9 +103,9 @@ export function useTimer({
     // Manage the running state of the timer
     const { value: isRunning, setTrue: startCountdown, setFalse: stopCountdown } = useBoolean(false);
 
-    const postServiceWorkerMessage = useCallback((message: Record<string, unknown>) => {
-        void postToServiceWorker(message).catch((error) =>
-            console.debug('Unable to send timer status to the service worker:', error)
+    const clearRunningStatus = useCallback((timerId: string) => {
+        void clearRunningTimerStatus(timerId).catch((error) =>
+            console.debug('Unable to clear running timer status:', error)
         );
     }, []);
 
@@ -130,10 +130,10 @@ export function useTimer({
         finishTriggeredRef.current = false;
         endAtRef.current = null;
         void cancelTimerNotification(timer.id);
-        postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
+        clearRunningStatus(timer.id);
         setCount(countStart);
         setIsInitialized(true);
-    }, [countStart, postServiceWorkerMessage, setCount, stopCountdown, timer.id]);
+    }, [clearRunningStatus, countStart, setCount, stopCountdown, timer.id]);
 
     // The callback for the countdown logic
     const countdownCallback = useCallback(() => {
@@ -142,14 +142,13 @@ export function useTimer({
         const remainingCount = getRemainingCount(endAtRef.current, intervalMs);
         setCount(remainingCount);
 
-        if (remainingCount === 0 && onFinish && !finishTriggeredRef.current) {
+        if (remainingCount <= 0 && onFinish && !finishTriggeredRef.current) {
             finishTriggeredRef.current = true;
-            stopCountdown();
             void cancelTimerNotification(timer.id);
-            postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
+            clearRunningStatus(timer.id);
             onFinish(resetCountdown);
         }
-    }, [intervalMs, onFinish, postServiceWorkerMessage, resetCountdown, setCount, stopCountdown, timer.id]);
+    }, [clearRunningStatus, intervalMs, onFinish, resetCountdown, setCount, timer.id]);
 
     // useInterval hook triggers the countdown logic when the timer is running
     useInterval(countdownCallback, isRunning ? intervalMs : null);
@@ -179,11 +178,11 @@ export function useTimer({
             setCount(newCountStart);
             endAtRef.current = null;
             void cancelTimerNotification(timer.id);
-            postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
+            clearRunningStatus(timer.id);
             setIsInitialized(true);
             stopCountdown();
         },
-        [currentUnit.multiple, maxTime, postServiceWorkerMessage, setCount, stopCountdown, timer.id]
+        [clearRunningStatus, currentUnit.multiple, maxTime, setCount, stopCountdown, timer.id]
     );
 
     // Toggles between minutes and seconds mode
@@ -193,10 +192,10 @@ export function useTimer({
         setCount(newCountStart);
         endAtRef.current = null;
         void cancelTimerNotification(timer.id);
-        postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
+        clearRunningStatus(timer.id);
         setIsInitialized(true);
         stopCountdown();
-    }, [isMinutes, postServiceWorkerMessage, setCount, stopCountdown, time, timer.id]);
+    }, [clearRunningStatus, isMinutes, setCount, stopCountdown, time, timer.id]);
 
     // Function to add a specific time to the current count
     const add = useCallback(
@@ -239,18 +238,17 @@ export function useTimer({
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'hidden') {
                 setIsDocumentVisible(false);
-                if (isRunning) {
+                if (isRunning && !finishTriggeredRef.current) {
                     scheduleBackgroundNotification(null);
-                    postServiceWorkerMessage({
-                        command: 'show-running-status',
-                        timerId: timer.id,
-                        title: timer.title || 'Timer',
-                        endAt: endAtRef.current,
-                    });
+                    if (endAtRef.current) {
+                        void showRunningTimerStatus(timer.id, timer.title || 'Timer', endAtRef.current).catch((error) =>
+                            console.debug('Unable to show running timer status:', error)
+                        );
+                    }
                 }
             } else if (document.visibilityState === 'visible') {
                 setIsDocumentVisible(true);
-                postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
+                clearRunningStatus(timer.id);
                 countdownCallback();
                 if (isRunning) {
                     scheduleBackgroundNotification(Date.now() + 15_000);
@@ -263,11 +261,11 @@ export function useTimer({
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
-    }, [countdownCallback, isRunning, postServiceWorkerMessage, scheduleBackgroundNotification, timer.id, timer.title]);
+    }, [clearRunningStatus, countdownCallback, isRunning, scheduleBackgroundNotification, timer.id, timer.title]);
 
     useInterval(
         () => scheduleBackgroundNotification(Date.now() + 15_000),
-        isRunning && isDocumentVisible ? 5_000 : null
+        isRunning && isDocumentVisible && !finishTriggeredRef.current ? 5_000 : null
     );
 
     // Reset timer with new input data
@@ -283,8 +281,8 @@ export function useTimer({
         stopCountdown();
         endAtRef.current = null;
         void cancelTimerNotification(timer.id);
-        postServiceWorkerMessage({ command: 'clear-running-status', timerId: timer.id });
-    }, [postServiceWorkerMessage, stopCountdown, timer.id]);
+        clearRunningStatus(timer.id);
+    }, [clearRunningStatus, stopCountdown, timer.id]);
 
     return {
         totalTime: time,
