@@ -1,5 +1,6 @@
 import {
     base64UrlToUint8Array,
+    cancelTimerNotification,
     createScheduleCredentials,
     configureTimerNotificationApiUrl,
     getBackgroundAlertStatus,
@@ -9,9 +10,12 @@ import {
 } from './timerNotificationService';
 
 describe('timer notification service', () => {
+    const originalFetch = global.fetch;
+
     afterEach(() => {
         localStorage.clear();
         configureTimerNotificationApiUrl(undefined);
+        global.fetch = originalFetch;
     });
 
     it('converts a URL-safe VAPID key into subscription bytes', () => {
@@ -74,5 +78,33 @@ describe('timer notification service', () => {
         await expect(requestBackgroundAlertsIfNeeded('enabled', requestAlerts, getSubscription)).resolves.toBeNull();
 
         expect(requestAlerts).not.toHaveBeenCalled();
+    });
+
+    it('cancels a background schedule and forgets its credentials', async () => {
+        configureTimerNotificationApiUrl('https://worker.example');
+        createScheduleCredentials('timer-1', () => 'generated-token');
+        const fetchMock = jest.fn().mockResolvedValue({ ok: true } as Response);
+        global.fetch = fetchMock as unknown as typeof fetch;
+
+        await cancelTimerNotification('timer-1');
+
+        expect(fetchMock).toHaveBeenCalledWith('https://worker.example/v1/schedules/timer-1', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ capability: 'generated-token' }),
+        });
+        expect(localStorage.getItem('timer-notification:timer-1')).toBeNull();
+    });
+
+    it('keeps credentials and stays quiet when cancelling fails offline', async () => {
+        configureTimerNotificationApiUrl('https://worker.example');
+        createScheduleCredentials('timer-1', () => 'generated-token');
+        const fetchMock = jest.fn().mockRejectedValue(new TypeError('Failed to fetch'));
+        global.fetch = fetchMock as unknown as typeof fetch;
+
+        await expect(cancelTimerNotification('timer-1')).resolves.toBeUndefined();
+
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(localStorage.getItem('timer-notification:timer-1')).toContain('generated-token');
     });
 });
