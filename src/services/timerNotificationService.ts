@@ -90,11 +90,18 @@ export const cancelTimerNotification = async (timerId: string) => {
     if (!apiBaseUrl || !storedCredentials) return;
 
     const credentials = JSON.parse(storedCredentials) as ScheduleCredentials;
-    await fetch(`${apiBaseUrl}/v1/schedules/${encodeURIComponent(credentials.scheduleId)}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ capability: credentials.capability }),
-    });
+    try {
+        await fetch(`${apiBaseUrl}/v1/schedules/${encodeURIComponent(credentials.scheduleId)}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ capability: credentials.capability }),
+        });
+    } catch (error) {
+        // Callers cancel as fire-and-forget, so an offline or backgrounded page must not
+        // reject. Keep the credentials so a later cancel can still delete the schedule.
+        console.debug('Unable to cancel background timer alert:', error);
+        return;
+    }
     localStorage.removeItem(scheduleCredentialsKey(timerId));
 };
 
