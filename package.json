@@ -6,7 +6,7 @@
     "homepage": "https://do0ori.github.io/visual-timer",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build",
+        "build": "tsc && vite build && node scripts/strip-sourcemaps.mjs",
         "test": "jest --runInBand",
         "preview": "vite preview",
         "format": "prettier . --write"

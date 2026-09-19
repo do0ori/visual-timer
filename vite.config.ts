@@ -68,8 +68,8 @@ export default defineConfig({
             }),
     ],
     build: {
-        // Generated only when they can be uploaded to Sentry, and deleted from dist
-        // afterwards, so source maps are never published to GitHub Pages.
+        // Generated only when they can be uploaded to Sentry. `strip-sourcemaps`
+        // clears the leftovers afterwards, so none are published to GitHub Pages.
         sourcemap: uploadSourcemaps ? 'hidden' : false,
     },
     server: {
