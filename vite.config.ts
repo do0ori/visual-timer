@@ -1,6 +1,14 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+
+const SENTRY_ORG = 'jaekyung-hwang';
+const SENTRY_PROJECT = 'visual-timer';
+
+// Only CI has the token, so local builds skip source map generation entirely.
+const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;
+const uploadSourcemaps = Boolean(sentryAuthToken);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -49,7 +57,21 @@ export default defineConfig({
                 navigateFallback: 'index.html',
             },
         }),
+        // Only runs in CI, where the Sentry credentials are available.
+        uploadSourcemaps &&
+            sentryVitePlugin({
+                authToken: sentryAuthToken,
+                org: SENTRY_ORG,
+                project: SENTRY_PROJECT,
+                release: { name: `visual-timer@${process.env.npm_package_version}` },
+                sourcemaps: { filesToDeleteAfterUpload: ['dist/**/*.map'] },
+            }),
     ],
+    build: {
+        // Generated only when they can be uploaded to Sentry, and deleted from dist
+        // afterwards, so source maps are never published to GitHub Pages.
+        sourcemap: uploadSourcemaps ? 'hidden' : false,
+    },
     server: {
         port: 3000,
         open: false,

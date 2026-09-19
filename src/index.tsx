@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react';
 import ReactDOM from 'react-dom/client';
+import packageMetadata from '../package.json';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { registerSW } from 'virtual:pwa-register';
 import App from './App';
@@ -37,14 +38,32 @@ const parseLocalStorage = () => {
     );
 };
 
+/**
+ * Stack frames from our own build always point at the hashed bundle under `assets/`.
+ * Frames attributed to the document URL (or to an injected/eval'd script) come from
+ * browser extensions and in-app injections, which `window.onerror` also reports.
+ * Tagging the origin keeps those separable in Sentry instead of silently mixing them in.
+ */
+const isOwnCodeEvent = (event: Sentry.ErrorEvent) => {
+    const frames = event.exception?.values?.flatMap((value) => value.stacktrace?.frames ?? []) ?? [];
+    const located = frames.filter((frame) => Boolean(frame.filename));
+    if (located.length === 0) return true;
+    return located.some((frame) => frame.filename?.includes(`${import.meta.env.BASE_URL}assets/`));
+};
+
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {
     Sentry.init({
         dsn: sentryDsn,
+        release: `visual-timer@${packageMetadata.version}`,
         beforeSend(event) {
             event.extra = {
                 ...event.extra,
                 localStorage: parseLocalStorage(),
+            };
+            event.tags = {
+                ...event.tags,
+                own_code: isOwnCodeEvent(event),
             };
             return event;
         },
