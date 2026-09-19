@@ -3,10 +3,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const SENTRY_ORG = 'jaekyung-hwang';
+const SENTRY_PROJECT = 'visual-timer';
+
+// Only CI has the token, so local builds skip source map generation entirely.
 const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;
-const sentryOrg = process.env.SENTRY_ORG;
-const sentryProject = process.env.SENTRY_PROJECT;
-const uploadSourcemaps = Boolean(sentryAuthToken && sentryOrg && sentryProject);
+const uploadSourcemaps = Boolean(sentryAuthToken);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -59,8 +61,8 @@ export default defineConfig({
         uploadSourcemaps &&
             sentryVitePlugin({
                 authToken: sentryAuthToken,
-                org: sentryOrg,
-                project: sentryProject,
+                org: SENTRY_ORG,
+                project: SENTRY_PROJECT,
                 release: { name: `visual-timer@${process.env.npm_package_version}` },
                 sourcemaps: { filesToDeleteAfterUpload: ['dist/**/*.map'] },
             }),
